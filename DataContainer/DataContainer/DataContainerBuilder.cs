@@ -70,6 +70,24 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
+        /// Method to add password data, need separate function to avoid ambiguity between <see cref="StringDataObject"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public DataContainerBuilder Password(string name, string value)
+        {
+            if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
+            {
+                return this;
+            }
+
+            config.Add(new PasswordDataObject(name, value));
+
+            return this;
+        }
+
+        /// <summary>
         /// Creates a DataObject for storing CLR objects based on <paramref name="format"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>

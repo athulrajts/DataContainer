@@ -3,8 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <RootNamespace>KEI.Infrastructure</RootNamespace>
+    <RootNamespace>KEI.Infrastructur</RootNamespace>
     <AssemblyName>DataContainer</AssemblyName>
+    <PackageId>DataContainer.NET</PackageId>
+    <Authors>athulrajts</Authors>
+    <Company />
+    <Product />
+    <Description>A strongly typed Settings/Configration management library</Description>
+    <RepositoryUrl>https://github.com/athulrajts/DataContainer</RepositoryUrl>
+    <RepositoryType>Open Source</RepositoryType>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Copyright>Copyright (c) 2021 athulrajts</Copyright>
+    <PackageTags>Settings,Configuration</PackageTags>
+    <NeutralLanguage>en-IN</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

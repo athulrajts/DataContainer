@@ -28,6 +28,7 @@ namespace KEI.Infrastructure
         public const string Collection = "dcl";
         public const string Xml = "xml";
         public const string Json = "json";
+        public const string Password = "pwd";
         public const string NotSupported = "404";
     }
 
@@ -59,7 +60,8 @@ namespace KEI.Infrastructure
             { DataObjectType.TimeSpan , typeof(TimeSpanDataObject)},
             { DataObjectType.Point , typeof(PointDataObject)},
             { DataObjectType.Xml , typeof(XmlDataObject) },
-            { DataObjectType.Json , typeof(JsonDataObject) }
+            { DataObjectType.Json , typeof(JsonDataObject) },
+            { DataObjectType.Password , typeof(PasswordDataObject) }
         };
 
         /// <summary>
@@ -102,11 +104,12 @@ namespace KEI.Infrastructure
             { DataObjectType.Folder , typeof(FolderPropertyObject)},
             { DataObjectType.Array1D , typeof(Array1DPropertyObject) },
             { DataObjectType.Array2D , typeof(Array2DPropertyObject) },
-            { DataObjectType.DateTime , typeof(DateTimePropertyObject)},
-            { DataObjectType.TimeSpan , typeof(TimeSpanPropertyObject)},
-            { DataObjectType.Point , typeof(PointPropertyObject)},
-            { DataObjectType.Xml , typeof(XmlPropertyObject)},
-            { DataObjectType.Json , typeof(JsonPropertyObject)}
+            { DataObjectType.DateTime , typeof(DateTimePropertyObject) },
+            { DataObjectType.TimeSpan , typeof(TimeSpanPropertyObject) },
+            { DataObjectType.Point , typeof(PointPropertyObject) },
+            { DataObjectType.Xml , typeof(XmlPropertyObject) },
+            { DataObjectType.Json , typeof(JsonPropertyObject) },
+            { DataObjectType.Password, typeof(PasswordPropertyObject) },
         };
 
 

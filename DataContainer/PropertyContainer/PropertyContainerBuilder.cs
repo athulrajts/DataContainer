@@ -108,8 +108,8 @@ namespace KEI.Infrastructure
                 return this;
             }
 
-            PropertyObject obj = null;
-            if(format == SerializationFormat.Container)
+            PropertyObject obj;
+            if (format == SerializationFormat.Container)
             {
                 obj = DataObjectFactory.GetPropertyObjectFor(name, value);
             }
@@ -163,6 +163,29 @@ namespace KEI.Infrastructure
 
                 config.Add(obj);
             }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Method to add password data, need separate function to avoid ambiguity between <see cref="StringDataObject"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="propertyBuilder"></param>
+        /// <returns></returns>
+        public PropertyContainerBuilder Password(string name, string value, Action<PropertyObjectBuilder> propertyBuilder = null)
+        {
+            if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
+            {
+                return this;
+            }
+
+            var obj = new PasswordPropertyObject(name, value);
+            
+            propertyBuilder?.Invoke(new PropertyObjectBuilder(obj));
+
+            config.Add(obj);
 
             return this;
         }
