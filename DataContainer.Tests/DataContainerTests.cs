@@ -8,6 +8,7 @@ using Xunit;
 using KEI.Infrastructure;
 using KEI.Infrastructure.Utils;
 using DataContainer.Tests.TestData;
+using KEI.Infrastructure.Helpers;
 
 namespace DataContainer.Tests
 {
@@ -1707,6 +1708,37 @@ namespace DataContainer.Tests
 
             // assert equal
             Assert.Equal(origValue.IntProperty, deserializedValue.IntProperty);
+        }
+
+        [Theory]
+        [InlineData(typeof(PasswordDataObject))]
+        [InlineData(typeof(PasswordPropertyObject))]
+        public void DataObject_Serialization_Password(Type type)
+        {
+            string password = "password";
+            string encryptedPassword = EncryptionHelper.Encrypt(password);
+
+            DataObject orig = (DataObject)Activator.CreateInstance(type, "A", password);
+           
+            // create xml
+            StringWriter sw = new StringWriter();
+            var writer = new XmlTextWriter(sw);
+            orig.WriteXml(writer);
+
+            // deserialize xml
+            DataObject deserialized = (DataObject)FormatterServices.GetUninitializedObject(type);
+            var reader = new XmlTextReader(new StringReader(sw.ToString()));
+            reader.Read();
+            deserialized.ReadXml(reader);
+
+            // read enrypted string
+            DataObject deserialized2 = (DataObject)FormatterServices.GetUninitializedObject(type);
+            var reader2 = new XmlTextReader(new StringReader(sw.ToString()));
+            reader2.Read();
+            string storedValue = reader2.GetAttribute("value");
+
+            Assert.Equal(password, deserialized.GetValue());
+            Assert.Equal(encryptedPassword, storedValue);
         }
 
         #endregion
