@@ -315,14 +315,19 @@ namespace KEI.Infrastructure
         {
             if (value is T t)
             {
-                if (Validate(t))
+                bool isValid = Validate(t);
+                
+                if (isValid)
                 {
                     Value = t;
                 }
-                return true;
-            }
 
-            return true;
+                return isValid;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>

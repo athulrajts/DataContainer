@@ -41,7 +41,7 @@ namespace KEI.Infrastructure
         }
     }
 
-    public class NumericPropertyObjectBuilder
+    public class NumericPropertyObjectBuilder<T>
     {
         private readonly PropertyObject prop;
 
@@ -50,31 +50,31 @@ namespace KEI.Infrastructure
             prop = obj;
         }
 
-        public NumericPropertyObjectBuilder SetCategory(string category)
+        public NumericPropertyObjectBuilder<T> SetCategory(string category)
         {
             prop.Category = category;
             return this;
         }
 
-        public NumericPropertyObjectBuilder SetDescription(string description)
+        public NumericPropertyObjectBuilder<T> SetDescription(string description)
         {
             prop.Description = description;
             return this;
         }
 
-        public NumericPropertyObjectBuilder SetDisplayName(string displayName)
+        public NumericPropertyObjectBuilder<T> SetDisplayName(string displayName)
         {
             prop.DisplayName = displayName;
             return this;
         }
 
-        public NumericPropertyObjectBuilder SetValidation(ValidatorGroup validation)
+        public NumericPropertyObjectBuilder<T> SetValidation(ValidatorGroup validation)
         {
             prop.Validation = validation;
             return this;
         }
 
-        public NumericPropertyObjectBuilder SetIncrement(object increment)
+        public NumericPropertyObjectBuilder<T> SetIncrement(T increment)
         {
             if (prop is INumericPropertyObject np)
             {
@@ -83,7 +83,7 @@ namespace KEI.Infrastructure
             return this;
         }
 
-        public NumericPropertyObjectBuilder SetMax(object max)
+        public NumericPropertyObjectBuilder<T> SetMax(T max)
         {
             if (prop is INumericPropertyObject np)
             {
@@ -93,7 +93,7 @@ namespace KEI.Infrastructure
 
         }
 
-        public NumericPropertyObjectBuilder SetMin(object min)
+        public NumericPropertyObjectBuilder<T> SetMin(T min)
         {
             if (prop is INumericPropertyObject np)
             {

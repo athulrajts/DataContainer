@@ -11,6 +11,11 @@ namespace KEI.Infrastructure
         public const string Byte = "byte";
         public const string Char = "c";
         public const string Integer = "i";
+        public const string Long = "l";
+        public const string Short = "short";
+        public const string UInteger = "ui";
+        public const string ULong = "ul";
+        public const string UShort = "ushort";
         public const string Float = "f";
         public const string Enum = "enum";
         public const string Double = "d";
@@ -45,7 +50,12 @@ namespace KEI.Infrastructure
         {
             { DataObjectType.Boolean , typeof(BoolDataObject) },
             { DataObjectType.Byte , typeof(ByteDataObject) },
+            { DataObjectType.Short, typeof(ShortDataObject) },
             { DataObjectType.Integer , typeof(IntDataObject) },
+            { DataObjectType.Long, typeof(LongDataObject)},
+            { DataObjectType.UShort, typeof(UnsignedShortDataObject) },
+            { DataObjectType.UInteger, typeof(UnsignedIntDataObject) },
+            { DataObjectType.ULong, typeof(UnsignedLongDataObject) },
             { DataObjectType.Float , typeof(FloatDataObject) },
             { DataObjectType.Double , typeof(DoubleDataObject) },
             { DataObjectType.String , typeof(StringDataObject) },
@@ -71,7 +81,12 @@ namespace KEI.Infrastructure
         {
             { typeof(bool) , typeof(BoolDataObject) },
             { typeof(byte) , typeof(ByteDataObject) },
+            { typeof(short), typeof(ShortDataObject) },
             { typeof(int) , typeof(IntDataObject) },
+            { typeof(long), typeof(LongDataObject) },
+            { typeof(ushort), typeof(UnsignedShortDataObject) },
+            { typeof(uint), typeof(UnsignedIntDataObject) },
+            { typeof(ulong), typeof(UnsignedLongDataObject) },
             { typeof(float) , typeof(FloatDataObject) },
             { typeof(double) , typeof(DoubleDataObject) },
             { typeof(string) , typeof(StringDataObject) },
@@ -90,7 +105,12 @@ namespace KEI.Infrastructure
         {
             { DataObjectType.Boolean , typeof(BoolPropertyObject) },
             { DataObjectType.Byte , typeof(BytePropertyObject) },
+            { DataObjectType.Short, typeof(ShortPropertyObject) },
             { DataObjectType.Integer , typeof(IntPropertyObject) },
+            { DataObjectType.Long , typeof(LongPropertyObject) },
+            { DataObjectType.UShort, typeof(UnsignedShortPropertyObject) },
+            { DataObjectType.UInteger, typeof(UnsignedIntPropertyObject) },
+            { DataObjectType.ULong, typeof(UnsignedLongPropertyObject) },
             { DataObjectType.Float , typeof(FloatPropertyObject) },
             { DataObjectType.Double , typeof(DoublePropertyObject) },
             { DataObjectType.String , typeof(StringPropertyObject) },
@@ -120,7 +140,12 @@ namespace KEI.Infrastructure
         {
             { typeof(bool) , typeof(BoolPropertyObject) },
             { typeof(byte) , typeof(BytePropertyObject) },
+            { typeof(short) , typeof(ShortPropertyObject) },
             { typeof(int) , typeof(IntPropertyObject) },
+            { typeof(long) , typeof(LongPropertyObject) },
+            { typeof(ushort), typeof(UnsignedShortPropertyObject) },
+            { typeof(uint), typeof(UnsignedIntPropertyObject) },
+            { typeof(ulong), typeof(UnsignedLongPropertyObject) },
             { typeof(float) , typeof(FloatPropertyObject) },
             { typeof(double) , typeof(DoublePropertyObject) },
             { typeof(string), typeof(StringPropertyObject) },

@@ -422,39 +422,29 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
-        /// Adds <see cref="IntPropertyObject"/>
+        /// Generic method for adding numeric types
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="propertyBuilder"></param>
         /// <returns></returns>
-        public PropertyContainerBuilder Number(string name, int value, Action<NumericPropertyObjectBuilder> propertyBuilder = null)
+        public PropertyContainerBuilder Number<T>(string name, T value, Action<NumericPropertyObjectBuilder<T>> propertyBuilder = null)
+            where T : struct, IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
         {
-            return Number(name, (object)value, propertyBuilder);
-        }
+            if (config.ContainsData(name))
+            {
+                return this;
+            }
 
-        /// <summary>
-        /// Adds <see cref="DoublePropertyObject"/>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <param name="propertyBuilder"></param>
-        /// <returns></returns>
-        public PropertyContainerBuilder Number(string name, double value, Action<NumericPropertyObjectBuilder> propertyBuilder = null)
-        {
-            return Number(name, (object)value, propertyBuilder);
-        }
+            if (DataObjectFactory.GetPropertyObjectFor(name, value) is PropertyObject obj)
+            {
+                propertyBuilder?.Invoke(new NumericPropertyObjectBuilder<T>(obj));
 
-        /// <summary>
-        /// Adds <see cref="FloatPropertyObject"/>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <param name="propertyBuilder"></param>
-        /// <returns></returns>
-        public PropertyContainerBuilder Number(string name, float value, Action<NumericPropertyObjectBuilder> propertyBuilder = null)
-        {
-            return Number(name, (object)value, propertyBuilder);
+                config.Add(obj);
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -549,33 +539,6 @@ namespace KEI.Infrastructure
 
             return this;
         }
-
-
-        /// <summary>
-        /// Adds <see cref="IntPropertyObject"/> , <see cref="FloatPropertyObject"/> or <see cref="DoublePropertyObject"/>
-        /// based on <see cref="Type"/> of <paramref name="value"/>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <param name="propertyBuilder"></param>
-        /// <returns></returns>
-        private PropertyContainerBuilder Number(string name, object value, Action<NumericPropertyObjectBuilder> propertyBuilder = null)
-        {
-            if (config.ContainsData(name) || value is null)
-            {
-                return this;
-            }
-
-            if (DataObjectFactory.GetPropertyObjectFor(name, value) is PropertyObject obj)
-            {
-                propertyBuilder?.Invoke(new NumericPropertyObjectBuilder(obj));
-
-                config.Add(obj);
-            }
-
-            return this;
-        }
-
 
         #endregion
     }
