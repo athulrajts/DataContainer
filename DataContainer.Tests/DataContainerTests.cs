@@ -9,6 +9,7 @@ using KEI.Infrastructure;
 using KEI.Infrastructure.Utils;
 using DataContainer.Tests.TestData;
 using KEI.Infrastructure.Helpers;
+using System.ComponentModel;
 
 namespace DataContainer.Tests
 {
@@ -931,7 +932,12 @@ namespace DataContainer.Tests
         {
             const string Name = "Name";
 
+            DataObject shortObj = DataObjectFactory.GetDataObjectFor(Name, (short)1);
             DataObject intObj = DataObjectFactory.GetDataObjectFor(Name, 1);
+            DataObject longObj = DataObjectFactory.GetDataObjectFor(Name, (long)1);
+            DataObject ushortObj = DataObjectFactory.GetDataObjectFor(Name, (ushort)1);
+            DataObject uintObj = DataObjectFactory.GetDataObjectFor(Name, (uint)1);
+            DataObject ulongObj = DataObjectFactory.GetPropertyObjectFor(Name, (ulong)1);
             DataObject byteObj = DataObjectFactory.GetDataObjectFor(Name, (byte)1);
             DataObject charObj = DataObjectFactory.GetDataObjectFor(Name, '@');
             DataObject floatObj = DataObjectFactory.GetDataObjectFor(Name, 1.42f);
@@ -944,7 +950,12 @@ namespace DataContainer.Tests
             DataObject timeObj = DataObjectFactory.GetDataObjectFor(Name, TimeSpan.FromSeconds(1));
             DataObject dateObj = DataObjectFactory.GetDataObjectFor(Name, DateTime.Now);
 
+            Assert.Equal(DataObjectType.Short, shortObj.Type);
             Assert.Equal(DataObjectType.Integer, intObj.Type);
+            Assert.Equal(DataObjectType.Long, longObj.Type);
+            Assert.Equal(DataObjectType.UShort, ushortObj.Type);
+            Assert.Equal(DataObjectType.UInteger, uintObj.Type);
+            Assert.Equal(DataObjectType.ULong, ulongObj.Type);
             Assert.Equal(DataObjectType.Byte, byteObj.Type);
             Assert.Equal(DataObjectType.Char, charObj.Type);
             Assert.Equal(DataObjectType.Float, floatObj.Type);
@@ -963,7 +974,12 @@ namespace DataContainer.Tests
         {
             const string Name = "Name";
 
+            PropertyObject shortObj = DataObjectFactory.GetPropertyObjectFor(Name, (short)1);
             PropertyObject intObj = DataObjectFactory.GetPropertyObjectFor(Name, 1);
+            PropertyObject longObj = DataObjectFactory.GetPropertyObjectFor(Name, (long)1);
+            PropertyObject ushortObj = DataObjectFactory.GetPropertyObjectFor(Name, (ushort)1);
+            PropertyObject uintObj = DataObjectFactory.GetPropertyObjectFor(Name, (uint)1);
+            PropertyObject ulongObj = DataObjectFactory.GetPropertyObjectFor(Name, (ulong)1);
             PropertyObject byteObj = DataObjectFactory.GetPropertyObjectFor(Name, (byte)1);
             PropertyObject charObj = DataObjectFactory.GetPropertyObjectFor(Name, '@');
             PropertyObject floatObj = DataObjectFactory.GetPropertyObjectFor(Name, 1.42f);
@@ -976,7 +992,12 @@ namespace DataContainer.Tests
             PropertyObject timeObj = DataObjectFactory.GetPropertyObjectFor(Name, TimeSpan.FromSeconds(1));
             PropertyObject dateObj = DataObjectFactory.GetPropertyObjectFor(Name, DateTime.Now);
 
+            Assert.Equal(DataObjectType.Short, shortObj.Type);
             Assert.Equal(DataObjectType.Integer, intObj.Type);
+            Assert.Equal(DataObjectType.Long, longObj.Type);
+            Assert.Equal(DataObjectType.UShort, ushortObj.Type);
+            Assert.Equal(DataObjectType.UInteger, uintObj.Type);
+            Assert.Equal(DataObjectType.ULong, ulongObj.Type);
             Assert.Equal(DataObjectType.Byte, byteObj.Type);
             Assert.Equal(DataObjectType.Char, charObj.Type);
             Assert.Equal(DataObjectType.Float, floatObj.Type);
@@ -1469,14 +1490,24 @@ namespace DataContainer.Tests
         #region DataObjects
         
         [Theory]
+        [InlineData(typeof(ShortDataObject), (short)42)]
         [InlineData(typeof(IntDataObject), 42)]
+        [InlineData(typeof(LongDataObject), (long)42)]
+        [InlineData(typeof(UnsignedShortDataObject), (ushort)42)]
+        [InlineData(typeof(UnsignedIntDataObject), (uint)42)]
+        [InlineData(typeof(UnsignedLongDataObject), (ulong)42)]
         [InlineData(typeof(DoubleDataObject), 3.14)]
         [InlineData(typeof(FloatDataObject), 1.42f)]
         [InlineData(typeof(ByteDataObject), (byte)22)]
         [InlineData(typeof(BoolDataObject), true)]
         [InlineData(typeof(CharDataObject), '!')]
         [InlineData(typeof(EnumDataObject), EntityHandling.ExpandEntities)]
+        [InlineData(typeof(ShortPropertyObject), (short)42)]
         [InlineData(typeof(IntPropertyObject), 42)]
+        [InlineData(typeof(LongPropertyObject), (long)42)]
+        [InlineData(typeof(UnsignedShortPropertyObject), (ushort)42)]
+        [InlineData(typeof(UnsignedIntPropertyObject), (uint)42)]
+        [InlineData(typeof(UnsignedLongPropertyObject), (ulong)42)]
         [InlineData(typeof(DoublePropertyObject), 3.14)]
         [InlineData(typeof(FloatPropertyObject), 1.42f)]
         [InlineData(typeof(BytePropertyObject), (byte)22)]
@@ -1739,6 +1770,63 @@ namespace DataContainer.Tests
 
             Assert.Equal(password, deserialized.GetValue());
             Assert.Equal(encryptedPassword, storedValue);
+        }
+
+        [Theory]
+        [InlineData(typeof(ShortPropertyObject), (short)22, (short)5, (short)60)]
+        [InlineData(typeof(IntPropertyObject), (int)22, (int)5, (int)60)]
+        [InlineData(typeof(LongPropertyObject), (long)22, (long)5, (long)60)]
+        [InlineData(typeof(UnsignedShortPropertyObject), (ushort)22, (ushort)5, (ushort)60)]
+        [InlineData(typeof(UnsignedIntPropertyObject), (uint)22, (uint)5, (uint)60)]
+        [InlineData(typeof(UnsignedLongPropertyObject), (ulong)22, (ulong)5, (ulong)60)]
+        public void NumericDataObject_SetValueReturnsFalseIfMinMaxValidationFails(Type type, object value, object minFail, object maxFail)
+        {
+            DataObject orig = (DataObject)Activator.CreateInstance(type, "A", value);
+
+            INumericPropertyObject numeric = (INumericPropertyObject)orig;
+            TypeConverter converter = TypeDescriptor.GetConverter(value);
+            
+            numeric.Max = converter.ConvertTo(50, value.GetType());
+            numeric.Min = converter.ConvertTo(10, value.GetType());
+
+            Assert.False(orig.SetValue(minFail));
+            Assert.False(orig.SetValue(maxFail));
+        }
+
+        [Theory]
+        [InlineData(typeof(ShortPropertyObject), (short)22, (short)5, (short)60)]
+        [InlineData(typeof(IntPropertyObject), (int)22, (int)5, (int)60)]
+        [InlineData(typeof(LongPropertyObject), (long)22, (long)5, (long)60)]
+        [InlineData(typeof(UnsignedShortPropertyObject), (ushort)22, (ushort)5, (ushort)60)]
+        [InlineData(typeof(UnsignedIntPropertyObject), (uint)22, (uint)5, (uint)60)]
+        [InlineData(typeof(UnsignedLongPropertyObject), (ulong)22, (ulong)5, (ulong)60)]
+        public void NumericDataObject_SetValueReturnsTrueIfMinMaxValidationPasses(Type type, object value, object minFail, object maxFail)
+        {
+            DataObject orig = (DataObject)Activator.CreateInstance(type, "A", value);
+
+            INumericPropertyObject numeric = (INumericPropertyObject)orig;
+            TypeConverter converter = TypeDescriptor.GetConverter(value);
+
+            numeric.Max = converter.ConvertTo(100, value.GetType());
+            numeric.Min = converter.ConvertTo(0, value.GetType());
+
+            Assert.True(orig.SetValue(minFail));
+            Assert.True(orig.SetValue(maxFail));
+        }
+
+        [Theory]
+        [InlineData(typeof(ShortPropertyObject), (short)22, (short)5, (short)60)]
+        [InlineData(typeof(IntPropertyObject), (int)22, (int)5, (int)60)]
+        [InlineData(typeof(LongPropertyObject), (long)22, (long)5, (long)60)]
+        [InlineData(typeof(UnsignedShortPropertyObject), (ushort)22, (ushort)5, (ushort)60)]
+        [InlineData(typeof(UnsignedIntPropertyObject), (uint)22, (uint)5, (uint)60)]
+        [InlineData(typeof(UnsignedLongPropertyObject), (ulong)22, (ulong)5, (ulong)60)]
+        public void NumericDataObject_SetValueReturnsTrueIfMinMaxIsNotSet(Type type, object value, object minFail, object maxFail)
+        {
+            DataObject orig = (DataObject)Activator.CreateInstance(type, "A", value);
+
+            Assert.True(orig.SetValue(minFail));
+            Assert.True(orig.SetValue(maxFail));
         }
 
         #endregion
