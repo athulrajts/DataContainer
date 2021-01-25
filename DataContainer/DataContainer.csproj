@@ -14,8 +14,9 @@
     <RepositoryType>Open Source</RepositoryType>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Copyright>Copyright (c) 2021 athulrajts</Copyright>
-    <PackageTags>Settings,Configuration</PackageTags>
+    <PackageTags>Settings,Configuration, XML</PackageTags>
     <NeutralLanguage>en-IN</NeutralLanguage>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
