@@ -60,14 +60,14 @@ This pattern allows to better visualize the hierarchy of values that it contains
 double height = 0;
 PropertyContainer.GetValue("Height", ref height);
 ```
-This is a safe way to retrieve values, if the property is not present, it will do nothing, since we’re using
+This is a safe way to retrieve values, if the property is not present, it will do nothing, since weï¿½re using
 ref, the value has to be initialized, so you I'll be left with the default value you provide if property of the
 given name does not exist, and will return false if property is not present.
 ###### Method 2
 ```
 double width = PropertyContainer.GetValue<double>("Width");
 ```
-This will return **default(T)** if the property is not present, that is, it’ll return null for reference types, 0 for
+This will return **default(T)** if the property is not present, that is, itï¿½ll return null for reference types, 0 for
 numeric types, false for Boolean and so on.
 ###### Method 3
 ```
@@ -103,7 +103,7 @@ double height = PropertyContainer.GetValue(Key.Height);
 ```
 It'll give error at compile time if you use the wrong type.
 ![Retrieve Key Error](Documentation/retrieve_key_error.png)  
-If the property is not present, it’ll return the default value in the Key object.
+If the property is not present, itï¿½ll return the default value in the Key object.
 
 ## Updating Values
 ###### Method 1
@@ -303,7 +303,7 @@ We can create an instance of TestClass using the below snippet
 ```
 TestClass testObject = container.Morph<TestClass>();
 ```
-This is particularly useful in areas where you have to create an object who you don’t have a reference.  
+This is particularly useful in areas where you have to create an object who you donï¿½t have a reference.  
 The consumer can morph it to actual object, everyone else can access it as a
 DataContainer/PropertyContainer.  
 
@@ -328,7 +328,7 @@ If the PropertyGrid does not make use of **EditorAttribute** this feature will n
 ## Data Binding
 ###### XAML
 Properties inside DataContainer/PropertyContainer can be directly used for binding in XAML as if it is an
-actual property of the type.
+actual property of the type.  
 ![Binding Xaml](Documentation/binding_xaml.png)
 ###### Code
 Public properties in your classes can be bound to DataContainer/PropertyContainer properties so that
@@ -343,7 +343,7 @@ work)
 
 Using ExpressionsTrees because
 1. It gives Intellisense to finish typing.
-2. It won’t break our code when renaming properties.
+2. It won't break our code when renaming properties.
 Third parameter BindingMode works the same way as in XAML binding mode
 ```
 PropertyContainer.SetBinding(() => Width, BindingMode.TwoWay);
@@ -363,7 +363,7 @@ to both instances. Values of properties will be taken from first instance
 Accepts an IDataContainer, return a new instance of IDataContainer with properties which are in first
 but not in second.
 ###### IsIdentical
-Returns whether first and second contains the same set of properties. (Doesn’t compare values, will
+Returns whether first and second contains the same set of properties. (Doesnï¿½t compare values, will
 return true if the keys in both are same)
 ###### Merge
 Add new properties from second to first, if they already exist, keep the values.
@@ -371,6 +371,21 @@ Add new properties from second to first, if they already exist, keep the values.
 Removes the properties from first which are common to first and second.
 ###### InvertedRemove
 Removes all the properties that are not in second and in first from first
+
+## AutoSaving and AutoUpdating
+If the instances **FilePath** property is set. then
+```
+PropertyContainer.GetAutoSaver()
+```
+will give use an instance of autosaver, as long as this instance is in memory, it'll trigger saving to file whenever the instance raises a PropertyChanged event.
+It will wait for 5 seconds to trigger saving, if another prpoerty change is recieved before 5 seconds, the timer is reset to 5 again.
+you can further controle saving by adding filters to autosaver which will limit saving only when the filtered proeprties are changed.
+
+If the instance is loaded from file. you can configure it to update it's values whenever the file changes.
+```
+PropertyContainer.GetAutoUpdater()
+```
+By default it'll only update the value for existing properties. but there are options to add/remove properties as well.
 
 
 
