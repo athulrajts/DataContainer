@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace KEI.Infrastructure
 {
@@ -48,6 +49,30 @@ namespace KEI.Infrastructure
         }
 
         public static void PutValue<T>(this IDataContainer dc, Key<T> key, T value) => dc.PutValue(key.Name, value);
+
+        public static DataObject FindRecursive(this IDataContainer container, string key)
+        {
+            var split = key.Split('.');
+
+            if (split.Length == 1)
+            {
+                return container.Find(key);
+            }
+            else
+            {
+                object temp = null;
+                container.GetValue(split.First(), ref temp);
+
+                if (temp is IDataContainer dc)
+                {
+                    return dc.FindRecursive(string.Join(".", split.Skip(1)));
+                }
+                else
+                {
+                    throw new Exception("Nested configs should be of type IDataContainer");
+                }
+            }
+        }
 
         #endregion
 

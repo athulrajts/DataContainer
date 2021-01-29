@@ -53,7 +53,7 @@ namespace KEI.Infrastructure
         {
             get
             {
-                DataObject obj = FindRecursive(key);
+                DataObject obj = this.FindRecursive(key);
                
                 if(obj is null)
                 {
@@ -64,7 +64,7 @@ namespace KEI.Infrastructure
             }
             set
             {
-                DataObject obj = FindRecursive(key);
+                DataObject obj = this.FindRecursive(key);
 
                 if (obj is null)
                 {
@@ -88,7 +88,7 @@ namespace KEI.Infrastructure
         /// <returns>Is Success</returns>
         public virtual bool GetValue<T>(string key, ref T value)
         {
-            var data = FindRecursive(key);
+            var data = this.FindRecursive(key);
 
             bool result = false;
             
@@ -108,7 +108,7 @@ namespace KEI.Infrastructure
         /// <param name="value">Value to set</param>
         public virtual bool SetValue(string key, object value)
         {
-            var data = FindRecursive(key);
+            var data = this.FindRecursive(key);
 
             if(data is null)
             {
@@ -147,35 +147,6 @@ namespace KEI.Infrastructure
         /// <param name="key">data Key to search for</param>
         /// <returns>Is Found</returns>
         public virtual bool ContainsData(string key) => Find(key) is DataObject;
-
-        /// <summary>
-        /// Gets <see cref="PropertyObject"/> with given name
-        /// </summary>
-        /// <param name="key">name of <see cref="PropertyObject"/></param>
-        /// <returns>reference of <see cref="PropertyObject"/></returns>
-        public DataObject FindRecursive(string key)
-        {
-            var split = key.Split('.');
-
-            if (split.Length == 1)
-            {
-                return Find(key);
-            }
-            else
-            {
-                object temp = null;
-                GetValue(split.First(), ref temp);
-
-                if (temp is IDataContainer dc)
-                {
-                    return dc.Find(string.Join(".", split.Skip(1)));
-                }
-                else
-                {
-                    throw new Exception("Nested configs should be of type IDataContainer");
-                }
-            }
-        }
 
         #endregion
 
@@ -297,7 +268,7 @@ namespace KEI.Infrastructure
         /// <param name="updateSourceOnPropertyChange">Whether or not to update value inside <see cref="DataContainer"/> when Target value changes</param>
         public bool SetBinding<T>(string propertyKey, Expression<Func<T>> expression, BindingMode mode = BindingMode.TwoWay)
         {
-            var property = FindRecursive(propertyKey);
+            var property = this.FindRecursive(propertyKey);
 
             if (property is null)
             {
@@ -342,7 +313,7 @@ namespace KEI.Infrastructure
                 throw new InvalidOperationException("Body of Lambda expression must be a Member expression");
             }
 
-            var property = FindRecursive(propinfo.Name);
+            var property = this.FindRecursive(propinfo.Name);
 
             if (property is null)
             {
@@ -373,7 +344,7 @@ namespace KEI.Infrastructure
         /// <param name="expression"><see cref="MemberExpression"/> that gets CLR property </param>
         public bool RemoveBinding<T>(string propertyKey, Expression<Func<T>> expression)
         {
-            var property = FindRecursive(propertyKey);
+            var property = this.FindRecursive(propertyKey);
 
             if (property is null)
             {
@@ -414,7 +385,7 @@ namespace KEI.Infrastructure
                 throw new InvalidOperationException("Body of Lambda expression must be a Member expression");
             }
 
-            var property = FindRecursive(propinfo.Name);
+            var property = this.FindRecursive(propinfo.Name);
 
             if (property is null)
             {

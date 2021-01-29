@@ -38,6 +38,23 @@ namespace DataContainer.Tests
 
         #region Access And Manipulation
 
+        [Fact]
+        public void DataContainerBase_CanAccessChildDataFromRoot()
+        {
+            IDataContainer Root = DataContainerBuilder.Create("Root")
+                .DataContainer("Child", b => b
+                    .DataContainer("GrandChild", c => c
+                        .Data("A", 1)
+                        .Data("B", 2)))
+                .Build();
+
+            int a = Root.GetValue(new Key<int>("Child.GrandChild.A"));
+            int b = Root.GetValue(new Key<int>("Child.GrandChild.B"));
+
+            Assert.Equal(1, a);
+            Assert.Equal(2, b);
+        }
+
         [Theory]
         [InlineData(typeof(POCO))]
         public void DataContainerBase_Morph_MustRecreatesSameObject(Type t)
