@@ -12,7 +12,7 @@ namespace KEI.Infrastructure
         /// <param name="option"></param>
         public bool SetBrowseOptions(string property, BrowseOptions option)
         {
-            if (FindRecursive(property) is PropertyObject di)
+            if (this.FindRecursive(property) is PropertyObject di)
             {
                 di.BrowseOption = option;
                 return true;
@@ -29,7 +29,7 @@ namespace KEI.Infrastructure
         /// <param name="option"></param>
         public bool SetValidation(string property, ValidatorGroup validation)
         {
-            if (FindRecursive(property) is PropertyObject di)
+            if (this.FindRecursive(property) is PropertyObject di)
             {
                 di.Validation = validation;
                 return true;
