@@ -197,6 +197,38 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
+        /// Gets an initialized <see cref="DataObject"/> instance of type <paramref name="type"/>
+        /// with name <paramref name="name"/> and value <paramref name="value"/>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static DataObject GetDataObject(string type, string name, object value, params object[] args)
+        {
+            object[] constructorArgs;
+
+            if (args != null && args.Length > 0)
+            {
+                constructorArgs = new object[args.Length + 2];
+                constructorArgs[0] = name;
+                constructorArgs[1] = value;
+
+                for (int i = 0; i < args.Length; i++)
+                {
+                    constructorArgs[i + 2] = args[i];
+                }
+            }
+            else
+            {
+                constructorArgs = new object[] { name, value };
+            }
+
+            return (DataObject)Activator.CreateInstance(typeIdDataObjMapping[type], constructorArgs);
+        }
+
+        /// <summary>
         /// Gets an uninitialized <see cref="PropertyObject"/> implementation for given type.
         /// </summary>
         /// <param name="typeid"></param>
@@ -207,6 +239,39 @@ namespace KEI.Infrastructure
                 ? (DataObject)FormatterServices.GetUninitializedObject(typeIdPropObjMapping[typeid])
                 : new NotSupportedDataObject();
         }
+
+        /// <summary>
+        /// Gets an initialized <see cref="PropertyObject"/> instance of type <paramref name="type"/>
+        /// with name <paramref name="name"/> and value <paramref name="value"/>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static DataObject GetPropertyObject(string type, string name, object value, params object[] args)
+        {
+            object[] constructorArgs;
+
+            if (args != null && args.Length > 0)
+            {
+                constructorArgs = new object[args.Length + 2];
+                constructorArgs[0] = name;
+                constructorArgs[1] = value;
+
+                for (int i = 0; i < args.Length; i++)
+                {
+                    constructorArgs[i + 2] = args[i];
+                }
+            }
+            else
+            {
+                constructorArgs = new object[] { name, value };
+            }
+
+            return (DataObject)Activator.CreateInstance(typeIdPropObjMapping[type], constructorArgs);
+        }
+
 
         /// <summary>
         /// Gets an initialized <see cref="DataObject"/> implementation for given value and name.
@@ -290,32 +355,6 @@ namespace KEI.Infrastructure
                 return new ContainerDataObject(name, value);
             }
 
-
-            /// special objects which can be used for multiple types
-            //return value switch
-            //{
-            //    DataObject data => data,
-            //    Enum e => new EnumDataObject(name, e),
-            //    IDataContainer d => new ContainerDataObject(name, d),
-            //    Array a => GetArrayDataObject(name, a),
-            //    IList l => new CollectionDataObject(name, l),
-            //    _ => new ContainerDataObject(name, value), // TODO : give option to choose default ( xml | json | container )
-            //};
-
-            //static DataObject GetArrayDataObject(string name, Array a)
-            //{
-            //    if (a.GetType().GetElementType().IsPrimitive == false)
-            //    {
-            //        throw new NotSupportedException("Array of non primitive types not supported");
-            //    }
-
-            //    return a.Rank switch
-            //    {
-            //        1 => new Array1DDataObject(name, a),
-            //        2 => new Array2DDataObject(name, a),
-            //        _ => throw new NotSupportedException("Array of more than 2 dimensions not supported") // TODO : create data object save n-dimensional array
-            //    };
-            //}
         }
 
         /// <summary>
@@ -405,32 +444,6 @@ namespace KEI.Infrastructure
                 return new ContainerPropertyObject(name, value);
             }
 
-
-            /// special objects which can be used for multiple types
-            //return value switch
-            //{
-            //    DataObject data => data,
-            //    Enum e => new EnumDataObject(name, e),
-            //    IDataContainer d => new ContainerDataObject(name, d),
-            //    Array a => GetArrayDataObject(name, a),
-            //    IList l => new CollectionDataObject(name, l),
-            //    _ => new ContainerDataObject(name, value), // TODO : give option to choose default ( xml | json | container )
-            //};
-
-            //static DataObject GetArrayDataObject(string name, Array a)
-            //{
-            //    if (a.GetType().GetElementType().IsPrimitive == false)
-            //    {
-            //        throw new NotSupportedException("Array of non primitive types not supported");
-            //    }
-
-            //    return a.Rank switch
-            //    {
-            //        1 => new Array1DDataObject(name, a),
-            //        2 => new Array2DDataObject(name, a),
-            //        _ => throw new NotSupportedException("Array of more than 2 dimensions not supported") // TODO : create data object save n-dimensional array
-            //    };
-            //}
         }
 
 
