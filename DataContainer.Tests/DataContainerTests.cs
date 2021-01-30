@@ -41,7 +41,7 @@ namespace DataContainer.Tests
         [Fact]
         public void DataContainerBase_CanAccessChildDataFromRoot()
         {
-            IDataContainer Root = DataContainerBuilder.Create("Root")
+            DataContainerBase Root = (DataContainerBase)DataContainerBuilder.Create("Root")
                 .DataContainer("Child", b => b
                     .DataContainer("GrandChild", c => c
                         .Data("A", 1)
@@ -61,20 +61,16 @@ namespace DataContainer.Tests
         {
             var obj = Activator.CreateInstance(t);
 
-            IDataContainer data = DataContainerBuilder.CreateObject("Untitiled", obj);
-            IPropertyContainer property = PropertyContainerBuilder.CreateObject("Untitled", obj);
+            DataContainerBase data = (DataContainerBase)DataContainerBuilder.CreateObject("Untitiled", obj);
 
             var morphedData = data.Morph();
-            var morphedProperty = property.Morph();
 
             foreach (var prop in t.GetProperties())
             {
                 var expected = prop.GetValue(obj);
                 var actualData = prop.GetValue(morphedData);
-                var actualProeprty = prop.GetValue(morphedProperty);
 
                 Assert.Equal(expected, actualData);
-                Assert.Equal(expected, actualProeprty);
             }
 
         }
@@ -86,59 +82,24 @@ namespace DataContainer.Tests
         {
             var obj = Activator.CreateInstance(t);
 
-            IDataContainer data = DataContainerBuilder.CreateObject("Untitiled", obj);
-            IPropertyContainer property = PropertyContainerBuilder.CreateObject("Untitled", obj);
+            DataContainerBase data = (DataContainerBase)DataContainerBuilder.CreateObject("Untitiled", obj);
 
             var serializedData = XmlHelper.SerializeToString(data);
-            var serializedProperty = XmlHelper.SerializeToString(property);
 
             var recreatedData = XmlHelper.DeserializeFromString<KEI.Infrastructure.DataContainer>(serializedData);
-            var recreatedProperty = XmlHelper.DeserializeFromString<PropertyContainer>(serializedProperty);
 
             Assert.NotNull(recreatedData);
-            Assert.NotNull(recreatedProperty);
 
             var morphedData = recreatedData.Morph();
-            var morphedProperty = recreatedProperty.Morph();
 
             foreach (var prop in t.GetProperties())
             {
                 var expected = prop.GetValue(obj);
                 var actualData = prop.GetValue(morphedData);
-                var actualProeprty = prop.GetValue(morphedProperty);
 
                 Assert.Equal(expected, actualData);
-                Assert.Equal(expected, actualProeprty);
             }
 
-        }
-
-        [Fact]
-        public void DataContainerBase_CanSerializeAndDeserializeDefaultDataObjects()
-        {
-            IDataContainer Obj = DataContainerBuilder.Create("Object1")
-                .Data("IntegerProperty", 14)
-                .Data("CharacterProperty", '@')
-                .Data("ByteProperty", (byte)255)
-                .Data("BooleanProperty", true)
-                .Data("DoubleProperty", 3.1412)
-                .Data("ColorProperty", new Color(124, 101, 33))
-                .Data("PointProperty", new Point(24, 48))
-                .Data("TimeSpanProperty", TimeSpan.FromSeconds(39))
-                .Data("DateTimeProperty", DateTime.Now)
-                .Data("Array2DProperty", new int[,] { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } })
-                .Data("Array1DProperty", new int[] { 1, 1, 2, 3, 5, 13 })
-                .Data("EnumProperty", DayOfWeek.Monday)
-                .Data("ObjectAsDataContainer", new BindingTestObject())
-                .Data("ObjectAsXML", new BindingTestObject(), SerializationFormat.Xml)
-                .Data("ObjectAsJson", new BindingTestObject(), SerializationFormat.Json)
-                .Build();
-
-            string xml = XmlHelper.SerializeToString(Obj);
-
-            IDataContainer newObj = XmlHelper.DeserializeFromString<KEI.Infrastructure.DataContainer>(xml);
-
-            Assert.Equal(15, newObj.Count);
         }
 
         [Fact]
@@ -146,7 +107,7 @@ namespace DataContainer.Tests
         {
             const string PROP_NAME = "IntProperty";
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, 42)
                 .Build();
 
@@ -168,7 +129,7 @@ namespace DataContainer.Tests
         {
             const string PROP_NAME = "IntProperty";
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, 42)
                 .Build();
 
@@ -190,7 +151,7 @@ namespace DataContainer.Tests
             const int VALUE = 42;
             const int SET_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, VALUE)
                 .Build();
 
@@ -213,7 +174,7 @@ namespace DataContainer.Tests
             const string PROP_NAME = "IntProperty";
             const int SET_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create().Build();
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create().Build();
 
             Assert.False(property.ContainsData(PROP_NAME));
 
@@ -234,7 +195,7 @@ namespace DataContainer.Tests
             const int VALUE = 42;
             const int SET_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, VALUE)
                 .Build();
 
@@ -257,7 +218,7 @@ namespace DataContainer.Tests
         [Fact]
         public void DataContainerBase_Morph_T_CanMoverToObject()
         {
-            IDataContainer DC = DataContainerBuilder.Create("POCO")
+            DataContainerBase DC = (DataContainerBase)DataContainerBuilder.Create("POCO")
                 .Data(nameof(POCO.IntProperty), 12)
                 .Data(nameof(POCO.StringProperty), "Hello")
                 .Build();
@@ -273,7 +234,7 @@ namespace DataContainer.Tests
         #region Binding
 
         [Fact]
-        public void PropertyContainer_SetBinding_MustBindOneWay()
+        public void DataContainerBase_SetBinding_MustBindOneWay()
         {
             const string PROP_NAME = "IntProperty";
             const int VALUE = 42;
@@ -308,13 +269,13 @@ namespace DataContainer.Tests
         }
 
         [Fact]
-        public void PropertyContainer_SetBinding_MustBindTwoWay()
+        public void DataContainerBase_SetBinding_MustBindTwoWay()
         {
             const string PROP_NAME = "IntProperty";
             const int VALUE = 42;
             const int NEW_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, VALUE)
                 .Build();
 
@@ -341,13 +302,13 @@ namespace DataContainer.Tests
         }
 
         [Fact]
-        public void PropertyContainer_SetBinding_MustBindOneWayToSource()
+        public void DataContainerBase_SetBinding_MustBindOneWayToSource()
         {
             const string PROP_NAME = "IntProperty";
             const int VALUE = 42;
             const int NEW_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, VALUE)
                 .Build();
 
@@ -375,13 +336,13 @@ namespace DataContainer.Tests
         }
 
         [Fact]
-        public void PropertyContainer_SetBinding_MustBindOneTime()
+        public void DataContainerBase_SetBinding_MustBindOneTime()
         {
             const string PROP_NAME = "IntProperty";
             const int VALUE = 42;
             const int NEW_VALUE = 14;
 
-            IPropertyContainer property = PropertyContainerBuilder.Create()
+            DataContainerBase property = (DataContainerBase)PropertyContainerBuilder.Create()
                 .Property(PROP_NAME, VALUE)
                 .Build();
 
@@ -1004,89 +965,54 @@ namespace DataContainer.Tests
             Assert.Equal(defaultValue, obj.GetValue());
         }
 
-
-        [Fact]
-        public void DataObjectFactory_GetDataObjectFor_CreatesCorrectObject()
+        [Theory]
+        [InlineData(DataObjectType.Short,typeof(short))]
+        [InlineData(DataObjectType.Integer, typeof(int))]
+        [InlineData(DataObjectType.Long, typeof(long))]
+        [InlineData(DataObjectType.UShort, typeof(ushort))]
+        [InlineData(DataObjectType.UInteger, typeof(uint))]
+        [InlineData(DataObjectType.ULong, typeof(ulong))]
+        [InlineData(DataObjectType.Float, typeof(float))]
+        [InlineData(DataObjectType.Double, typeof(double))]
+        [InlineData(DataObjectType.String, typeof(string))]
+        [InlineData(DataObjectType.DateTime, typeof(DateTime))]
+        [InlineData(DataObjectType.TimeSpan, typeof(TimeSpan))]
+        [InlineData(DataObjectType.Point, typeof(Point))]
+        [InlineData(DataObjectType.Color, typeof(Color))]
+        [InlineData(DataObjectType.Array1D, typeof(int[]))]
+        [InlineData(DataObjectType.Array2D, typeof(int[,]))]
+        public void DataObjectFactory_GetDataObjectFor_CreatesCorrectObject(string dataObjectType, Type valueType)
         {
-            const string Name = "Name";
+            var valueProvider = new DefaultValueProvider();
+            object defaultValue = valueProvider.GetValue(valueType);
 
-            DataObject shortObj = DataObjectFactory.GetDataObjectFor(Name, (short)1);
-            DataObject intObj = DataObjectFactory.GetDataObjectFor(Name, 1);
-            DataObject longObj = DataObjectFactory.GetDataObjectFor(Name, (long)1);
-            DataObject ushortObj = DataObjectFactory.GetDataObjectFor(Name, (ushort)1);
-            DataObject uintObj = DataObjectFactory.GetDataObjectFor(Name, (uint)1);
-            DataObject ulongObj = DataObjectFactory.GetPropertyObjectFor(Name, (ulong)1);
-            DataObject byteObj = DataObjectFactory.GetDataObjectFor(Name, (byte)1);
-            DataObject charObj = DataObjectFactory.GetDataObjectFor(Name, '@');
-            DataObject floatObj = DataObjectFactory.GetDataObjectFor(Name, 1.42f);
-            DataObject doubleObj = DataObjectFactory.GetDataObjectFor(Name, 3.14);
-            DataObject stringObj = DataObjectFactory.GetDataObjectFor(Name, "hello");
-            DataObject array1dObj = DataObjectFactory.GetDataObjectFor(Name, new int[] { 1, 2, 3 });
-            DataObject array2dObj = DataObjectFactory.GetDataObjectFor(Name, new int[,] { { 1, 1 }, { 2, 2 } });
-            DataObject colorObj = DataObjectFactory.GetDataObjectFor(Name, new Color(1, 1, 1));
-            DataObject ptObject = DataObjectFactory.GetDataObjectFor(Name, new Point(1, 1));
-            DataObject timeObj = DataObjectFactory.GetDataObjectFor(Name, TimeSpan.FromSeconds(1));
-            DataObject dateObj = DataObjectFactory.GetDataObjectFor(Name, DateTime.Now);
-
-            Assert.Equal(DataObjectType.Short, shortObj.Type);
-            Assert.Equal(DataObjectType.Integer, intObj.Type);
-            Assert.Equal(DataObjectType.Long, longObj.Type);
-            Assert.Equal(DataObjectType.UShort, ushortObj.Type);
-            Assert.Equal(DataObjectType.UInteger, uintObj.Type);
-            Assert.Equal(DataObjectType.ULong, ulongObj.Type);
-            Assert.Equal(DataObjectType.Byte, byteObj.Type);
-            Assert.Equal(DataObjectType.Char, charObj.Type);
-            Assert.Equal(DataObjectType.Float, floatObj.Type);
-            Assert.Equal(DataObjectType.Double, doubleObj.Type);
-            Assert.Equal(DataObjectType.String, stringObj.Type);
-            Assert.Equal(DataObjectType.Array1D, array1dObj.Type);
-            Assert.Equal(DataObjectType.Array2D, array2dObj.Type);
-            Assert.Equal(DataObjectType.Color, colorObj.Type);
-            Assert.Equal(DataObjectType.Point, ptObject.Type);
-            Assert.Equal(DataObjectType.TimeSpan, timeObj.Type);
-            Assert.Equal(DataObjectType.DateTime, dateObj.Type);
+            DataObject obj = DataObjectFactory.GetDataObjectFor("name", defaultValue);
+            Assert.Equal(dataObjectType, obj.Type);
         }
 
-        [Fact]
-        public void DataObjectFactory_GetPropertyObjectFor_CreatesCorrectObject()
+        [Theory]
+        [InlineData(DataObjectType.Short, typeof(short))]
+        [InlineData(DataObjectType.Integer, typeof(int))]
+        [InlineData(DataObjectType.Long, typeof(long))]
+        [InlineData(DataObjectType.UShort, typeof(ushort))]
+        [InlineData(DataObjectType.UInteger, typeof(uint))]
+        [InlineData(DataObjectType.ULong, typeof(ulong))]
+        [InlineData(DataObjectType.Float, typeof(float))]
+        [InlineData(DataObjectType.Double, typeof(double))]
+        [InlineData(DataObjectType.String, typeof(string))]
+        [InlineData(DataObjectType.DateTime, typeof(DateTime))]
+        [InlineData(DataObjectType.TimeSpan, typeof(TimeSpan))]
+        [InlineData(DataObjectType.Point, typeof(Point))]
+        [InlineData(DataObjectType.Color, typeof(Color))]
+        [InlineData(DataObjectType.Array1D, typeof(int[]))]
+        [InlineData(DataObjectType.Array2D, typeof(int[,]))]
+        public void DataObjectFactory_GetPropertyObjectFor_CreatesCorrectObject(string dataObjectType, Type valueType)
         {
-            const string Name = "Name";
+            var valueProvider = new DefaultValueProvider();
+            object defaultValue = valueProvider.GetValue(valueType);
 
-            PropertyObject shortObj = DataObjectFactory.GetPropertyObjectFor(Name, (short)1);
-            PropertyObject intObj = DataObjectFactory.GetPropertyObjectFor(Name, 1);
-            PropertyObject longObj = DataObjectFactory.GetPropertyObjectFor(Name, (long)1);
-            PropertyObject ushortObj = DataObjectFactory.GetPropertyObjectFor(Name, (ushort)1);
-            PropertyObject uintObj = DataObjectFactory.GetPropertyObjectFor(Name, (uint)1);
-            PropertyObject ulongObj = DataObjectFactory.GetPropertyObjectFor(Name, (ulong)1);
-            PropertyObject byteObj = DataObjectFactory.GetPropertyObjectFor(Name, (byte)1);
-            PropertyObject charObj = DataObjectFactory.GetPropertyObjectFor(Name, '@');
-            PropertyObject floatObj = DataObjectFactory.GetPropertyObjectFor(Name, 1.42f);
-            PropertyObject doubleObj = DataObjectFactory.GetPropertyObjectFor(Name, 3.14);
-            PropertyObject stringObj = DataObjectFactory.GetPropertyObjectFor(Name, "hello");
-            PropertyObject array1dObj = DataObjectFactory.GetPropertyObjectFor(Name, new int[] { 1, 2, 3 });
-            PropertyObject array2dObj = DataObjectFactory.GetPropertyObjectFor(Name, new int[,] { { 1, 1 }, { 2, 2 } });
-            PropertyObject colorObj = DataObjectFactory.GetPropertyObjectFor(Name, new Color(1, 1, 1));
-            PropertyObject ptObject = DataObjectFactory.GetPropertyObjectFor(Name, new Point(1, 1));
-            PropertyObject timeObj = DataObjectFactory.GetPropertyObjectFor(Name, TimeSpan.FromSeconds(1));
-            PropertyObject dateObj = DataObjectFactory.GetPropertyObjectFor(Name, DateTime.Now);
-
-            Assert.Equal(DataObjectType.Short, shortObj.Type);
-            Assert.Equal(DataObjectType.Integer, intObj.Type);
-            Assert.Equal(DataObjectType.Long, longObj.Type);
-            Assert.Equal(DataObjectType.UShort, ushortObj.Type);
-            Assert.Equal(DataObjectType.UInteger, uintObj.Type);
-            Assert.Equal(DataObjectType.ULong, ulongObj.Type);
-            Assert.Equal(DataObjectType.Byte, byteObj.Type);
-            Assert.Equal(DataObjectType.Char, charObj.Type);
-            Assert.Equal(DataObjectType.Float, floatObj.Type);
-            Assert.Equal(DataObjectType.Double, doubleObj.Type);
-            Assert.Equal(DataObjectType.String, stringObj.Type);
-            Assert.Equal(DataObjectType.Array1D, array1dObj.Type);
-            Assert.Equal(DataObjectType.Array2D, array2dObj.Type);
-            Assert.Equal(DataObjectType.Color, colorObj.Type);
-            Assert.Equal(DataObjectType.Point, ptObject.Type);
-            Assert.Equal(DataObjectType.TimeSpan, timeObj.Type);
-            Assert.Equal(DataObjectType.DateTime, dateObj.Type);
+            DataObject obj = DataObjectFactory.GetPropertyObjectFor("name", defaultValue);
+            Assert.Equal(dataObjectType, obj.Type);
         }
 
         #endregion
