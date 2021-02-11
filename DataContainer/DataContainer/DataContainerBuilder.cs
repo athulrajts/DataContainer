@@ -121,14 +121,6 @@ namespace KEI.Infrastructure
                 throw new NotImplementedException();
             }
 
-            //DataObject obj = format switch
-            //{
-            //    SerializationFormat.Container => DataObjectFactory.GetDataObjectFor(name, value),
-            //    SerializationFormat.Json => new JsonDataObject(name, value),
-            //    SerializationFormat.Xml => new XmlDataObject(name, value),
-            //    _ => throw new NotImplementedException()
-            //};
-
             config.Add(obj);
 
             return this;
@@ -172,6 +164,10 @@ namespace KEI.Infrastructure
             {
                 return null;
             }
+            else if(value is IDataContainerSource ids)
+            {
+                return ids.ToDataContainer();
+            }
 
             var objContainer = new DataContainerBuilder(name);
 
@@ -182,6 +178,10 @@ namespace KEI.Infrastructure
             foreach (var prop in props)
             {
                 if (prop.CanWrite == false)
+                {
+                    continue;
+                }
+                else if (prop.GetCustomAttribute<DataContainerIgnoreAttribute>() is DataContainerIgnoreAttribute)
                 {
                     continue;
                 }

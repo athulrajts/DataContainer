@@ -126,14 +126,6 @@ namespace KEI.Infrastructure
                 throw new NotImplementedException();
             }
 
-            //PropertyObject obj = format switch
-            //{
-            //    SerializationFormat.Container => DataObjectFactory.GetPropertyObjectFor(name, value),
-            //    SerializationFormat.Json => new JsonPropertyObject(name, value),
-            //    SerializationFormat.Xml => new XmlPropertyObject(name, value),
-            //    _ => throw new NotImplementedException()
-            //};
-
             propertyBuilder?.Invoke(new PropertyObjectBuilder(obj));
 
             config.Add(obj);
@@ -407,13 +399,6 @@ namespace KEI.Infrastructure
                 throw new NotSupportedException("Arrays of more than 2 dimensions not supported");
             }
 
-            //PropertyObject obj = a.Rank switch
-            //{
-            //    1 => new Array1DPropertyObject(name, a),
-            //    2 => new Array2DPropertyObject(name, a),
-            //    _ => throw new NotSupportedException("Arrays of more than 2 dimensions not supported"),
-            //};
-
             propertyBuilder?.Invoke(new PropertyObjectBuilder(obj));
 
             config.Add(obj);
@@ -481,6 +466,10 @@ namespace KEI.Infrastructure
             {
                 return null;
             }
+            else if (value is IPropertyContainerSource ips)
+            {
+                return ips.ToPropertyContainer();
+            }
 
             var objContainer = new PropertyContainerBuilder(name);
 
@@ -491,6 +480,10 @@ namespace KEI.Infrastructure
             foreach (var prop in props)
             {
                 if (prop.CanWrite == false)
+                {
+                    continue;
+                }
+                else if (prop.GetCustomAttribute<DataContainerIgnoreAttribute>() is DataContainerIgnoreAttribute)
                 {
                     continue;
                 }

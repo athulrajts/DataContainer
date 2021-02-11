@@ -326,6 +326,10 @@ namespace KEI.Infrastructure
             {
                 return new ContainerDataObject(name, d);
             }
+            else if(value is IDataContainerSource ids)
+            {
+                return new ContainerDataObject(name, ids.ToDataContainer());
+            }
             else if(value is Array a)
             {
                 if (a.GetType().GetElementType().IsPrimitive == false)
@@ -414,6 +418,10 @@ namespace KEI.Infrastructure
             else if (value is IDataContainer d)
             {
                 return new ContainerPropertyObject(name, d);
+            }
+            else if(value is IPropertyContainerSource ips)
+            {
+                return new ContainerPropertyObject(name, ips.ToPropertyContainer());
             }
             else if (value is Array a)
             {
