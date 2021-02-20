@@ -60,7 +60,7 @@ This pattern allows to better visualize the hierarchy of values that it contains
 double height = 0;
 PropertyContainer.GetValue("Height", ref height);
 ```
-This is a safe way to retrieve values, if the property is not present, it will do nothing, since we�re using
+This is a safe way to retrieve values, if the property is not present, it will do nothing, since we're using
 ref, the value has to be initialized, so you I'll be left with the default value you provide if property of the
 given name does not exist, and will return false if property is not present.
 ###### Method 2
@@ -102,8 +102,10 @@ type can be avoided provided that all the keys are defined properly.
 double height = PropertyContainer.GetValue(Key.Height);
 ```
 It'll give error at compile time if you use the wrong type.
-![Retrieve Key Error](Documentation/retrieve_key_error.png)  
-If the property is not present, it�ll return the default value in the Key object.
+
+![Retrieve Key Error](Documentation/retrieve_key_error.png)
+
+If the property is not present, it'll return the default value in the Key object.
 
 ## Updating Values
 ###### Method 1
@@ -191,22 +193,33 @@ The Above object will be serialized as follows.
 
 ###### Serializing to File
 ```
-PropertContainer.Store("Settings.xml")
+PropertContainer.SaveAsXml("Settings.xml")
 ```
 If the instance was loaded from a file as follows,
 ```
-PropertyContainerBuilder.FromFile("Settings.xml");
+PropertyContainerBuilder.FromXmlFile("Settings.xml");
 ```
 Then the settings path is not mandatory, it remember where it was loaded from and calling **Store**
 without arguments will cause it to write to the same path.
 ```
-PropertyContainer.Store()
+PropertyContainer.SaveAsXml()
 ```
+The instance can also be serialized to a binary file using similar api
+```
+PropertyContainer.SaveAsBinary("Settings.dat");
+PropertyContainer.SaveAsBinary();
+```
+
 
 ## Supported Object Types
 | Type     | TypeID  |                Serialized form                                        |
 | -------- | ------- | --------------------------------------------------------------------- |
+| short    | short   | \<Data key="ShortProperty" value="77" type="short"/>                  |
 | int      | i       | \<Data key="IntegerProperty" value="14" type="i"/>                    |
+| long     | l       | \<Data key="LongProperty" value="100" type="l"/>                      |
+| ushort   | ushort  | \<Data key="UShortProperty" value="14" type="ushort"/>                |
+| uint     | ui      | \<Data key="ShortProperty" value="3" type="ui"/>                      |
+| ulong    | ulong   | \<Data key="ShortProperty" value="200" type="ul"/>                    |
 | byte     | byte    | \<Data key="ByteProperty" value="255" type="b"/>                      |
 | char     | c       | \<Data key="CharProperty" value="@" type="c"/>                        |
 | bool     | b       | \<Data key="BoolProperty" value="True" type="b"/>                     |
