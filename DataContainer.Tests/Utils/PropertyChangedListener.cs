@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace DataContainer.Tests
+namespace DataContainer.Utils
 {
     public class PropertyChangedListener
     {

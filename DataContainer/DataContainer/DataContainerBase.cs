@@ -12,6 +12,8 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KEI.Infrastructure
 {
@@ -19,7 +21,8 @@ namespace KEI.Infrastructure
     /// Base class for <see cref="DataContainer"/> and <see cref="PropertyContainer"/>
     /// </summary>
     [XmlRoot("DataContainer")]
-    public abstract class DataContainerBase : DynamicObject, IDataContainer, ICustomTypeDescriptor, IXmlSerializable, IEnumerable
+    [Serializable]
+    public abstract class DataContainerBase : DynamicObject, IDataContainer, ICustomTypeDescriptor, IXmlSerializable, ISerializable
     {
         #region Properties
 
@@ -127,9 +130,29 @@ namespace KEI.Infrastructure
         {
             FilePath = path;
 
-            if (XmlHelper.SerializeToFile(this, path) == false)
+            var ext = Path.GetExtension(path);
+
+            if (ext == ".xml")
             {
-                return false;
+                if (XmlHelper.SerializeToFile(this, path) == false)
+                {
+                    return false;
+                } 
+            }
+            else
+            {
+                try
+                {
+                    using (var s = new FileStream(path, FileMode.Create))
+                    {
+                        IFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(s, this);
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -241,12 +264,6 @@ namespace KEI.Infrastructure
         /// <param name="key"></param>
         /// <returns></returns>
         public abstract DataObject Find(string key);
-
-        /// <summary>
-        /// Allows <see cref="IDataContainer"/> to be used in foreach loop
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerator<DataObject> GetEnumerator();
 
         /// <summary>
         /// Get all keys in this object
@@ -591,8 +608,15 @@ namespace KEI.Infrastructure
         #region INotifyCollectionChanged Members
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        
         protected void RaiseCollectionChanged(NotifyCollectionChangedAction action, object changedItem)
             => CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, changedItem));
+
+        protected void RaiseCollectionChanged(NotifyCollectionChangedAction action, IList changedItems)
+            => CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, changedItems));
+
+        protected void RaiseCollectionChanged(NotifyCollectionChangedAction action)
+            => CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action));
 
         #endregion
 
@@ -602,16 +626,6 @@ namespace KEI.Infrastructure
         public void RaisePropertyChanged([CallerMemberName] string property = "") 
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         
-        #endregion
-
-        #region IEnumerable Members
-
-        /// <summary>
-        /// Implementation for <see cref="IEnumerable.GetEnumerator"/>
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
         #endregion
 
         #region ICustomTypeDescriptor Members
@@ -804,6 +818,36 @@ namespace KEI.Infrastructure
 
         #endregion
 
+        #region IEnumerable Members
+        
+        /// <summary>
+        /// Implementation for <see cref="IEnumerable{T}.GetEnumerator"/>
+        /// </summary>
+        /// <returns></returns>
+        public abstract IEnumerator<DataObject> GetEnumerator();
+
+        /// <summary>
+        /// Implementation for <see cref="IEnumerable.GetEnumerator"/>
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        #endregion
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Implementation for <see cref="ICloneable.Clone"/>
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            string xml = XmlHelper.SerializeToString(this);
+            return XmlHelper.DeserializeFromString(GetType(), xml);
+        }
+
+        #endregion
+
         #region Private Functions
 
         /// <summary>
@@ -832,6 +876,11 @@ namespace KEI.Infrastructure
                     {
                         if (dc.UnderlyingType is null)
                         {
+                            if(prop.PropertyType.IsAssignableFrom(data.GetDataType()))
+                            {
+                                prop.SetValue(result, dc);
+                            }
+
                             continue;
                         }
 
@@ -917,6 +966,40 @@ namespace KEI.Infrastructure
 
         #endregion
 
+        #region ISerializable Members
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Name), Name);
+            info.AddValue(nameof(UnderlyingType), UnderlyingType);
+            info.AddValue(nameof(Count), Count);
+
+            int count = 0;
+            foreach (var item in this)
+            {
+                info.AddValue($"Data_{count++}", item);
+            }
+        }
+
+        public DataContainerBase()
+        {
+            CollectionChanged += Data_CollectionChanged;
+        }
+
+        public DataContainerBase(SerializationInfo info, StreamingContext context) : this()
+        {
+            Name = info.GetString(nameof(Name));
+            UnderlyingType = (Types.TypeInfo)info.GetValue(nameof(UnderlyingType), typeof(Types.TypeInfo));
+            int count = info.GetInt32(nameof(Count));
+
+            for (int i = 0; i < count; i++)
+            {
+                DataObject obj = (DataObject)info.GetValue($"Data_{i}", typeof(DataObject));
+                Add(obj);
+            }
+        }
+
+        #endregion
     }
 
 }

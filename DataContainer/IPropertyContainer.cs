@@ -1,9 +1,8 @@
-﻿using System;
-using KEI.Infrastructure.Validation;
+﻿using KEI.Infrastructure.Validation;
 
 namespace KEI.Infrastructure
 {
-    public interface IPropertyContainer : IDataContainer, ICloneable
+    public interface IPropertyContainer : IDataContainer
     {
         /// <summary>
         /// Update <see cref="PropertyObject.BrowseOption"/> of instance with key <paramref name="property"/>

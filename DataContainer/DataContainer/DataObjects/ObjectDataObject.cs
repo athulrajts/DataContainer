@@ -3,9 +3,11 @@ using System.Xml;
 using System.Text.Json;
 using System.ComponentModel;
 using KEI.Infrastructure.Types;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
+    [Serializable]
     internal abstract class ObjectDataObject : DataObject
     {
         /// <summary>
@@ -37,6 +39,24 @@ namespace KEI.Infrastructure
             /// If value implements <see cref="INotifyPropertyChanged"/> subscribe to <see cref="INotifyPropertyChanged.PropertyChanged"/>
             /// and invoke PropertyChanged event on ourselves whenever a property of <see cref="Value"/> changes
             if (value is INotifyPropertyChanged inpc)
+            {
+                inpc.PropertyChanged += Inpc_PropertyChanged;
+            }
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ObjectDataObject(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            ObjectType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = info.GetValue(nameof(Value), ObjectType);
+
+            /// If value implements <see cref="INotifyPropertyChanged"/> subscribe to <see cref="INotifyPropertyChanged.PropertyChanged"/>
+            /// and invoke PropertyChanged event on ourselves whenever a property of <see cref="Value"/> changes
+            if (Value is INotifyPropertyChanged inpc)
             {
                 inpc.PropertyChanged += Inpc_PropertyChanged;
             }
@@ -184,6 +204,12 @@ namespace KEI.Infrastructure
         {
             RaisePropertyChanged(nameof(Value));
         }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Type", new TypeInfo(ObjectType));
+        }
     }
 
 
@@ -201,6 +227,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public JsonDataObject(string name, object value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public JsonDataObject(SerializationInfo info, StreamingContext context): base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>
@@ -245,6 +278,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public XmlDataObject(string name, object value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public XmlDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>

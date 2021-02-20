@@ -1,7 +1,10 @@
 ﻿using KEI.Infrastructure.Validation;
+using System;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
+    [Serializable]
     public abstract class PropertyContainerBase : DataContainerBase, IPropertyContainer
     {
         /// <summary>
@@ -48,7 +51,16 @@ namespace KEI.Infrastructure
             return DataObjectFactory.GetPropertyObject(type);
         }
 
-        public abstract object Clone();
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public PropertyContainerBase() { }
 
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public PropertyContainerBase(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

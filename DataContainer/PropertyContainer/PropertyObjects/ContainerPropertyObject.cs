@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Xml;
 using KEI.Infrastructure.Types;
 
@@ -9,6 +10,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// PropertyObject implementation for <see cref="IDataContainer"/>
     /// </summary>
+    [Serializable]
     internal class ContainerPropertyObject : PropertyObject
     {
         private IDataContainer _container;
@@ -37,6 +39,29 @@ namespace KEI.Infrastructure
             {
                 Value = value;
                 ObjectType = value.GetType();
+            }
+
+            /// If value implements <see cref="INotifyPropertyChanged"/> subscribe to <see cref="INotifyPropertyChanged.PropertyChanged"/>
+            /// and invoke PropertyChanged event on ourselves whenever a property of <see cref="Value"/> changes
+            if (Value is INotifyPropertyChanged inpc)
+            {
+                inpc.PropertyChanged += Inpc_PropertyChanged;
+            }
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ContainerPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            ObjectType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = info.GetValue(nameof(Value), ObjectType);
+
+            if (Value is IDataContainer dc)
+            {
+                _container = dc;
             }
 
             /// If value implements <see cref="INotifyPropertyChanged"/> subscribe to <see cref="INotifyPropertyChanged.PropertyChanged"/>
@@ -114,6 +139,18 @@ namespace KEI.Infrastructure
         public override Type GetDataType()
         {
             return ObjectType ?? typeof(PropertyContainer);
+        }
+
+        /// <summary>
+        /// Implementation for <see cref="DataObject.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(Value), Value);
+            info.AddValue("Type", new TypeInfo(Value.GetType()));
         }
 
         /// <summary>

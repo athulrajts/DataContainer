@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using KEI.Infrastructure.Utils;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
@@ -11,20 +12,20 @@ namespace KEI.Infrastructure
     /// Concrete implementation for <see cref="IDataContainer"/>
     /// </summary>
     [XmlRoot("DataContainer")]
+    [Serializable]
     public class DataContainer : DataContainerBase
     {
         /// <summary>
         /// Storage structure for all data stored inside this object
         /// TODO : Is there a need to use <see cref="System.Collections.Concurrent.ConcurrentDictionary{TKey, TValue}"/> ??
         /// </summary>
-        protected readonly Dictionary<string, DataObject> internalDictionary;
+        protected readonly Dictionary<string, DataObject> internalDictionary = new Dictionary<string, DataObject>();
 
         public DataContainer()
         {
-            internalDictionary = new Dictionary<string, DataObject>();
-
-            CollectionChanged += Data_CollectionChanged;
         }
+
+        public DataContainer(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="IDataContainer.Count"/>
@@ -64,7 +65,7 @@ namespace KEI.Infrastructure
         {
             internalDictionary.Clear();
 
-            RaiseCollectionChanged(NotifyCollectionChangedAction.Reset, null);
+            RaiseCollectionChanged(NotifyCollectionChangedAction.Reset);
         }
 
         /// <summary>

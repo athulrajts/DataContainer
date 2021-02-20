@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Xml;
 
 namespace KEI.Infrastructure
 {
+    [Serializable]
     public class Filter
     {
         public string Description { get; set; }
@@ -15,6 +17,8 @@ namespace KEI.Infrastructure
             Extension = ext;
         }
     }
+
+    [Serializable]
     public class FilterCollection : List<Filter> { }
 
     public interface IFileProperty
@@ -29,6 +33,7 @@ namespace KEI.Infrastructure
     /// is the Editor in PropertyGrid. <see cref="StringDataObject"/> should be used for storing filepaths
     /// in <see cref="DataContainer"/>
     /// </summary>
+    [Serializable]
     internal class FilePropertyObject : StringPropertyObject , IFileProperty
     {
         const string FILTER_DESCRIPTION_ATTRIBUTE = "desc";
@@ -56,6 +61,27 @@ namespace KEI.Infrastructure
         public FilePropertyObject(string name, string value): base(name, value)
         {
             Filters = new FilterCollection();
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public FilePropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            Filters = (FilterCollection)info.GetValue(nameof(Filters), typeof(FilterCollection));
+        }
+
+        /// <summary>
+        /// Implmentation for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(Filters), Filters);
         }
 
         /// <summary>

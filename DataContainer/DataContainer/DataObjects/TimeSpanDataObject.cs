@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     /// <summary>
     /// DataObject implementation for storing <see cref="TimeSpan"/>
     /// </summary>
+    [Serializable]
     internal class TimeSpanDataObject : DataObject<TimeSpan>
     {
         /// <summary>
@@ -26,5 +24,12 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public TimeSpanDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

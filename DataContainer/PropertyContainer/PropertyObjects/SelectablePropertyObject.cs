@@ -3,6 +3,7 @@ using System.Xml;
 using KEI.Infrastructure.Types;
 using System.Collections;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
@@ -12,6 +13,7 @@ namespace KEI.Infrastructure
     /// There is no DataObject implementation this is only used when need to be changed from UI
     /// so a combobox can be used instead of a textbox
     /// </summary>
+    [Serializable]
     internal class SelectablePropertyObject : PropertyObject
     {
         const string OPTION_ELEMENT = "Option";
@@ -63,6 +65,20 @@ namespace KEI.Infrastructure
             Name = name;
             Value = new Selector(value.ToString(), options);
             ListType = options.GetType();
+            ElementType = ListType.GenericTypeArguments[0];
+
+            Value.PropertyChanged += Value_PropertyChanged;
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public SelectablePropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            Value = (Selector)info.GetValue(nameof(Value), typeof(Selector));
+            ListType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
             ElementType = ListType.GenericTypeArguments[0];
 
             Value.PropertyChanged += Value_PropertyChanged;
@@ -126,6 +142,18 @@ namespace KEI.Infrastructure
         public override object ConvertFromString(string value)
         {
             return value;
+        }
+
+        /// <summary>
+        /// Implementation for <see cref="DataObject.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(Value), Value);
+            info.AddValue("Type", ListType);
         }
 
         /// <summary>

@@ -3,12 +3,14 @@ using System.IO;
 using System.Xml;
 using System.Collections;
 using KEI.Infrastructure.Types;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     /// <summary>
     /// <see cref="DataObject"/> implementation to store <see cref="IList"/> of non primitive types
     /// </summary>
+    [Serializable]
     internal class CollectionDataObject : DataObject
     {
         private IDataContainer readingHelper;
@@ -23,6 +25,17 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
             CollectionType = value.GetType();
+        }
+
+        /// <summary>
+        /// Constructor for binary serialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public CollectionDataObject(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            CollectionType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = (IList)info.GetValue(nameof(Value), CollectionType);
         }
 
         /// <summary>
@@ -179,6 +192,12 @@ namespace KEI.Infrastructure
         protected override void InitializeObject()
         {
             readingHelper = new DataContainer();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Type", CollectionType);
         }
     }
 }

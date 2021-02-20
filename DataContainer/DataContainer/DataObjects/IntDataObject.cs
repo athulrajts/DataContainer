@@ -1,10 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     /// <summary>
     /// DataObject Implementation for <see cref="short"/>
     /// </summary>
+    [Serializable]
     internal class ShortDataObject : DataObject<short>
     {
         /// <summary>
@@ -22,11 +25,19 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ShortDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
     /// DataObject Implementation for <see cref="int"/>
     /// </summary>
+    [Serializable]
     internal class IntDataObject : DataObject<int>, IWriteToBinaryStream
     {
         /// <summary>
@@ -39,6 +50,13 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public IntDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>
@@ -58,6 +76,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// DataObject Implementation for <see cref="long"/>
     /// </summary>
+    [Serializable]
     internal class LongDataObject : DataObject<long>
     {
         /// <summary>
@@ -75,11 +94,19 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public LongDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
     /// DataObject Implementation for <see cref="ushort"/>
     /// </summary>
+    [Serializable]
     internal class UnsignedShortDataObject : DataObject<ushort>
     {
         /// <summary>
@@ -97,11 +124,19 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public UnsignedShortDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
     /// DataObject Implementation for <see cref="uint"/>
     /// </summary>
+    [Serializable]
     internal class UnsignedIntDataObject : DataObject<uint>
     {
         /// <summary>
@@ -119,11 +154,19 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public UnsignedIntDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
     /// DataObject Implementation for <see cref="ulong"/>
     /// </summary>
+    [Serializable]
     internal class UnsignedLongDataObject : DataObject<ulong>
     {
         /// <summary>
@@ -141,5 +184,12 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public UnsignedLongDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -3,12 +3,14 @@ using System.Xml;
 using System.Text;
 using System.ComponentModel;
 using KEI.Infrastructure.Types;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     /// <summary>
     /// Base class for storing <see cref="System.Array"/> of primitive types
     /// </summary>
+    [Serializable]
     internal abstract class ArrayPropertyObject : PropertyObject
     {
         /// <summary>
@@ -39,6 +41,18 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ArrayPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            Type arrayType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = (Array)info.GetValue(nameof(Value), arrayType);
+            ElementType = Value.GetType().GetElementType();
+        }
+
+        /// <summary>
         /// Implementation for <see cref="DataObject.GetDataType"/>
         /// </summary>
         /// <returns></returns>
@@ -65,12 +79,23 @@ namespace KEI.Infrastructure
         {
             if (value is Array a)
             {
-                Value = value as Array;
+                Value = a;
 
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Implementation for <see cref="DataObject.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Type", new TypeInfo(Value.GetType()));
         }
 
         /// <summary>
@@ -112,6 +137,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// Property Object implementation to store <see cref="Array"/> of dimension 1
     /// </summary>
+    [Serializable]
     internal class Array1DPropertyObject : ArrayPropertyObject
     {
         /// <summary>
@@ -125,6 +151,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public Array1DPropertyObject(string name, Array value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public Array1DPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.WriteXmlContent(XmlWriter)"/>
@@ -182,6 +215,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// Property Object implementation to store <see cref="Array"/> of dimension 2
     /// </summary>
+    [Serializable]
     internal class Array2DPropertyObject : ArrayPropertyObject
     {
         /// <summary>
@@ -195,6 +229,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public Array2DPropertyObject(string name, Array value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public Array2DPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.WriteXmlContent(XmlWriter)"/>

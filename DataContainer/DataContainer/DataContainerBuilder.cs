@@ -204,7 +204,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static DataContainerBuilder Create(string name) => new DataContainerBuilder(name);
+        public static DataContainerBuilder Create(string name ="") => new DataContainerBuilder(name);
     }
 
     public enum SerializationFormat

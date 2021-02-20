@@ -5,6 +5,7 @@ using System.ComponentModel;
 namespace KEI.Infrastructure
 {
     [TypeConverter(typeof(PointConverter))]
+    [Serializable]
     public struct Point
     {
         public double X { get; set; }

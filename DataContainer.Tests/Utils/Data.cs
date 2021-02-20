@@ -1,8 +1,9 @@
-﻿using System;
+﻿using KEI.Infrastructure;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace DataContainer.Tests
+namespace DataContainer.Utils
 {
     public class POCO
     {
@@ -60,6 +61,20 @@ namespace DataContainer.Tests
             get { return intProperty; }
             set { SetProperty(ref intProperty, value); }
         }
+    }
+
+    public class Component
+    {
+        // Change to enum ?
+        public string Type { get; set; }
+
+        public string DisplayableName { get; set; }
+
+        public IPropertyContainer TestParameters { get; set; } = new PropertyContainer
+        {
+            { "Property1", 1 },
+            { "Property2", 2 }
+        };
     }
 
 }

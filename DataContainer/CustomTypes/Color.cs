@@ -10,6 +10,7 @@ namespace KEI.Infrastructure
     /// Cross platform data structure to store color information
     /// </summary>
     [TypeConverter(typeof(ColorTypeConverter))]
+    [Serializable]
     public struct Color
     {
         public byte R { get; set; }

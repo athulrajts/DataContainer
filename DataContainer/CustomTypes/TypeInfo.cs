@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace KEI.Infrastructure.Types
 {
+    [Serializable]
     public class TypeInfo : IEquatable<TypeInfo>, IEquatable<Type>
     {
         [XmlAttribute]

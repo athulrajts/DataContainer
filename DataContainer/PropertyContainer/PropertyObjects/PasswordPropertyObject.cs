@@ -1,8 +1,11 @@
-﻿using System.Xml;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Xml;
 using KEI.Infrastructure.Helpers;
 
 namespace KEI.Infrastructure
 {
+    [Serializable]
     internal class PasswordPropertyObject : StringPropertyObject
     {
         /// <summary>
@@ -16,6 +19,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public PasswordPropertyObject(string name, string value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public PasswordPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.WriteXmlAttributes(XmlWriter)"/>

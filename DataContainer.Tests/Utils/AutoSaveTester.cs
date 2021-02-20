@@ -1,6 +1,6 @@
 ﻿using KEI.Infrastructure;
 
-namespace DataContainer.Tests.TestData
+namespace DataContainer.Utils
 {
     class AutoSaveTester
     {

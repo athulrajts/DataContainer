@@ -4,24 +4,32 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using KEI.Infrastructure.Utils;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     [XmlRoot("DataContainer")]
+    [Serializable]
     public class PropertyContainer : PropertyContainerBase
     {
         /// <summary>
         /// Storage structure for all data stored inside this object
         /// TODO : Is there a need to use <see cref="System.Collections.Concurrent.ConcurrentDictionary{TKey, TValue}"/> ??
         /// </summary>
-        protected readonly Dictionary<string, DataObject> internalDictionary;
+        protected readonly Dictionary<string, DataObject> internalDictionary = new Dictionary<string, DataObject>();
 
-        public PropertyContainer()
-        {
-            internalDictionary = new Dictionary<string, DataObject>();
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public PropertyContainer() { }
 
-            CollectionChanged += Data_CollectionChanged;
-        }
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public PropertyContainer(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
 
         /// <summary>
         /// Implementation for <see cref="IDataContainer.Count"/>
@@ -60,7 +68,7 @@ namespace KEI.Infrastructure
         {
             internalDictionary.Clear();
             
-            RaiseCollectionChanged(NotifyCollectionChangedAction.Reset, null);
+            RaiseCollectionChanged(NotifyCollectionChangedAction.Reset);
         }
 
         /// <summary>
@@ -96,13 +104,6 @@ namespace KEI.Infrastructure
 
             RaiseCollectionChanged(NotifyCollectionChangedAction.Add, internalDictionary[key]);
         }
-
-        /// <summary>
-        /// create clone
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-            => XmlHelper.DeserializeFromString<PropertyContainer>(XmlHelper.SerializeToString(this));
 
         /// <summary>
         /// Implementation for <see cref="IDataContainer.Find(string)"/>

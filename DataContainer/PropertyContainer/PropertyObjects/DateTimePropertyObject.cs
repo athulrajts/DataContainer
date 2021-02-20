@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
     /// <summary>
     /// PropertyObject Implementation for storing <see cref="DateTime"/>
     /// </summary>
+    [Serializable]
     internal class DateTimePropertyObject : PropertyObject<DateTime>
     {
         /// <summary>
@@ -17,6 +19,13 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Constructor for binar deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public DateTimePropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>

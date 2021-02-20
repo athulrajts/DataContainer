@@ -1,4 +1,6 @@
 ﻿using KEI.Infrastructure.Helpers;
+using System;
+using System.Runtime.Serialization;
 using System.Xml;
 
 namespace KEI.Infrastructure
@@ -6,6 +8,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// DataObject implementation for storing passwords, serialized value will be encrypted
     /// </summary>
+    [Serializable]
     internal class PasswordDataObject : StringDataObject
     {
         /// <summary>
@@ -19,6 +22,13 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public PasswordDataObject(string name, string value) : base(name, value) { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public PasswordDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.WriteXmlAttributes(XmlWriter)"/>

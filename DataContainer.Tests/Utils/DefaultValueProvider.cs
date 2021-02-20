@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataContainer.Tests.TestData
+namespace DataContainer.Utils
 {
     public class DefaultValueProvider
     {

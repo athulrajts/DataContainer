@@ -3,6 +3,7 @@ using System.ComponentModel;
 using KEI.Infrastructure.Validation;
 using System.Xml;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
@@ -11,6 +12,7 @@ namespace KEI.Infrastructure
     /// Handles Xml Serialization and Deserialization
     /// Handles validation when updating values.
     /// </summary>
+    [Serializable]
     public abstract class PropertyObject : DataObject
     {
         // xml strings
@@ -64,6 +66,18 @@ namespace KEI.Infrastructure
         public void ForceValueChanged() => RaisePropertyChanged(nameof(StringValue));
 
         #endregion
+
+        public PropertyObject() { }
+
+        public PropertyObject(SerializationInfo info, StreamingContext context): base(info, context) 
+        {
+            Category = info.GetString(nameof(Category));
+            Description = info.GetString(nameof(Description));
+            DisplayName = info.GetString(nameof(DisplayName));
+            BrowseOption = (BrowseOptions)info.GetValue(nameof(BrowseOption), typeof(BrowseOptions));
+
+            //TODO : Serialize validation also
+        }
 
         protected override void WriteXmlAttributes(XmlWriter writer)
         {
@@ -222,14 +236,37 @@ namespace KEI.Infrastructure
             Category = category;
             return this;
         }
+
+        /// <summary>
+        /// Implementation for <see cref="DataObject.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue(nameof(Category), Category);
+            info.AddValue(nameof(Description), Description);
+            info.AddValue(nameof(DisplayName), DisplayName);
+            info.AddValue(nameof(BrowseOption), BrowseOption);
+        }
     }
 
     /// <summary>
     /// Generic implemenation of <see cref="PropertyObject"/> for primitive types
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public abstract class PropertyObject<T> : PropertyObject
     {
+        public PropertyObject() { }
+
+        public PropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            Value = (T)info.GetValue(nameof(Value), typeof(T));
+        }
+
         /// <summary>
         /// Value held by this object
         /// </summary>

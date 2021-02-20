@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataContainer.Tests.TestData
+namespace DataContainer.Utils
 {
     class AutoUpateTester
     {

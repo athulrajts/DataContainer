@@ -9,6 +9,7 @@ namespace KEI.Infrastructure
     /// Container for Holding <see cref="Enum"/> Properties or, Properties whos
     /// values are restricted to a set of values.
     /// </summary>
+    [Serializable]
     public class Selector : BindableObject
     {
         private string selectedItem;

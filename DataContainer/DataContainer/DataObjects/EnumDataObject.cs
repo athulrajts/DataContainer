@@ -1,6 +1,7 @@
 ﻿using KEI.Infrastructure.Types;
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Xml;
 
 namespace KEI.Infrastructure
@@ -8,6 +9,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// DataObject implementation for <see cref="enum"/>
     /// </summary>
+    [Serializable]
     internal class EnumDataObject : DataObject<Enum>, IWriteToBinaryStream
     {
         /// <summary>
@@ -20,6 +22,18 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
             EnumType = value?.GetType();
+        }
+
+        /// <summary>
+        /// Constructor for binary Deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public EnumDataObject(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString(nameof(Name));
+            EnumType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = (Enum)info.GetValue("Value", EnumType);
         }
 
         /// <summary>
@@ -145,6 +159,13 @@ namespace KEI.Infrastructure
             {
                 return false;
             }
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue("Type", new TypeInfo(EnumType));
         }
     }
 }

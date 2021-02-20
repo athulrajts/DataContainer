@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace DataContainer.Tests
+namespace DataContainer.Utils
 {
     public class InpcImplementation : INotifyPropertyChanged
     {

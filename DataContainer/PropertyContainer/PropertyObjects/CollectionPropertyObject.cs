@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Xml;
 
 namespace KEI.Infrastructure
@@ -9,6 +10,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// PropertyObject Implementation for storing <see cref="IList"/> of not primitive types
     /// </summary>
+    [Serializable]
     internal class CollectionPropertyObject : PropertyObject
     {
         private IDataContainer readingHelper;
@@ -23,6 +25,17 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
             CollectionType = value.GetType();
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public CollectionPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            CollectionType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = (IList)info.GetValue(nameof(Value), CollectionType);
         }
 
         /// <summary>
@@ -78,6 +91,18 @@ namespace KEI.Infrastructure
             Value = (IList)value;
 
             return true;
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(Value), Value);
+            info.AddValue("Type", new TypeInfo(Value.GetType()));
         }
 
         /// <summary>

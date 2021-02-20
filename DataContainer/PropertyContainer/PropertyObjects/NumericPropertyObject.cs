@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Xml;
 
 namespace KEI.Infrastructure
@@ -6,6 +7,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// PropertyObject implementation for storing numeric types
     /// </summary>
+    [Serializable]
     internal abstract class NumericPropertyObject<T> : PropertyObject<T>, INumericPropertyObject
         where T : struct, IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
     {
@@ -18,6 +20,18 @@ namespace KEI.Infrastructure
         {
             Name = name;
             Value = value;
+        }
+
+        /// <summary>
+        /// Constructor for binary deserializatoin
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public NumericPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            Increment = info.GetValue(nameof(Increment), typeof(T));
+            Min = info.GetValue(nameof(Min), typeof(T));
+            Max = info.GetValue(nameof(Max), typeof(T));
         }
 
         /// <summary>
@@ -35,6 +49,25 @@ namespace KEI.Infrastructure
         /// </summary>
         public object Min { get; set; }
 
+        /// <summary>
+        /// Implementation for <see cref="DataObject.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue(nameof(Increment), Increment);
+            info.AddValue(nameof(Max), Max);
+            info.AddValue(nameof(Min), Min);
+        }
+
+        /// <summary>
+        /// Implementation for <see cref="DataObject{T}.Validate(T)"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected override bool Validate(T value)
         {
             return ValidateMin(value) && ValidateMax(value);
@@ -48,17 +81,17 @@ namespace KEI.Infrastructure
         {
             base.WriteXmlContent(writer);
 
-            if (Increment is int inc)
+            if (Increment is T inc)
             {
                 writer.WriteElementString(nameof(Increment), inc.ToString());
             }
 
-            if (Max is int max)
+            if (Max is T max)
             {
                 writer.WriteElementString(nameof(Max), max.ToString());
             }
 
-            if (Min is int min)
+            if (Min is T min)
             {
                 writer.WriteElementString(nameof(Min), min.ToString());
             }

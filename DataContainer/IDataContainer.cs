@@ -8,7 +8,7 @@ using KEI.Infrastructure.Types;
 
 namespace KEI.Infrastructure
 {
-    public interface IDataContainer : INotifyPropertyChanged, INotifyCollectionChanged
+    public interface IDataContainer : INotifyPropertyChanged, INotifyCollectionChanged, ICloneable, IEnumerable<DataObject>
     {
         /// <summary>
         /// Will contain the file path from which this instance was loaded
@@ -89,8 +89,6 @@ namespace KEI.Infrastructure
         /// <param name="path"></param>
         /// <returns></returns>
         bool Store(string path);
-        
-        IEnumerator<DataObject> GetEnumerator();
         
         /// <summary>
         /// Get all top level keys

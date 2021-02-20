@@ -5,6 +5,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure
 {
@@ -18,7 +19,8 @@ namespace KEI.Infrastructure
     /// Handles Xml Serialization and Deserialization
     /// Handles validation when updating values.
     /// </summary>
-    public abstract class DataObject : BindableObject, IXmlSerializable
+    [Serializable]
+    public abstract class DataObject : BindableObject, IXmlSerializable, ISerializable
     {
         // constants for xml serialization
         public const string KEY_ATTRIBUTE = "key";
@@ -29,6 +31,16 @@ namespace KEI.Infrastructure
         public DataObject()
         {
 
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public DataObject(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString(nameof(Name));
         }
 
         /// <summary>
@@ -255,6 +267,11 @@ namespace KEI.Infrastructure
         /// <param name="value"></param>
         protected virtual void OnStringValueChanged(string value) { }
 
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Name), Name);
+            info.AddValue("Value", GetValue());
+        }
     }
 
     /// <summary>
@@ -270,6 +287,12 @@ namespace KEI.Infrastructure
         {
 
         }
+
+        public DataObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            Value = (T)info.GetValue(nameof(Value), typeof(T));
+        }
+        
 
         /// <summary>
         /// Value held by this object

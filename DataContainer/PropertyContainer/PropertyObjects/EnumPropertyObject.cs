@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Xml;
 using KEI.Infrastructure.Types;
 
@@ -7,6 +8,7 @@ namespace KEI.Infrastructure
     /// <summary>
     /// PropertyObject implementation for <see cref="enum"/>
     /// </summary>
+    [Serializable]
     internal class EnumPropertyObject : PropertyObject<Enum>
     {
         public EnumPropertyObject(string name, Enum value)
@@ -14,6 +16,25 @@ namespace KEI.Infrastructure
             Name = name;
             Value = value;
             EnumType = value?.GetType();
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public EnumPropertyObject(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString(nameof(Name));
+            Category = info.GetString(nameof(Category));
+            Description = info.GetString(nameof(Description));
+            DisplayName = info.GetString(nameof(DisplayName));
+            BrowseOption = (BrowseOptions)info.GetValue(nameof(BrowseOption), typeof(BrowseOptions));
+
+            //TODO Add validation
+
+            EnumType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
+            Value = (Enum)info.GetValue(nameof(Value), EnumType);
         }
 
         /// <summary>
@@ -51,6 +72,17 @@ namespace KEI.Infrastructure
             return TryParse(value, out object tmp)
                 ? tmp
                 : null;
+        }
+
+        /// <summary>
+        /// Implementation for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Type", new TypeInfo(Value.GetType()));
         }
 
         /// <summary>
