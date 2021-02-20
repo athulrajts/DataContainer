@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using KEI.Infrastructure.Utils;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace KEI.Infrastructure
 {
@@ -72,11 +74,11 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
-        /// Load state from file.
+        /// Load state from xml file.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IPropertyContainer FromFile(string path)
+        public static IPropertyContainer FromXmlFile(string path)
         {
             if (XmlHelper.DeserializeFromFile<PropertyContainer>(path) is PropertyContainer dc)
             {
@@ -86,6 +88,28 @@ namespace KEI.Infrastructure
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Load state from binary file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IPropertyContainer FromBinaryFile(string path)
+        {
+            IFormatter formatter = new BinaryFormatter();
+
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    return (IPropertyContainer)formatter.Deserialize(stream);
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

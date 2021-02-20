@@ -126,43 +126,48 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="path">file path to store the config</param>
         /// <returns>Is Sucess</returns>
-        public virtual bool Store(string path)
+        public bool SaveAsXml(string path)
         {
             FilePath = path;
 
-            var ext = Path.GetExtension(path);
-
-            if (ext == ".xml")
+            if (XmlHelper.SerializeToFile(this, path) == false)
             {
-                if (XmlHelper.SerializeToFile(this, path) == false)
-                {
-                    return false;
-                } 
-            }
-            else
-            {
-                try
-                {
-                    using (var s = new FileStream(path, FileMode.Create))
-                    {
-                        IFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(s, this);
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            }
+                return false;
+            } 
 
             return true;
         }
 
         /// <summary>
-        /// Stores the config file in the path <see cref="FilePath"/>
+        /// Serializes DataContainer object to an XML file to the given path
         /// </summary>
         /// <returns></returns>
-        public bool Store() => Store(FilePath);
+        public bool SaveAsXml() => SaveAsXml(FilePath);
+
+        /// <summary>
+        /// Serializer object to a binary file in given path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public bool SaveAsBinary(string path)
+        {
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    return this.WriteToStream(stream);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Serializer object to a binary file in given path
+        /// </summary>
+        public bool SaveAsBinary() => SaveAsBinary(FilePath);
 
         /// <summary>
         /// Checks if the Object contains data with given key

@@ -197,7 +197,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IDataContainer FromFile(string path) => Infrastructure.DataContainer.FromFile(path);
+        public static IDataContainer FromXmlFile(string path) => Infrastructure.DataContainer.FromXmlFile(path);
 
         /// <summary>
         /// returns <see cref="IDataContainer"/> instance built

@@ -78,17 +78,30 @@ namespace KEI.Infrastructure
         //
         
         /// <summary>
-        /// Try to save to <see cref="FilePath"/>
+        /// Try to save as xml to <see cref="FilePath"/>
         /// </summary>
         /// <returns></returns>
-        bool Store();
+        bool SaveAsXml();
 
         /// <summary>
-        /// Try to save to <paramref name="path"/>
+        /// Try to save as xml to <paramref name="path"/>
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        bool Store(string path);
+        bool SaveAsXml(string path);
+
+        /// <summary>
+        /// Try to save as binary to <see cref="FilePath"/>
+        /// </summary>
+        /// <returns></returns>
+        bool SaveAsBinary();
+
+        /// <summary>
+        /// Try to save as binary to <paramref name="path"/>
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        bool SaveAsBinary(string path);
         
         /// <summary>
         /// Get all top level keys

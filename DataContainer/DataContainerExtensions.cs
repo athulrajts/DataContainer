@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KEI.Infrastructure
 {
@@ -405,6 +407,20 @@ namespace KEI.Infrastructure
                 }
             }
 
+        }
+
+        public static bool WriteToStream(this IDataContainer container, Stream stream)
+        {
+            try
+            {
+                IFormatter formater = new BinaryFormatter();
+                formater.Serialize(stream, container);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

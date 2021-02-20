@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using KEI.Infrastructure.Utils;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace KEI.Infrastructure
 {
@@ -158,11 +160,11 @@ namespace KEI.Infrastructure
             : null;
 
         /// <summary>
-        /// Create <see cref="DataDictionary"/> from XML serialized file
+        /// Create <see cref="DataContainer"/> from XML serialized file
         /// </summary>
         /// <param name="path">Path to XML file</param>
-        /// <returns><see cref="DataDictionary"/> deserilized from path</returns>
-        public static DataContainer FromFile(string path)
+        /// <returns><see cref="DataContainer"/> deserilized from path</returns>
+        public static IDataContainer FromXmlFile(string path)
         {
             if (XmlHelper.DeserializeFromFile<DataContainer>(path) is DataContainer dc)
             {
@@ -171,6 +173,24 @@ namespace KEI.Infrastructure
             }
 
             return null;
+        }
+
+
+        public static IDataContainer FromBinaryFile(string path)
+        {
+            IFormatter formatter = new BinaryFormatter();
+
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    return (IDataContainer)formatter.Deserialize(stream);
+                }
+            }
+            catch 
+            {
+                return null;
+            }
         }
     }
 }

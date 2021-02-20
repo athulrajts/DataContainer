@@ -109,7 +109,7 @@ namespace KEI.Infrastructure
             SavingStarted?.Invoke();
 
             // save;
-            _container.Store();
+            _container.SaveAsXml();
 
             // notify listeners
             SavingFinished?.Invoke();

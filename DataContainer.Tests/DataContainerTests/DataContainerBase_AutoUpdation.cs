@@ -103,7 +103,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -116,7 +116,7 @@ namespace DataContainer.Tests
                 .Data("D", 5)
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
@@ -144,7 +144,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -159,7 +159,7 @@ namespace DataContainer.Tests
                     .Data("AB1", 2))
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
@@ -188,7 +188,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -205,7 +205,7 @@ namespace DataContainer.Tests
                 .Data("D", 5)
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
@@ -237,7 +237,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -256,7 +256,7 @@ namespace DataContainer.Tests
                     .Data("AB2", 2))
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
@@ -288,7 +288,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -303,7 +303,7 @@ namespace DataContainer.Tests
                 .Data("D", 5)
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
@@ -334,7 +334,7 @@ namespace DataContainer.Tests
                 .Build();
 
             A.FilePath = path;
-            A.Store(path);
+            A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
 
@@ -352,7 +352,7 @@ namespace DataContainer.Tests
                     .Data("AB1", 1))
                 .Build();
 
-            Updated.Store(path);
+            Updated.SaveAsXml(path);
 
             // wait timer
             Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);

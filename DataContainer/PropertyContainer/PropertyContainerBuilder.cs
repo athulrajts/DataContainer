@@ -55,11 +55,18 @@ namespace KEI.Infrastructure
             => new PropertyContainerBuilder();
 
         /// <summary>
-        /// Create <see cref="IPropertyContainer"/> from file
+        /// Create <see cref="IPropertyContainer"/> from xml file
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IPropertyContainer FromFile(string path) => Infrastructure.PropertyContainer.FromFile(path);
+        public static IPropertyContainer FromXmlFile(string path) => Infrastructure.PropertyContainer.FromXmlFile(path);
+
+        /// <summary>
+        /// Create <see cref="IPropertyContainer"/> from binary file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IPropertyContainer FromBinaryFile(string path) => Infrastructure.PropertyContainer.FromBinaryFile(path);
 
         #endregion
 

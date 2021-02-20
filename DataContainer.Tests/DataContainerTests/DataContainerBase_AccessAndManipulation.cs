@@ -268,5 +268,28 @@ namespace DataContainer.Tests
             Assert.Equal(oldValue.Description, newValue.Description);
             Assert.Equal(oldValue.DisplayName, newValue.DisplayName);
         }
+
+        [Fact]
+        public void DataContainerBase_Store_Binary_ReferenceTypes()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", new POCO { IntProperty = 55 })
+                .Build();
+
+            IFormatter formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
+            formatter.Serialize(stream, dc);
+
+            stream.Position = 0;
+
+            var deserialized = (IDataContainer)formatter.Deserialize(stream);
+
+            POCO orig = dc["A"] as POCO;
+            POCO @new = deserialized["A"] as POCO;
+
+            Assert.NotSame(orig, @new);
+            Assert.Equal(orig.IntProperty, @new.IntProperty);
+
+        }
     }
 }

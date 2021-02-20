@@ -1,10 +1,10 @@
 ﻿using KEI.Infrastructure;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace DataContainer.Utils
 {
+    [Serializable]
     public class POCO
     {
 
@@ -53,6 +53,7 @@ namespace DataContainer.Utils
 
     public class NestedPOCOCollection : Collection<NestedPOCO> { }
 
+    [Serializable]
     public class BindingTestObject : InpcImplementation
     {
         private int intProperty;
