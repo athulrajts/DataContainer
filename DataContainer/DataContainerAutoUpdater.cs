@@ -104,7 +104,7 @@ namespace KEI.Infrastructure
 
                 if(CanRemoveItems)
                 {
-                    _container.InvertedRemove(changed);
+                    _container.InplaceIntersect(changed);
                 }
 
                 _container.Refresh(changed);

@@ -106,8 +106,10 @@ namespace KEI.Infrastructure
                     return (IPropertyContainer)formatter.Deserialize(stream);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                DataContainerEvents.NotifyError($"Error reading file :{path}, {ex}");
+
                 return null;
             }
         }

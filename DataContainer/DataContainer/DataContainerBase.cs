@@ -13,7 +13,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KEI.Infrastructure
 {
@@ -24,6 +23,36 @@ namespace KEI.Infrastructure
     [Serializable]
     public abstract class DataContainerBase : DynamicObject, IDataContainer, ICustomTypeDescriptor, IXmlSerializable, ISerializable
     {
+        #region Constructors
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public DataContainerBase()
+        {
+            CollectionChanged += Data_CollectionChanged;
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public DataContainerBase(SerializationInfo info, StreamingContext context) : this()
+        {
+            Name = info.GetString(nameof(Name));
+            UnderlyingType = (Types.TypeInfo)info.GetValue(nameof(UnderlyingType), typeof(Types.TypeInfo));
+            int count = info.GetInt32(nameof(Count));
+
+            for (int i = 0; i < count; i++)
+            {
+                DataObject obj = (DataObject)info.GetValue($"Data_{i}", typeof(DataObject));
+                Add(obj);
+            }
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -100,6 +129,10 @@ namespace KEI.Infrastructure
                 value = val;
                 result = true;
             }
+            else
+            {
+                DataContainerEvents.NotifyError($"Unable to find \"{key}\"");
+            }
 
             return result;
         }
@@ -115,6 +148,8 @@ namespace KEI.Infrastructure
 
             if(data is null)
             {
+                DataContainerEvents.NotifyError($"Unable to find \"{key}\"");
+
                 return false;
             }
 
@@ -158,8 +193,10 @@ namespace KEI.Infrastructure
                     return this.WriteToStream(stream);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                DataContainerEvents.NotifyError(ex.ToString());
+
                 return false;
             }
         }
@@ -174,7 +211,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="key">data Key to search for</param>
         /// <returns>Is Found</returns>
-        public virtual bool ContainsData(string key) => Find(key) is DataObject;
+        public virtual bool ContainsData(string key) => this.FindRecursive(key) is DataObject;
 
         #endregion
 
@@ -294,6 +331,8 @@ namespace KEI.Infrastructure
 
             if (property is null)
             {
+                DataContainerEvents.NotifyError($"Binding failed, key : {propertyKey} not found");
+
                 return false;
             }
 
@@ -339,6 +378,8 @@ namespace KEI.Infrastructure
 
             if (property is null)
             {
+                DataContainerEvents.NotifyError($"Binding failed, key : {propinfo.Name} not found");
+
                 return false;
             }
 
@@ -370,6 +411,8 @@ namespace KEI.Infrastructure
 
             if (property is null)
             {
+                DataContainerEvents.NotifyError($"Remove Binding failed, key : {propertyKey} not found");
+
                 return false;
             }
 
@@ -411,6 +454,8 @@ namespace KEI.Infrastructure
 
             if (property is null)
             {
+                DataContainerEvents.NotifyError($"Remove Binding failed, key : {propinfo.Name} not found");
+
                 return false;
             }
 
@@ -983,24 +1028,6 @@ namespace KEI.Infrastructure
             foreach (var item in this)
             {
                 info.AddValue($"Data_{count++}", item);
-            }
-        }
-
-        public DataContainerBase()
-        {
-            CollectionChanged += Data_CollectionChanged;
-        }
-
-        public DataContainerBase(SerializationInfo info, StreamingContext context) : this()
-        {
-            Name = info.GetString(nameof(Name));
-            UnderlyingType = (Types.TypeInfo)info.GetValue(nameof(UnderlyingType), typeof(Types.TypeInfo));
-            int count = info.GetInt32(nameof(Count));
-
-            for (int i = 0; i < count; i++)
-            {
-                DataObject obj = (DataObject)info.GetValue($"Data_{i}", typeof(DataObject));
-                Add(obj);
             }
         }
 

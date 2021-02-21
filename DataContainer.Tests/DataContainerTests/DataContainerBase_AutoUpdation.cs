@@ -19,6 +19,7 @@ namespace DataContainer.Tests
                 .Build();
 
             var tester = new AutoSaveTester(A);
+            tester.AutoSaver.SaveDelay = 10;
 
             Assert.False(tester.SavingStartedInvoked);
             Assert.False(tester.SavingFinishedInvoked);
@@ -26,7 +27,7 @@ namespace DataContainer.Tests
             A["B"] = 5;
 
             // wait timer
-            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 1000);
+            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 20);
 
             Assert.True(tester.SavingStartedInvoked);
             Assert.True(tester.SavingFinishedInvoked);
@@ -42,6 +43,7 @@ namespace DataContainer.Tests
                 .Build();
 
             var tester = new AutoSaveTester(A);
+            tester.AutoSaver.SaveDelay = 10;
             tester.AutoSaver.UseFilters = true;
             tester.AutoSaver.AddFilter("D");
 
@@ -51,7 +53,7 @@ namespace DataContainer.Tests
             A["B"] = 5;
 
             // wait timer
-            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 1000);
+            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 20);
 
             Assert.False(tester.SavingStartedInvoked);
             Assert.False(tester.SavingFinishedInvoked);
@@ -59,7 +61,7 @@ namespace DataContainer.Tests
             A["D"] = 10;
 
             // wait timer
-            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 1000);
+            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 20);
 
             Assert.True(tester.SavingStartedInvoked);
             Assert.True(tester.SavingFinishedInvoked);
@@ -75,6 +77,7 @@ namespace DataContainer.Tests
                 .Build();
 
             var tester = new AutoSaveTester(A);
+            tester.AutoSaver.SaveDelay = 10;
             tester.AutoSaver.UseFilters = false;
             tester.AutoSaver.AddFilter("D");
 
@@ -84,7 +87,7 @@ namespace DataContainer.Tests
             A["B"] = 5;
 
             // wait timer
-            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 1000);
+            Thread.Sleep((int)tester.AutoSaver.SaveDelay + 20);
 
             Assert.True(tester.SavingStartedInvoked);
             Assert.True(tester.SavingFinishedInvoked);
@@ -106,6 +109,7 @@ namespace DataContainer.Tests
             A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
+            tester.AutoUpdater.PollingInterval = 10;
 
             Assert.False(tester.UpdateStartedInvoked);
             Assert.False(tester.UpdateFinishedInvoked);
@@ -119,7 +123,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);
@@ -147,6 +151,7 @@ namespace DataContainer.Tests
             A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
+            tester.AutoUpdater.PollingInterval = 10;
 
             Assert.False(tester.UpdateStartedInvoked);
             Assert.False(tester.UpdateFinishedInvoked);
@@ -162,7 +167,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);
@@ -197,6 +202,7 @@ namespace DataContainer.Tests
 
             // allow adding new items
             tester.AutoUpdater.CanAddItems = true;
+            tester.AutoUpdater.PollingInterval = 10;
 
             IDataContainer Updated = (DataContainerBase)DataContainerBuilder.Create("A")
                 .Data("A", 1)
@@ -208,7 +214,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);
@@ -240,6 +246,7 @@ namespace DataContainer.Tests
             A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
+            tester.AutoUpdater.PollingInterval = 10;
 
             // allow adding
             tester.AutoUpdater.CanAddItems = true;
@@ -259,7 +266,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);
@@ -291,6 +298,7 @@ namespace DataContainer.Tests
             A.SaveAsXml(path);
 
             var tester = new AutoUpateTester(A);
+            tester.AutoUpdater.PollingInterval = 10;
 
             Assert.False(tester.UpdateStartedInvoked);
             Assert.False(tester.UpdateFinishedInvoked);
@@ -306,7 +314,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);
@@ -340,6 +348,7 @@ namespace DataContainer.Tests
 
             // allow adding
             tester.AutoUpdater.CanRemoveItems = true;
+            tester.AutoUpdater.PollingInterval = 10;
 
             Assert.False(tester.UpdateStartedInvoked);
             Assert.False(tester.UpdateFinishedInvoked);
@@ -355,7 +364,7 @@ namespace DataContainer.Tests
             Updated.SaveAsXml(path);
 
             // wait timer
-            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 1000);
+            Thread.Sleep((int)tester.AutoUpdater.PollingInterval + 20);
 
             Assert.True(tester.UpdateStartedInvoked);
             Assert.True(tester.UpdateFinishedInvoked);

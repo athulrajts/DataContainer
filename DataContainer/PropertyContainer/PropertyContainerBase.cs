@@ -8,6 +8,18 @@ namespace KEI.Infrastructure
     public abstract class PropertyContainerBase : DataContainerBase, IPropertyContainer
     {
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public PropertyContainerBase() { }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public PropertyContainerBase(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        /// <summary>
         /// Set <see cref="PropertyObject.BrowseOption"/> of the <see cref="PropertyObject"/>
         /// identified by name.
         /// </summary>
@@ -50,17 +62,5 @@ namespace KEI.Infrastructure
         {
             return DataObjectFactory.GetPropertyObject(type);
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public PropertyContainerBase() { }
-
-        /// <summary>
-        /// Constructor for binary deserialization
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        public PropertyContainerBase(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

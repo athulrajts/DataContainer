@@ -9,48 +9,50 @@ namespace KEI.Infrastructure
 {
     public static class DataContainerExtensions
     {
-        #region DataContainer Get/Put Extensions
+        #region DataContainer Manipulation Extensions
 
-        public static T GetValue<T>(this IDataContainer dc, string key)
+        public static T GetValue<T>(this IDataContainer container, string key)
         {
             var retValue = default(T);
 
-            dc.GetValue(key, ref retValue);
+            container.GetValue(key, ref retValue);
 
             return retValue;
         }
 
-        public static T GetValue<T>(this IDataContainer dc, Key<T> key)
+        public static T GetValue<T>(this IDataContainer container, Key<T> key)
         {
             T value = key.DefaultValue;
             
-            dc.GetValue(key.Name, ref value);
+            container.GetValue(key.Name, ref value);
             
             return value;
         }
 
-        public static bool SetValue<T>(this IDataContainer dc, Key<T> key, T value) => dc.SetValue(key.Name, value);
+        public static bool SetValue<T>(this IDataContainer container, Key<T> key, T value) 
+            => container.SetValue(key.Name, value);
 
-        public static void PutValue(this IDataContainer dc, string key, object value)
+        public static void PutValue(this IDataContainer container, string key, object value)
         {
-            if (dc.ContainsData(key))
+            if (container.ContainsData(key))
             {
-                dc.SetValue(key, value);
+                container.SetValue(key, value);
             }
             else
             {
-                if (dc is IPropertyContainer)
+                if (container is IPropertyContainer)
                 {
-                    dc.Add(DataObjectFactory.GetPropertyObjectFor(key, value));
+                    container.Add(DataObjectFactory.GetPropertyObjectFor(key, value));
                 }
                 else
                 {
-                    dc.Add(DataObjectFactory.GetDataObjectFor(key, value));
+                    container.Add(DataObjectFactory.GetDataObjectFor(key, value));
                 }
             }
         }
 
-        public static void PutValue<T>(this IDataContainer dc, Key<T> key, T value) => dc.PutValue(key.Name, value);
+        public static void PutValue<T>(this IDataContainer container, Key<T> key, T value) 
+            => container.PutValue(key.Name, value);
 
         public static DataObject FindRecursive(this IDataContainer container, string key)
         {
@@ -71,10 +73,49 @@ namespace KEI.Infrastructure
                 }
                 else
                 {
-                    throw new Exception("Nested configs should be of type IDataContainer");
+                    return null;
                 }
             }
         }
+
+        public static void Remove(this IDataContainer dc, string key)
+        {
+            if(dc.Find(key) is DataObject obj)
+            {
+                dc.Remove(obj);
+            }
+        }
+
+        public static void Remove<T>(this IDataContainer dc, Key<T> key)
+            => dc.Remove(key.Name);
+
+        public static void RecursiveRemove(this IDataContainer container, string key)
+        {
+            var split = key.Split('.');
+
+            if(split.Length == 1 && container.Find(split.First()) is DataObject obj)
+            {
+                container.Remove(obj);
+            }
+            else
+            {
+                object temp = null;
+                container.GetValue(split.First(), ref temp);
+
+                if (temp is IDataContainer dc)
+                {
+                   dc.RecursiveRemove(string.Join(".", split.Skip(1)));
+                }
+                else
+                {
+                    ;
+                }
+            }
+        }
+
+        public static void RecursiveRemove<T>(this IDataContainer container, Key<T> key)
+            => container.RecursiveRemove(key.Name);
+
 
         #endregion
 
@@ -91,7 +132,7 @@ namespace KEI.Infrastructure
         {
             IDataContainer union = lhs is IPropertyContainer
                 ? (IDataContainer)new PropertyContainer() 
-                : (IDataContainer)new DataContainer();
+                : new DataContainer();
 
             union.Name = lhs.Name;
 
@@ -137,7 +178,7 @@ namespace KEI.Infrastructure
         {
             IDataContainer intersect = lhs is IPropertyContainer
                 ? (IDataContainer)new PropertyContainer()
-                : (IDataContainer)new DataContainer();
+                : new DataContainer();
 
             intersect.Name = lhs.Name;
 
@@ -178,7 +219,7 @@ namespace KEI.Infrastructure
         {
             IDataContainer difference = lhs is IPropertyContainer
                 ? (IDataContainer)new PropertyContainer()
-                : (IDataContainer)new DataContainer();
+                : new DataContainer();
 
             difference.Name = lhs.Name;
 
@@ -209,13 +250,11 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public static bool IsIdentical(this IDataContainer lhs, IDataContainer rhs)
         {
-            List<string> lhsKeys = new List<string>();
-            List<string> rhsKeys = new List<string>();
+            List<string> lhsKeys = lhs.GetAllKeys().ToList();
+            List<string> rhsKeys = rhs.GetAllKeys().ToList();
 
-            lhs.GetAllKeys(lhsKeys);
-            rhs.GetAllKeys(rhsKeys);
 
-            if(lhsKeys.Count != rhsKeys.Count)
+            if (lhsKeys.Count != rhsKeys.Count)
             {
                 return false;
             }
@@ -242,13 +281,22 @@ namespace KEI.Infrastructure
         /// <param name="dc"></param>
         /// <param name="keys"></param>
         /// <param name="root"></param>
-        public static void GetAllKeys(this IDataContainer dc, List<string> keys, string root ="")
+        public static IEnumerable<string> GetAllKeys(this IDataContainer dc)
+        {
+            List<string> keys = new List<string>();
+
+            GetAllKeysInternal(dc, keys);
+
+            return keys;
+        }
+
+        private static void GetAllKeysInternal(IDataContainer dc, List<string> keys, string root = "")
         {
             foreach (var data in dc)
             {
-                if(data.GetValue() is IDataContainer dcInner)
+                if (data.GetValue() is IDataContainer dcInner)
                 {
-                    dcInner.GetAllKeys(keys, dcInner.Name);
+                    GetAllKeysInternal(dcInner, keys, dcInner.Name);
                 }
                 else
                 {
@@ -306,7 +354,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static void InvertedRemove(this IDataContainer lhs, IDataContainer rhs)
+        public static void InplaceIntersect(this IDataContainer lhs, IDataContainer rhs)
         {
             var toRemove = new List<DataObject>();
 
@@ -319,7 +367,7 @@ namespace KEI.Infrastructure
                 else if (data.GetValue() is IDataContainer dc)
                 {
                     var rhsDC = (IDataContainer)rhs[data.Name];
-                    dc.InvertedRemove(rhsDC);
+                    dc.InplaceIntersect(rhsDC);
                 }
             }
 

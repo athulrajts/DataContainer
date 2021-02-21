@@ -86,7 +86,7 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
-                return this;
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
             }
 
             var builder = Create(name);
@@ -112,6 +112,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null)
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -153,6 +155,7 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null)
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
                 return this;
             }
 
@@ -177,6 +180,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add duplication value : {name}");
+                
                 return this;
             }
 
@@ -200,6 +205,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -237,6 +244,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -260,6 +269,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -283,6 +294,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -304,8 +317,10 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public PropertyContainerBuilder File(string name, string value, Action<FilePropertyObjectBuilder> propertyBuilder = null)
         {
-            if (config.ContainsData(name) || value is null)
+            if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -329,6 +344,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -384,6 +401,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -426,6 +445,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -447,8 +468,10 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public PropertyContainerBuilder Folder(string name, string value, Action<PropertyObjectBuilder> propertyBuilder = null)
         {
-            if (config.ContainsData(name) || value is null)
+            if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 

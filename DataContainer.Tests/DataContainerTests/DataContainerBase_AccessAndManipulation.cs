@@ -1,14 +1,13 @@
-﻿using DataContainer.Utils;
-using KEI.Infrastructure;
-using KEI.Infrastructure.Validation;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Xunit;
+using DataContainer.Utils;
+using KEI.Infrastructure;
+using KEI.Infrastructure.Validation;
+using System.Linq;
 
 namespace DataContainer.Tests
 {
@@ -319,6 +318,174 @@ namespace DataContainer.Tests
 
             Assert.Equal(1, v.MinValue);
             Assert.Equal(100, v.MaxValue);
+        }
+
+        [Fact]
+        public void DataContainerBase_ContainsDataReturnsTrueIfPresent()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .Build();
+
+            Assert.True(dc.ContainsData("A"));
+        }
+
+        [Fact]
+        public void DataContainerBase_ContainsDataReturnsFalseIfNotPresent()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .Build();
+
+            Assert.False(dc.ContainsData("B"));
+        }
+
+        [Fact]
+        public void DataContainerBase_ContainsDataReturnsTrueIfPresent_Recursive()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .DataContainer("B", b => b
+                    .DataContainer("BB", c => c
+                        .Data("BB1",2)))
+                .Build();
+
+            Assert.True(dc.ContainsData("B.BB.BB1"));
+        }
+
+        [Fact]
+        public void DataContainerBase_ContainsDataReturnsFalseIfNotPresent_Recursive()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .DataContainer("B", b => b
+                    .DataContainer("BB", c => c
+                        .Data("BB1", 2)))
+                .Build();
+
+            Assert.False(dc.ContainsData("B.BB.BB2"));
+        }
+
+        [Fact]
+        public void DataContainerBase_RemoveWorks()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .Build();
+
+            Assert.True(dc.ContainsData("A"));
+
+            dc.Remove("A");
+
+            Assert.False(dc.ContainsData("A"));
+        }
+
+        [Fact]
+        public void DataContainerBase_RemoveWorksRecursively()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .DataContainer("B", b => b
+                    .DataContainer("BB", c => c
+                        .Data("BB1", 2)))
+                .Build();
+
+            Assert.True(dc.ContainsData("B.BB.BB1"));
+
+            dc.RecursiveRemove("B.BB.BB1");
+
+            Assert.False(dc.ContainsData("B.BB.BB1"));
+        }
+
+        [Theory]
+        [MemberData(nameof(Inputs.PrimitiveTypeValues), MemberType =typeof(Inputs))]
+        public void DataContainerBase_AddWorks(object value)
+        {
+            IDataContainer dc = DataContainerBuilder.Create().Build();
+
+            Assert.Equal(0, dc.Count);
+
+            dc.Add(DataObjectFactory.GetDataObjectFor("A", value));
+
+            Assert.Equal(1, dc.Count);
+            Assert.True(dc.ContainsData("A"));
+        }
+
+        [Fact]
+        public void PropertyContainerBase_RemoveWorks()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("A", 1)
+                .Build();
+
+            Assert.True(dc.ContainsData("A"));
+
+            dc.Remove("A");
+
+            Assert.False(dc.ContainsData("A"));
+        }
+
+        [Fact]
+        public void PropertyContainerBase_RemoveWorksRecursively()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("A", 1)
+                .PropertyContainer("B", b => b
+                    .PropertyContainer("BB", c => c
+                        .Property("BB1", 2)))
+                .Build();
+
+            Assert.True(dc.ContainsData("B.BB.BB1"));
+
+            dc.RecursiveRemove("B.BB.BB1");
+
+            Assert.False(dc.ContainsData("B.BB.BB1"));
+        }
+
+        [Theory]
+        [MemberData(nameof(Inputs.PrimitiveTypeValues), MemberType =typeof(Inputs))]
+        public void PropertyContainerBase_AddWorks(object value)
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create().Build();
+
+            Assert.Equal(0, dc.Count);
+
+            dc.Add(DataObjectFactory.GetPropertyObjectFor("A", value));
+
+            Assert.Equal(1, dc.Count);
+            Assert.True(dc.ContainsData("A"));
+        }
+
+        [Fact]
+        public void DataContainer_GetKeysReturnsTopLevelKeys()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .DataContainer("B", b => b
+                    .DataContainer("BB", c => c
+                        .Data("BB1", 2)))
+                .Build();
+
+            var keys = dc.GetKeys().ToList();
+
+            Assert.Equal(2, keys.Count);
+            Assert.DoesNotContain("B.BB.BB1", keys);
+        }
+
+        [Fact]
+        public void PropertyContainer_GetKeysReturnsTopLevelKeys()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("A", 1)
+                .PropertyContainer("B", b => b
+                    .PropertyContainer("BB", c => c
+                        .Property("BB1", 2)))
+                .Build();
+
+            var keys = dc.GetKeys().ToList();
+
+            Assert.Equal(2, keys.Count);
+            Assert.DoesNotContain("B.BB.BB1", keys);
         }
     }
 }

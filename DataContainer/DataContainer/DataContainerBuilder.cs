@@ -39,6 +39,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -61,6 +63,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -79,6 +83,8 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+
                 return this;
             }
 
@@ -100,10 +106,12 @@ namespace KEI.Infrastructure
         {
             if (config.ContainsData(name) || value is null)
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
+                
                 return this;
             }
 
-            DataObject obj = null;
+            DataObject obj;
             if (format == SerializationFormat.Container)
             {
                 obj = DataObjectFactory.GetDataObjectFor(name, value);
@@ -138,6 +146,8 @@ namespace KEI.Infrastructure
 
             if(value is null || string.IsNullOrEmpty(value.ToString()))
             {
+                DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {pi.Name}");
+
                 return this;
             }
 
@@ -193,11 +203,18 @@ namespace KEI.Infrastructure
         }
 
         /// <summary>
-        /// Read DataContainer from file
+        /// Read DataContainer from xml file
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public static IDataContainer FromXmlFile(string path) => Infrastructure.DataContainer.FromXmlFile(path);
+
+        /// <summary>
+        /// Read DataContainer from binary file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IDataContainer FromBinaryFile(string path) => Infrastructure.DataContainer.FromBinaryFile(path);
 
         /// <summary>
         /// returns <see cref="IDataContainer"/> instance built

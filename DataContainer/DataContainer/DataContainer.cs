@@ -70,32 +70,6 @@ namespace KEI.Infrastructure
             RaiseCollectionChanged(NotifyCollectionChangedAction.Reset);
         }
 
-        /// <summary>
-        /// Implementation for <see cref="IDataContainer.ContainsData(string)"/>
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public override bool ContainsData(string key)
-        {
-            var split = key.Split('.');
-
-            if (split.Length == 1)
-            {
-                return internalDictionary.ContainsKey(key);
-            }
-            else
-            {
-                if (internalDictionary[split.First()].GetValue() is IDataContainer dc)
-                {
-                    return dc.ContainsData(key);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-        }
 
         /// <summary>
         /// Remove property with name <paramref name="key"/>
@@ -187,8 +161,10 @@ namespace KEI.Infrastructure
                     return (IDataContainer)formatter.Deserialize(stream);
                 }
             }
-            catch 
+            catch(Exception ex)
             {
+                DataContainerEvents.NotifyError($"Error reading file :{path}, {ex}");
+
                 return null;
             }
         }

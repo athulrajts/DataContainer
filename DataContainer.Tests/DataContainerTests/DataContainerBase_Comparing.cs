@@ -1,13 +1,13 @@
 ﻿using Xunit;
 using System.Linq;
 using KEI.Infrastructure;
+using System.Collections.Generic;
+using DataContainer.Utils;
 
 namespace DataContainer.Tests
 {
     public class DataContainerBase_Comparing
     {
-        #region Set Operations
-
         [Fact]
         public void IDataContainer_Union_UsesFirstsNameForResultName()
         {
@@ -390,7 +390,7 @@ namespace DataContainer.Tests
         }
 
         [Fact]
-        public void IDataContainer_Difference_RemovesCommonProperties()
+        public void IDataContainer_Except_RemovesCommonProperties()
         {
             IDataContainer A = DataContainerBuilder.Create("A")
                 .Data("A", 1)
@@ -477,6 +477,113 @@ namespace DataContainer.Tests
             Assert.Equal(5, CC.Count);
         }
 
-        #endregion
+        [Fact]
+        public void IDataContainer_GetAllKeysGetsKeysFromAllLevel()
+        {
+            IDataContainer A = DataContainerBuilder.Create()
+                .Data("A", 1)
+                .DataContainer("AA", b => b
+                    .Data("A1", 1)
+                    .Data("A3", 3))
+                .Data("B", 2)
+                .Data("C", 3)
+                .DataContainer("CC", b => b
+                    .Data("C5", 1)
+                    .Data("C6", 2))
+                .Build();
+
+            List<string> keys = A.GetAllKeys().ToList();
+
+            Assert.Equal(7, keys.Count);
+        }
+
+        [Fact]
+        public void IDataContainer_Remove_RemovesCommonProperties()
+        {
+            IDataContainer A = DataContainerBuilder.Create("A")
+                .Data("A", 1)
+                .Data("B", 2)
+                .Data("C", 3)
+                .DataContainer("AA", b => b
+                    .Data("A1", 11)
+                    .Data("A2", 12))
+                .Data("D", 4)
+                .Build();
+
+            var cloneA = A.Clone() as IDataContainer;
+
+            IDataContainer B = DataContainerBuilder.Create("B")
+                .Data("F", 1)
+                .Data("B", 2)
+                .Data("C", 3)
+                .Data("X", 4)
+                .Data("Y", 2)
+                .Data("Z", 3)
+                .Build();
+
+            var cloneB = B.Clone() as IDataContainer;
+
+            cloneA.Remove(B);
+            cloneB.Remove(A);
+
+            Assert.Equal(3, cloneA.Count); // remove B,C from A
+            Assert.Equal(4, cloneB.Count); // remove B,C from B
+        }
+
+        [Fact]
+        public void IDataContainer_InplaceIntersect_Works()
+        {
+            IDataContainer A = DataContainerBuilder.Create("A")
+                .Data("A", 1)
+                .Data("B", 2)
+                .Data("C", 3)
+                .DataContainer("AA", b => b
+                    .Data("A1", 11)
+                    .Data("A2", 12))
+                .Data("D", 4)
+                .Build();
+
+            IDataContainer B = DataContainerBuilder.Create("B")
+                .Data("A", 1)
+                .Data("B", 2)
+                .Data("C", 3)
+                .Data("X", 4)
+                .Data("D", 2)
+                .Data("Z", 3)
+                .Build();
+
+            int commonCount = A.GetAllKeys().Intersect(B.GetAllKeys()).Count();
+
+            A.InplaceIntersect(B);
+
+            Assert.Equal(commonCount, A.GetAllKeys().Count());
+        }
+
+        [Fact]
+        public void IDataContainer_RefreshUpdatesChangedValue()
+        {
+            IDataContainer A = DataContainerBuilder.Create()
+                .Data("A", 2)
+                .Data("B", 3)
+                .Data("C", 4)
+                .Build();
+            
+            IDataContainer A2 = DataContainerBuilder.Create()
+                .Data("A", 2)
+                .Data("B", 3)
+                .Data("C", 5)
+                .Build();
+
+            var listener = new PropertyChangedListener(A);
+
+            Assert.NotEqual(A["C"], A2["C"]);
+
+            A.Refresh(A2);
+
+            Assert.Equal(A["C"], A2["C"]);
+            Assert.Equal("C", listener.LastChangedProperty);
+            Assert.Single(listener.PropertiesChanged);
+
+        }
     }
 }

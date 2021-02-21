@@ -40,7 +40,8 @@ namespace KEI.Infrastructure
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError(ex.ToString());
+                DataContainerEvents.NotifyError(ex.ToString());
+
                 return false;
             }
         }
@@ -51,7 +52,7 @@ namespace KEI.Infrastructure
         /// <typeparam name="T">Type of of object</typeparam>
         /// <param name="data">Data to serialize</param>
         /// <returns>XML string</returns>
-        public static string SerializeToString<T>(T data, bool indent = false)
+        public static string SerializeToString(object data, bool indent = false)
         {
             try
             {
@@ -75,7 +76,8 @@ namespace KEI.Infrastructure
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError(ex.ToString());
+                DataContainerEvents.NotifyError(ex.ToString());
+
                 return string.Empty;
             }
         }
@@ -108,7 +110,7 @@ namespace KEI.Infrastructure
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError(ex.ToString());
+                DataContainerEvents.NotifyError(ex.ToString());
                 return default;
             }
         }
