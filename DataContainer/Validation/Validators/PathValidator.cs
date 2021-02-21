@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace KEI.Infrastructure.Validation
@@ -8,9 +10,21 @@ namespace KEI.Infrastructure.Validation
         File,
         Directory
     }
+
+    [Serializable]
     public class PathValidator : ValidationRule
     {
         private PathValidationMode mode;
+
+        public PathValidator()
+        {
+
+        }
+
+        public PathValidator(SerializationInfo info, StreamingContext context)
+        {
+            Mode = (PathValidationMode)info.GetValue(nameof(Mode), typeof(PathValidationMode));
+        }
 
         [XmlAttribute]
         public PathValidationMode Mode
@@ -43,6 +57,11 @@ namespace KEI.Infrastructure.Validation
             }
 
             return ValidationSucces();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Mode), Mode);
         }
 
         public override string StringRepresentation => Mode.ToString();

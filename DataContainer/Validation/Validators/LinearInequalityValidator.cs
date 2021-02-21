@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using KEI.Infrastructure.Helpers;
 
@@ -22,10 +24,22 @@ namespace KEI.Infrastructure.Validation
         NotEqualTo
     }
 
+    [Serializable]
     public class LinearInequalityValidator : ValidationRule
     {
         private Ineqaulity ineqaulity;
         private double limit;
+
+        public LinearInequalityValidator()
+        {
+
+        }
+
+        public LinearInequalityValidator(SerializationInfo info, StreamingContext context)
+        {
+            Ineqaulity = (Ineqaulity)info.GetValue(nameof(Ineqaulity), typeof(Ineqaulity));
+            Limit = info.GetDouble(nameof(Limit));
+        }
 
         [XmlAttribute]
         public Ineqaulity Ineqaulity
@@ -88,6 +102,12 @@ namespace KEI.Infrastructure.Validation
             }
 
             return ValidationSucces();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Ineqaulity), Ineqaulity);
+            info.AddValue(nameof(Limit), Limit);
         }
 
         public override string StringRepresentation => $"{Ineqaulity.GetEnumDescription()} {Limit}";

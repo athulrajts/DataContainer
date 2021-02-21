@@ -2,10 +2,12 @@
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure.Validation
 {
     [XmlRoot(IsNullable = false, ElementName = "Validations")]
+    [Serializable]
     public class ValidatorGroup : ValidationRule
     {
         [XmlAttribute("Cascade")]
@@ -57,6 +59,12 @@ namespace KEI.Infrastructure.Validation
             CascadeValidations = cascadeValidations;
         }
 
+        public ValidatorGroup(SerializationInfo info, StreamingContext context)
+        {
+            Rules = (ObservableCollection<ValidationRule>)info.GetValue(nameof(Rules), typeof(ObservableCollection<ValidationRule>));
+            CascadeValidations = info.GetBoolean(nameof(CascadeValidations));
+        }
+
         public override bool Equals(object obj)
         {
             if (obj.GetType() != GetType())
@@ -86,6 +94,12 @@ namespace KEI.Infrastructure.Validation
         public override int GetHashCode()
         {
             return Rules.GetHashCode();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Rules), Rules);
+            info.AddValue(nameof(CascadeValidations), CascadeValidations);
         }
 
         public static implicit operator ValidatorGroup(ValidationBuilder builder) => builder.Validator;

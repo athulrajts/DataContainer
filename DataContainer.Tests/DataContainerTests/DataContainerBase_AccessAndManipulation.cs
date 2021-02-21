@@ -1,5 +1,6 @@
 ﻿using DataContainer.Utils;
 using KEI.Infrastructure;
+using KEI.Infrastructure.Validation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -290,6 +291,34 @@ namespace DataContainer.Tests
             Assert.NotSame(orig, @new);
             Assert.Equal(orig.IntProperty, @new.IntProperty);
 
+        }
+
+        [Fact]
+        public void PropertyContainerBase_Store_Validations()
+        {
+            IPropertyContainer dc = PropertyContainerBuilder.Create()
+                .Property("A", 1 , b => b
+                    .SetValidation(ValidationBuilder.Create().Range(1,100))
+                    .SetCategory("Test"))
+                .Build();
+
+            IFormatter formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
+            formatter.Serialize(stream, dc);
+
+
+            stream.Position = 0;
+
+            var deserialized = (IDataContainer)formatter.Deserialize(stream);
+
+            PropertyObject obj = deserialized.Find("A") as PropertyObject;
+
+            Assert.IsType<RangeValidator>(obj.Validation.Rules[0]);
+
+            RangeValidator v = obj.Validation.Rules[0] as RangeValidator;
+
+            Assert.Equal(1, v.MinValue);
+            Assert.Equal(100, v.MaxValue);
         }
     }
 }

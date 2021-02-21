@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace KEI.Infrastructure.Validation
 {
@@ -19,8 +20,27 @@ namespace KEI.Infrastructure.Validation
     [XmlInclude(typeof(MustBeOneOfValidator))]
     [XmlInclude(typeof(TypeValidator))]
     [XmlInclude(typeof(ValidatorGroup))]
-    public abstract class ValidationRule : BindableObject, IValidationRule
+    [Serializable]
+    public abstract class ValidationRule : BindableObject, IValidationRule, ISerializable
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ValidationRule()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor for binary deserialization
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ValidationRule(SerializationInfo info, StreamingContext context)
+        {
+
+        }
+
         public abstract ValidationResult Validate(object value);
 
         protected ValidationResult CannotBeNull()
@@ -96,6 +116,8 @@ namespace KEI.Infrastructure.Validation
         {
             return base.GetHashCode();
         }
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
     }
 
     public class ValidationResult

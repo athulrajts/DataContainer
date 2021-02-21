@@ -1,12 +1,26 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using KEI.Infrastructure.Validation.Attributes;
 
 namespace KEI.Infrastructure.Validation
 {
+    [Serializable]
     public class LengthValidator : ValidationRule
     {
         private int min;
         private int max;
+
+        public LengthValidator()
+        {
+
+        }
+
+        public LengthValidator(SerializationInfo info, StreamingContext context)
+        {
+            Min = info.GetInt32(nameof(Min));
+            Max = info.GetInt32(nameof(Max));
+        }
 
         [XmlAttribute]
         [Positive]
@@ -52,6 +66,12 @@ namespace KEI.Infrastructure.Validation
             {
                 return ValidationFailed("Value must be string");
             }
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Min), Min);
+            info.AddValue(nameof(Max), Max);
         }
 
         public override string StringRepresentation

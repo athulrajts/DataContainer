@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Xml;
 using KEI.Infrastructure.Types;
+using KEI.Infrastructure.Validation;
 
 namespace KEI.Infrastructure
 {
@@ -32,6 +33,7 @@ namespace KEI.Infrastructure
             BrowseOption = (BrowseOptions)info.GetValue(nameof(BrowseOption), typeof(BrowseOptions));
 
             //TODO Add validation
+            Validation = (ValidatorGroup)info.GetValue(nameof(Validation), typeof(ValidatorGroup));
 
             EnumType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
             Value = (Enum)info.GetValue(nameof(Value), EnumType);

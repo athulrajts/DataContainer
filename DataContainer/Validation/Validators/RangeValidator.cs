@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace KEI.Infrastructure.Validation
 {
+    [Serializable]
     public class RangeValidator : ValidationRule
     {
         public RangeValidator(Func<double> minValGetter, Func<double> maxValGetter)
@@ -12,6 +14,15 @@ namespace KEI.Infrastructure.Validation
             maxValueGetter = maxValGetter;
         }
         public RangeValidator() { }
+
+        public RangeValidator(SerializationInfo info, StreamingContext context)
+        {
+            MaxValue = info.GetDouble(nameof(MaxValue));
+            MinValue = info.GetDouble(nameof(MinValue));
+            ExcludeMaxValue = info.GetBoolean(nameof(ExcludeMaxValue));
+            ExcludeMinValue = info.GetBoolean(nameof(ExcludeMinValue));
+            Invert = info.GetBoolean(nameof(Invert));
+        }
 
         private double maxValue = double.PositiveInfinity;
         private double minValue = double.NegativeInfinity;
@@ -112,6 +123,15 @@ namespace KEI.Infrastructure.Validation
             return ValidationSucces();
         }
 
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(MaxValue), MaxValue);
+            info.AddValue(nameof(MinValue), MinValue);
+            info.AddValue(nameof(ExcludeMaxValue), ExcludeMaxValue);
+            info.AddValue(nameof(ExcludeMinValue), ExcludeMinValue);
+            info.AddValue(nameof(Invert), Invert);
+        }
+
         public override string StringRepresentation
         {
             get
@@ -125,8 +145,19 @@ namespace KEI.Infrastructure.Validation
         }
     }
 
+    [Serializable]
     public class NumberSignValidator : ValidationRule
     {
+        public NumberSignValidator()
+        {
+
+        }
+
+        public NumberSignValidator(SerializationInfo info, StreamingContext context)
+        {
+            IsPositive = info.GetBoolean(nameof(IsPositive));
+        }
+
         private bool isPositive;
 
         [XmlAttribute]
@@ -144,9 +175,8 @@ namespace KEI.Infrastructure.Validation
             if (value == null)
                 return CannotBeNull();
 
-            double num = 0;
 
-            if (!double.TryParse(value.ToString(), out num))
+            if (!double.TryParse(value.ToString(), out double num))
                 return ValidationFailed($"{value} is not convertable to {typeof(double).FullName}");
 
             if (IsPositive)
@@ -163,5 +193,9 @@ namespace KEI.Infrastructure.Validation
             return ValidationSucces();
         }
 
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(IsPositive), IsPositive);
+        }
     }
 }

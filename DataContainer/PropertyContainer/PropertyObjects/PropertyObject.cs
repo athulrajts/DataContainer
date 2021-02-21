@@ -77,6 +77,7 @@ namespace KEI.Infrastructure
             BrowseOption = (BrowseOptions)info.GetValue(nameof(BrowseOption), typeof(BrowseOptions));
 
             //TODO : Serialize validation also
+            Validation = (ValidatorGroup)info.GetValue(nameof(Validation), typeof(ValidatorGroup));
         }
 
         protected override void WriteXmlAttributes(XmlWriter writer)
@@ -250,6 +251,7 @@ namespace KEI.Infrastructure
             info.AddValue(nameof(Description), Description);
             info.AddValue(nameof(DisplayName), DisplayName);
             info.AddValue(nameof(BrowseOption), BrowseOption);
+            info.AddValue(nameof(Validation), Validation);
         }
     }
 

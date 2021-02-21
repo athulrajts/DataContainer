@@ -1,7 +1,21 @@
-﻿namespace KEI.Infrastructure.Validation
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace KEI.Infrastructure.Validation
 {
+    [Serializable]
     public class NotNullOrEmptyValidator : ValidationRule
     {
+        public NotNullOrEmptyValidator()
+        {
+
+        }
+
+        public NotNullOrEmptyValidator(SerializationInfo info, StreamingContext context)
+        {
+
+        }
+
         public override ValidationResult Validate(object value)
         {
 
@@ -11,6 +25,11 @@
             }
 
             return ValidationSucces();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            return;
         }
 
         public override string StringRepresentation => "NotEmpty";
