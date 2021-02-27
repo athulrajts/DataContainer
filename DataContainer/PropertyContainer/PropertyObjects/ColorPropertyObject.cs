@@ -32,5 +32,26 @@ namespace KEI.Infrastructure
         /// Implementation for <see cref="DataObject.Type"/>
         /// </summary>
         public override string Type => DataObjectType.Color;
+
+        /// <summary>
+        /// Doing this because TypeConverter was not working in C++/CLI
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override bool CanConvertFromString(string value)
+        {
+            return Color.TryParse(value, out _);
+        }
+
+        /// <summary>
+        /// Doing this because TypeConverter was not working in C++/CLI
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override object ConvertFromString(string value)
+        {
+            Color.TryParse(value, out Color c);
+            return c;
+        }
     }
 }

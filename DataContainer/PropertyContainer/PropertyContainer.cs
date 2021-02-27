@@ -97,7 +97,10 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public static IPropertyContainer FromBinaryFile(string path)
         {
-            IFormatter formatter = new BinaryFormatter();
+            IFormatter formatter = new BinaryFormatter
+            {
+                Binder = new CustomizedBinder()
+            };
 
             try
             {

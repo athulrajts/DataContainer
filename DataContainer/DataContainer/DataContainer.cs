@@ -7,6 +7,7 @@ using KEI.Infrastructure.Utils;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Reflection;
 
 namespace KEI.Infrastructure
 {
@@ -152,7 +153,10 @@ namespace KEI.Infrastructure
 
         public static IDataContainer FromBinaryFile(string path)
         {
-            IFormatter formatter = new BinaryFormatter();
+            IFormatter formatter = new BinaryFormatter
+            {
+                Binder = new CustomizedBinder()
+            };
 
             try
             {
@@ -167,6 +171,30 @@ namespace KEI.Infrastructure
 
                 return null;
             }
+        }
+    }
+    /// <summary>
+    /// Added to fix BinarySerialization not working in C++/CLI
+    /// </summary>
+    sealed class CustomizedBinder : SerializationBinder
+    {
+        public override Type BindToType(string assemblyName, string typeName)
+        {
+            Type returntype = null;
+            string sharedAssemblyName = typeof(DataContainer).Assembly.FullName;
+            assemblyName = Assembly.GetExecutingAssembly().FullName;
+            typeName = typeName.Replace(sharedAssemblyName, assemblyName);
+            returntype =
+                    Type.GetType(string.Format("{0}, {1}",
+                    typeName, assemblyName));
+
+            return returntype;
+        }
+
+        public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
+        {
+            base.BindToName(serializedType, out assemblyName, out typeName);
+            assemblyName = typeof(DataContainer).Assembly.FullName;
         }
     }
 }

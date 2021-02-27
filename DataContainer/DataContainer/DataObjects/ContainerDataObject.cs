@@ -248,6 +248,10 @@ namespace KEI.Infrastructure
                 // free memory, we don't need it anymore
                 _container = null;
             }
+            else 
+            {
+                Value = _container;
+            }
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
