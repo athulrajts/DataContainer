@@ -127,13 +127,17 @@
   <ItemGroup>
     <ClInclude Include="DataContainer.CLR.h" />
     <ClInclude Include="DataContainer.h" />
+    <ClInclude Include="DataContainerBuilder.h" />
+    <ClInclude Include="DataContainerBuilderWrapper.h" />
     <ClInclude Include="DataContainerWrapper.h" />
+    <ClInclude Include="ValueConverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DataContainer.cpp" />
+    <ClCompile Include="DataContainerBuilder.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

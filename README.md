@@ -400,7 +400,24 @@ PropertyContainer.GetAutoUpdater()
 ```
 By default it'll only update the value for existing properties. but there are options to add/remove properties as well.
 
+## Native C++ suport with C++/CLI wrapper (Windows Only)
+There is a very basic C++/CLI wrapper which can
+1. Read and Write as XML
+2. Read and write as Binary
+3. Get Values
+4. Put Values (similar to PutValue extension method, which add the value if it doesn't already exist)
 
-
-
-
+To use it in your application,
+link the lib file 
+```
+DataContainer.CLR.lib
+```
+include the header file 
+```
+DataContainer.h
+```
+and copy
+```
+DataContainer.CLR.dll
+```
+to exe directory.

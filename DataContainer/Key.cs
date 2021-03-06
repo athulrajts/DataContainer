@@ -45,6 +45,11 @@
         public StringKey(string name, string defaultValue = default) : base(name, defaultValue) { }
     }
 
+    public class DataContainerKey : Key<IDataContainer>
+    {
+        public DataContainerKey(string name, IDataContainer defaultValue = default) : base(name, defaultValue) { }
+    }
+
     #endregion
 
 }

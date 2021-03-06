@@ -2,11 +2,10 @@
 //
 
 #include <iostream>
-#include "..\DataContainer.CLR\DataContainer.h"
+#include "..\DataContainer.CLR\DataContainerBuilder.h"
 
 int main()
 {
-    std::cout << "Hello Worlddsfds!\n";
 
     short v = 1;
     time_t t = time(0);
@@ -24,43 +23,43 @@ int main()
     c.g = 123;
     c.b = 67;
 
-    DataContainer dc;
-    dc.Put("shortv", v);
-    dc.Put("intv", 1);
-    dc.Put("longv", (long long)1);
-    dc.Put("ushortv", (unsigned short)1);
-    dc.Put("uintv", (unsigned int)1);
-    dc.Put("ulongv", (unsigned long long)1);
-    dc.Put("stringv", "Hello Wolrd");
-    dc.Put("doublev", 1.2);
-    dc.Put("floatv", 1.2f);
-    dc.Put("datev", date);
-    dc.Put("timespanv", duration);
-    dc.Put("pointv", p);
-    dc.Put("colorv", c);
+
+    DataContainer* built = DataContainerBuilder::Create("test")
+        ->Data("shortv", v)
+        ->Data("intv", 1)
+        ->Data("longv", (int64_t)1)
+        ->Data("ushortv", (uint16_t)1)
+        ->Data("uintv", (uint32_t)1)
+        ->Data("ulongv", (uint64_t)1)
+        ->Data("doublev", 1.2)
+        ->Data("floatv", 1.4f)
+        ->Data("datev", date)
+        ->Data("timev", duration)
+        ->Data("pointv", p)
+        ->Data("colorv", c)
+        ->Data("stringv", "Hello World")
+        ->SubDataContainer("dcv", DataContainerBuilder::Create()
+            ->Data("doublev", 4.2)
+            ->Data("floatv", 6.9)
+            ->Data("stringv", "Blha"))
+        ->Build();
 
 
-    DataContainer dc2;
-    dc2.Put("stringv", "Hello Wolrd");
-    dc2.Put("doublev", 1.2);
-    dc2.Put("floatv", 1.2f);
-    dc2.Put("dcv", &dc);
-    dc2.SaveAsXml("Test.xml");
-    dc2.SaveAsBinary("Test.dat");
+    built->SaveAsXml("Test.xml");
 
     DataContainer dcXml = DataContainer::LoadFromBinary("Test.dat");
 
     auto keys = dcXml.GetKeys();
 
     DataContainer dcInner;
-    bool result = dcXml.Get("dcv", dcInner);
+    bool result = dcXml.GetValue("dcv", dcInner);
     auto keys2 = dcInner.GetKeys();
 
 
     Color c2;
     Point p2;
     std::string str;
-    dcInner.Get("colorv", c2);
-    dcInner.Get("pointv", p2);
+    dcInner.GetValue("colorv", c2);
+    dcInner.GetValue("pointv", p2);
 
 }

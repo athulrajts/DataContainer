@@ -4,6 +4,7 @@
 #include <vector>
 #include <msclr/gcroot.h>
 #include "DataContainer.h"
+#include "ValueConverter.h"
 
 class DataContainerWrapper
 {
@@ -15,46 +16,75 @@ public:
 
 	static DataContainerWrapper* LoadFromXml(std::string path);
 	static DataContainerWrapper* LoadFromBinary(std::string path);
+	
 	bool SaveAsXml(std::string path);
 	bool SaveAsXml();
 
 	bool SaveAsBinary(std::string path);
 	bool SaveAsBinary();
 
-	bool Get(std::string key, std::string& value);
-	bool Get(std::string key, bool& value);
-	bool Get(std::string key, unsigned short& value);
-	bool Get(std::string key, unsigned int& value);
-	bool Get(std::string key, unsigned long long& value);
-	bool Get(std::string key, short& value);
-	bool Get(std::string key, int& value);
-	bool Get(std::string key, long long& value);
-	bool Get(std::string key, float& value);
-	bool Get(std::string key, double& value);
-	bool Get(std::string key, tm& value);
-	bool Get(std::string key, Duration& value);
-	bool Get(std::string key, Point& value);
-	bool Get(std::string key, Color& value);
-	bool Get(std::string key, DataContainerWrapper& value);
+	template <typename T>
+	bool GetValue(std::string key, T& value)
+	{
+		System::String^ managedKey = gcnew System::String(key.c_str());
 
-	void Put(std::string key, std::string value);
-	void Put(std::string key, bool value);
-	void Put(std::string key, unsigned short value);
-	void Put(std::string key, unsigned int value);
-	void Put(std::string key, unsigned long long value);
-	void Put(std::string key, short value);
-	void Put(std::string key, int value);
-	void Put(std::string key, long long value);
-	void Put(std::string key, float value);
-	void Put(std::string key, double value);
-	void Put(std::string key, System::DateTime^ value);
-	void Put(std::string key, System::TimeSpan^ value);
-	void Put(std::string key, KEI::Infrastructure::Point^ value);
-	void Put(std::string key, KEI::Infrastructure::Color^ value);
-	void Put(std::string key, DataContainerWrapper* value);
+		System::Object^ managedValue = gcnew System::Object();
+		
+		if (instance->GetValue(managedKey, managedValue))
+		{
+			value = ValueConverter<T>::GetUnmanaged(managedValue);
+			return true;
+		}
+
+		return false;
+	}
+
+	template <typename T>
+	void PutValue(std::string key, T value)
+	{
+		System::String^ managedKey = gcnew System::String(key.c_str());
+
+		KEI::Infrastructure::DataContainerExtensions::PutValue(instance, managedKey, ValueConverter<T>::GetManaged(value));
+	}
+
+	template <typename T>
+	bool SetValue(std::string key, T value)
+	{
+		System::String^ managedKey = gcnew System::String(key.c_str());
+
+		return instance->SetValue(managedKey, ValueConverter<T>::GetManaged(value));
+	}
+
+	KEI::Infrastructure::IDataContainer^ GetInstance()
+	{
+		return instance;
+	}
 
 
 private:
 	msclr::gcroot<KEI::Infrastructure::IDataContainer^> instance;
+};
+
+template <>
+class ValueConverter<DataContainerWrapper>
+{
+public:
+	static System::Object^ GetManaged(DataContainerWrapper& unmanaged)
+	{
+		return unmanaged.GetInstance();
+	}
+
+	static DataContainerWrapper GetUnmanaged(System::Object^ managed)
+	{
+		KEI::Infrastructure::IDataContainer^ dc = safe_cast<KEI::Infrastructure::IDataContainer^>(managed);
+		DataContainerWrapper result;
+
+		if (dc)
+		{
+			result = DataContainerWrapper(dc);
+		}
+
+		return result;
+	}
 };
 
