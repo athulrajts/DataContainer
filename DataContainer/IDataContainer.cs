@@ -31,15 +31,20 @@ namespace KEI.Infrastructure
         /// Number of properties in this instance
         /// </summary>
         int Count { get; }
-        
+
         /// <summary>
         /// Get value by key
         /// Will throw <see cref="KeyNotFoundException"/> of <paramref name="key"/> does not exist
         /// </summary>
         /// <param name="key"></param>
         /// <returns>value</returns>
-        object this[string key] { get;set; }
-        
+        object this[string key] { get; set; }
+
+        /// <summary>
+        /// Indicates whether instance will raise <see cref="INotifyPropertyChanged.PropertyChanged"/> event
+        /// </summary>
+        bool EnableChangeNotification { get; set; }
+
         /// <summary>
         /// Get value by key
         /// </summary>
@@ -48,7 +53,7 @@ namespace KEI.Infrastructure
         /// <param name="value"></param>
         /// <returns></returns>
         bool GetValue<T>(string key, ref T value);
-        
+
         /// <summary>
         /// Set value by key
         /// </summary>
@@ -56,27 +61,27 @@ namespace KEI.Infrastructure
         /// <param name="value"></param>
         /// <returns></returns>
         bool SetValue(string key, object value);
-        
+
         /// <summary>
         /// Create instance of type <see cref="UnderlyingType"/> if it's null
         /// throws exception
         /// </summary>
         /// <returns></returns>
         object Morph();
-        
+
         /// <summary>
         /// Forces to morph to give type even if <see cref="UnderlyingType"/> is not set
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T Morph<T>();
-        
+
         // TODO : Does this still work ??
         // Is this still needed ??
         IList MorphList();
         IList<T> MorphList<T>();
         //
-        
+
         /// <summary>
         /// Try to save as xml to <see cref="FilePath"/>
         /// </summary>
@@ -102,13 +107,13 @@ namespace KEI.Infrastructure
         /// <param name="path"></param>
         /// <returns></returns>
         bool SaveAsBinary(string path);
-        
+
         /// <summary>
         /// Get all top level keys
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> GetKeys();
-        
+
         /// <summary>
         /// Find instance of <see cref="DataObject"/> corresponding to key
         /// </summary>

@@ -86,8 +86,8 @@ namespace KEI.Infrastructure
             get
             {
                 DataObject obj = this.FindRecursive(key);
-               
-                if(obj is null)
+
+                if (obj is null)
                 {
                     throw new KeyNotFoundException();
                 }
@@ -107,6 +107,11 @@ namespace KEI.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Indicates whether instance will raise <see cref="INotifyPropertyChanged.PropertyChanged"/> event
+        /// </summary>
+        public bool EnableChangeNotification { get; set; } = true;
+
         #endregion
 
         #region Manipulation
@@ -123,7 +128,7 @@ namespace KEI.Infrastructure
             var data = this.FindRecursive(key);
 
             bool result = false;
-            
+
             if (data != null && data.GetValue() is T val)
             {
                 value = val;
@@ -146,7 +151,7 @@ namespace KEI.Infrastructure
         {
             var data = this.FindRecursive(key);
 
-            if(data is null)
+            if (data is null)
             {
                 DataContainerEvents.NotifyError($"Unable to find \"{key}\"");
 
@@ -168,7 +173,7 @@ namespace KEI.Infrastructure
             if (XmlHelper.SerializeToFile(this, path) == false)
             {
                 return false;
-            } 
+            }
 
             return true;
         }
@@ -193,7 +198,7 @@ namespace KEI.Infrastructure
                     return this.WriteToStream(stream);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 DataContainerEvents.NotifyError(ex.ToString());
 
@@ -594,14 +599,14 @@ namespace KEI.Infrastructure
                 {
                     UnderlyingType = reader.ReadObjectXml<Types.TypeInfo>();
                 }
-                
+
                 // We're reading a DataObject implementation
                 else
                 {
                     string dataObjectType = reader.GetAttribute(DataObject.TYPE_ID_ATTRIBUTE);
 
                     /// Get uninitialized Object based on type attribute
-                    if(GetUnitializedDataObject(dataObjectType) is DataObject obj)
+                    if (GetUnitializedDataObject(dataObjectType) is DataObject obj)
                     {
                         /// need to create a new XmlReader so that <see cref="DataObject"/> implementation
                         /// can read till end.
@@ -623,7 +628,7 @@ namespace KEI.Infrastructure
                             }
                         }
                     }
-                }    
+                }
 
             }
         }
@@ -658,7 +663,7 @@ namespace KEI.Infrastructure
         #region INotifyCollectionChanged Members
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
-        
+
         protected void RaiseCollectionChanged(NotifyCollectionChangedAction action, object changedItem)
             => CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, changedItem));
 
@@ -673,9 +678,9 @@ namespace KEI.Infrastructure
         #region INotifyPropertyChanged Memmbers
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void RaisePropertyChanged([CallerMemberName] string property = "") 
+        public void RaisePropertyChanged([CallerMemberName] string property = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        
+
         #endregion
 
         #region ICustomTypeDescriptor Members
@@ -798,7 +803,7 @@ namespace KEI.Infrastructure
                 var attrs = new List<Attribute>();
 
                 // add expandable attributes for data objects holding complex objects
-                if((data.Type == DataObjectType.Xml || data.Type == DataObjectType.Container || data.Type == DataObjectType.Json) 
+                if ((data.Type == DataObjectType.Xml || data.Type == DataObjectType.Container || data.Type == DataObjectType.Json)
                     && PropertyGridHelper.ExpandableAttribute != null)
                 {
                     attrs.Add(PropertyGridHelper.ExpandableAttribute);
@@ -829,7 +834,7 @@ namespace KEI.Infrastructure
                     {
                         attrs.Add(new DescriptionAttribute(po.Description));
                     }
-                    
+
                     // add display name attribute
                     if (string.IsNullOrEmpty(po.DisplayName) == false)
                     {
@@ -843,11 +848,11 @@ namespace KEI.Infrastructure
                     }
 
                     Attribute browseOption = new BrowsableAttribute(true);
-                    if(po.BrowseOption == BrowseOptions.NonBrowsable)
+                    if (po.BrowseOption == BrowseOptions.NonBrowsable)
                     {
                         browseOption = new BrowsableAttribute(false);
                     }
-                    else if(po.BrowseOption == BrowseOptions.NonEditable)
+                    else if (po.BrowseOption == BrowseOptions.NonEditable)
                     {
                         browseOption = new ReadOnlyAttribute(true);
                     }
@@ -869,7 +874,7 @@ namespace KEI.Infrastructure
         #endregion
 
         #region IEnumerable Members
-        
+
         /// <summary>
         /// Implementation for <see cref="IEnumerable{T}.GetEnumerator"/>
         /// </summary>
@@ -926,7 +931,7 @@ namespace KEI.Infrastructure
                     {
                         if (dc.UnderlyingType is null)
                         {
-                            if(prop.PropertyType.IsAssignableFrom(data.GetDataType()))
+                            if (prop.PropertyType.IsAssignableFrom(data.GetDataType()))
                             {
                                 prop.SetValue(result, dc);
                             }
@@ -987,6 +992,12 @@ namespace KEI.Infrastructure
 
         private void OnPropertyChangedRaised(object sender, PropertyChangedEventArgs e)
         {
+            // Don't raise any property changed event, if disabled.
+            if (EnableChangeNotification == false)
+            {
+                return;
+            }
+
             string propName = e.PropertyName;
 
             /// If sender is one of our children, pass the event on up the tree.

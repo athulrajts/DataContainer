@@ -166,5 +166,30 @@ namespace DataContainer.Tests
             Assert.NotNull(listener.LastChange);
             Assert.Equal(NotifyCollectionChangedAction.Reset, listener.LastChange.Action);
         }
+
+        [Fact]
+        public void IDataContainer_EnableChangeNotificationWorks()
+        {
+            IDataContainer A = DataContainerBuilder.Create("A")
+                .Data("A", 1)
+                .Data("B", 2)
+                .Data("C", 3)
+                .Build();
+
+            A.EnableChangeNotification = false;
+
+            var listener = new PropertyChangedListener(A);
+
+            A["A"] = 55;
+            Assert.Null(listener.LastChangedProperty);
+            Assert.Empty(listener.PropertiesChanged);
+
+            A.EnableChangeNotification = true;
+
+            A["B"] = 23;
+            Assert.Equal("B", listener.LastChangedProperty);
+            Assert.Single(listener.PropertiesChanged);
+
+        }
     }
 }

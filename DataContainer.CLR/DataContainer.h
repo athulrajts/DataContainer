@@ -105,4 +105,3 @@ public:
 	unsigned char g;
 	unsigned char b;
 };
-

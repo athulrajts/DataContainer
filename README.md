@@ -401,11 +401,6 @@ PropertyContainer.GetAutoUpdater()
 By default it'll only update the value for existing properties. but there are options to add/remove properties as well.
 
 ## Native C++ suport with C++/CLI wrapper (Windows Only)
-There is a very basic C++/CLI wrapper which can
-1. Read and Write as XML
-2. Read and write as Binary
-3. Get Values
-4. Put Values (similar to PutValue extension method, which add the value if it doesn't already exist)
 
 To use it in your application,
 link the lib file 
@@ -414,10 +409,33 @@ DataContainer.CLR.lib
 ```
 include the header file 
 ```
-DataContainer.h
+DataContainerBuilder.h
 ```
 and copy
 ```
 DataContainer.CLR.dll
 ```
 to exe directory.
+
+an instance can be created using the same builder pattern as in C#
+```
+DataContainer* dc = DataContainerBuilder::Create("DC")
+    ->Data("shortv", v)
+    ->Data("intv", 1)
+    ->Data("longv", (int64_t)1)
+    ->Data("ushortv", (uint16_t)1)
+    ->Data("uintv", (uint32_t)1)
+    ->Data("ulongv", (uint64_t)1)
+    ->Data("doublev", 1.2)
+    ->Data("floatv", 1.4f)
+    ->Data("datev", date)
+    ->Data("timev", duration)
+    ->Data("pointv", p)
+    ->Data("colorv", c)
+    ->Data("stringv", "Hello World")
+    ->SubDataContainer("dcv", DataContainerBuilder::Create()
+        ->Data("doublev", 4.2)
+        ->Data("floatv", 6.9)
+        ->Data("stringv", "Blha"))
+    ->Build();
+```

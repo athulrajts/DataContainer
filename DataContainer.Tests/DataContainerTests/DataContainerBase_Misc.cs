@@ -174,6 +174,31 @@ namespace DataContainer.Tests
 
         }
 
+        [Fact]
+        public void DataObjectFactory_RegisterDataObject_Works()
+        {
+            DataObjectFactory.RegisterDataObject<Utils.PersonDataObject>();
+
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("person", new Utils.Person { FirstName = "John", LastName = "Doe" })
+                .Build();
+
+            string xml = XmlHelper.SerializeToString(dc);
+
+            IDataContainer dcNew = XmlHelper.DeserializeFromString<KEI.Infrastructure.DataContainer>(xml);
+
+            Assert.True(dcNew.ContainsData("person"));
+
+            DataObject dobj = dcNew.Find("person");
+
+            Assert.Equal("prsn", dobj.Type);
+
+            Utils.Person p = dobj.GetValue() as Utils.Person;
+
+            Assert.Equal("John", p.FirstName);
+            Assert.Equal("Doe", p.LastName);
+        }
+
         #endregion
 
     }
