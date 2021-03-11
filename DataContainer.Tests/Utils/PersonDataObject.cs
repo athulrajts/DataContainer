@@ -1,6 +1,7 @@
 ﻿using KEI.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
@@ -18,6 +19,13 @@ namespace DataContainer.Tests.Utils
         {
             Name = name;
             Value = value;
+        }
+
+        public PersonDataObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        {
+            Value = new Person();
+            Value.FirstName = info.GetString(nameof(Person.FirstName));
+            Value.LastName = info.GetString(nameof(Person.LastName));
         }
 
         private Person _value;
@@ -68,6 +76,14 @@ namespace DataContainer.Tests.Utils
 
             Value.FirstName = reader.GetAttribute(nameof(Person.FirstName));
             Value.LastName = reader.GetAttribute(nameof(Person.LastName));
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue(nameof(Person.FirstName), Value.FirstName);
+            info.AddValue(nameof(Person.LastName), Value.LastName);
         }
     }
 }

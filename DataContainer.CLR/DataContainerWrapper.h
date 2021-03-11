@@ -5,6 +5,7 @@
 #include <msclr/gcroot.h>
 #include "DataContainer.h"
 #include "ValueConverter.h"
+#include "ChangeNotification.h"
 
 class DataContainerWrapper
 {
@@ -60,9 +61,15 @@ public:
 		return instance;
 	}
 
+	void AttachListener(std::function<void(std::string)> action)
+	{
+		unmanagedListner.SetCallBack(action);
+	}
 
 private:
 	msclr::gcroot<KEI::Infrastructure::IDataContainer^> instance;
+	msclr::gcroot<PropertyChangedListener^> listner;
+	UnmanagedPropertyChangedListener unmanagedListner;
 };
 
 template <>

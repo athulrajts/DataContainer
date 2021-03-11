@@ -67,7 +67,7 @@ given name does not exist, and will return false if property is not present.
 ```
 double width = PropertyContainer.GetValue<double>("Width");
 ```
-This will return **default(T)** if the property is not present, that is, it�ll return null for reference types, 0 for
+This will return **default(T)** if the property is not present, that is, it'll return null for reference types, 0 for
 numeric types, false for Boolean and so on.
 ###### Method 3
 ```
@@ -290,6 +290,126 @@ The above objects will be serialized as follows
 </DataContainer>
 ```
 
+## Creating your own DataObject/PropertyObject
+You can create your own custom DataObject for storing your types. 
+Assume that you have the below class. 
+```
+public class Person
+{
+    public string FirstName { get;set; }
+    public string LastName { get;set; }
+}
+```
+And we want this object be serialized as
+```
+<Data type="ps" name="person" firstname="John" lastname="Doe">
+```
+First we create a new class inherting from **DataObject**
+```
+public class PersonDataObject : DataObject
+{
+
+}
+```
+All DataObjects should have a property that stores the values, in this a case a Person Property, and **it's name should always be Value and should raise PropertyChanged events**
+```
+private Person _value;
+public Person Value
+{
+    get { return _value; }
+    set { SetProperty(ref _value, value); }
+}
+```
+Set DataObject type to create correct DataObject when deserializing xml
+```
+public override string Type => "ps";
+```
+
+All DataObjects should have 2 Constructors, One contructor is used for binary deserialization, other should accept 2 arguments, first being the name of the DataObject and second being the value
+```
+public PersonDataObject(string name, Person value)
+{
+    Name = name;
+    Value = value;
+}
+
+public PersonDataObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+{
+    Value = new Person();
+    Value.FirstName = info.GetString(nameof(Person.FirstName));
+    Value.LastName = info.GetString(nameof(Person.LastName));
+}
+```
+Override GetValue and SetValue methods to return the Person object
+```
+public override object GetValue()
+{
+    return Value;
+}
+
+public override bool SetValue(object value)
+{
+    if(value is Person p)
+    {
+        Value = p;
+        return true;
+    }
+
+    return false;
+}
+```
+Let DataObjectFactory know to use this object when asked to create DataObject from Person object
+```
+public override Type GetDataType()
+{
+    return typeof(Person);
+}
+```
+DataObject will write DataObject.StringValue as value attribute in xml as default, we don't want that in this case, to prevent that
+```
+protected override bool CanWriteValueAsXmlAttribute()
+{
+    return false;
+}
+```
+Now we need to write first name and last name was attributes in xml
+```
+protected override void WriteXmlAttributes(XmlWriter writer)
+{
+    base.WriteXmlAttributes(writer);
+
+    writer.WriteAttributeString("firstname", Value.FirstName);
+    writer.WriteAttributeString("lastname", Value.LastName);
+}
+```
+Hanlde xml and binary deserialization
+```
+protected override void InitializeObject()
+{
+    Value = new Person();
+}
+
+protected override void ReadXmlAttributes(XmlReader reader)
+{
+    base.ReadXmlAttributes(reader);
+
+    Value.FirstName = reader.GetAttribute("firstname");
+    Value.LastName = reader.GetAttribute("lastname");
+}
+
+public override void GetObjectData(SerializationInfo info, StreamingContext context)
+{
+    base.GetObjectData(info, context);
+
+    info.AddValue(nameof(Person.FirstName), Value.FirstName);
+    info.AddValue(nameof(Person.LastName), Value.LastName);
+}
+```
+Register this object to DataObjectFactory, preferrably at application startup before any of the DataContainer files are loaded.
+```
+DataObjectFactory.RegisterDataObject<PersonDataObject>();
+```
+
 ## Creating CLR Object from DataContainer/PropertyContainer
 You can create a DataContainer/PropertyContainer that resembles in shape to that of a CLR Object, that
 it both have some common properties that match in name and type. Then you can create an instance of
@@ -438,4 +558,10 @@ DataContainer* dc = DataContainerBuilder::Create("DC")
         ->Data("floatv", 6.9)
         ->Data("stringv", "Blha"))
     ->Build();
+```
+
+###### Change Notification
+Can hook in to property changed events by passing an **std::function\<void(std::string)\>**
+```
+dc.AttachPropertyChangedListner([&](std::string propertyName) {std::cout << propertyName << std::endl;});
 ```

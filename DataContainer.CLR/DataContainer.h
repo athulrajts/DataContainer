@@ -2,6 +2,7 @@
 #include "DataContainer.CLR.h"
 #include <string>
 #include <vector>
+#include <functional>
 
 class DataContainerWrapper;
 struct Duration;
@@ -19,6 +20,7 @@ public:
 
 	static DataContainer LoadFromXml(std::string path);
 	static DataContainer LoadFromBinary(std::string path);
+	
 	bool SaveAsXml(std::string path);
 	bool SaveAsXml();
 
@@ -75,6 +77,7 @@ public:
 	bool SetValue(std::string key, Point value);
 	bool SetValue(std::string key, Color value);
 
+	void AttachPropertyChangedListner(std::function<void(std::string)> listener);
 
 private:
 	DataContainerWrapper* managed;

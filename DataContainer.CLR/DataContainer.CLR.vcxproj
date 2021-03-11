@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ChangeNotification.h" />
     <ClInclude Include="DataContainer.CLR.h" />
     <ClInclude Include="DataContainer.h" />
     <ClInclude Include="DataContainerBuilder.h" />

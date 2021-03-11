@@ -44,22 +44,27 @@ int main()
             ->Data("stringv", "Blha"))
         ->Build();
 
+    built->AttachPropertyChangedListner([&](std::string s) {std::cout << s << std::endl;});
 
-    built->SaveAsXml("Test.xml");
+    built->SetValue("intv", 1);
+    built->SetValue("doublev", 6.9);
+    built->SetValue("stringv", "blah");
 
-    DataContainer dcXml = DataContainer::LoadFromBinary("Test.dat");
+    //built->SaveAsXml("Test.xml");
 
-    auto keys = dcXml.GetKeys();
+    //DataContainer dcXml = DataContainer::LoadFromBinary("Test.dat");
 
-    DataContainer dcInner;
-    bool result = dcXml.GetValue("dcv", dcInner);
-    auto keys2 = dcInner.GetKeys();
+    //auto keys = dcXml.GetKeys();
+
+    //DataContainer dcInner;
+    //bool result = dcXml.GetValue("dcv", dcInner);
+    //auto keys2 = dcInner.GetKeys();
 
 
-    Color c2;
-    Point p2;
-    std::string str;
-    dcInner.GetValue("colorv", c2);
-    dcInner.GetValue("pointv", p2);
+    //Color c2;
+    //Point p2;
+    //std::string str;
+    //dcInner.GetValue("colorv", c2);
+    //dcInner.GetValue("pointv", p2);
 
 }

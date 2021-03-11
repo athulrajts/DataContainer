@@ -93,6 +93,11 @@ bool DataContainer::SetValue(std::string key, DataContainer* value)
 	return managed->SetValue(key, *value->managed);
 }
 
+void DataContainer::AttachPropertyChangedListner(std::function<void(std::string)> listener)
+{
+	managed->AttachListener(listener);
+}
+
 std::vector<std::string> DataContainer::GetKeys()
 {
 	return managed->GetKeys();
@@ -137,10 +142,18 @@ bool DataContainer::SaveAsBinary()
 DataContainerWrapper::DataContainerWrapper()
 {
 	instance = gcnew KEI::Infrastructure::DataContainer();
+
+	System::ComponentModel::INotifyPropertyChanged^ inpc = safe_cast<System::ComponentModel::INotifyPropertyChanged^>(GetInstance());
+
+	listner = gcnew PropertyChangedListener(inpc, &unmanagedListner);
 }
 
 DataContainerWrapper::DataContainerWrapper(KEI::Infrastructure::IDataContainer^ managed)
 {
+	System::ComponentModel::INotifyPropertyChanged^ inpc = safe_cast<System::ComponentModel::INotifyPropertyChanged^>(managed);
+
+	listner = gcnew PropertyChangedListener(inpc, &unmanagedListner);
+
 	instance = managed;
 }
 
@@ -197,3 +210,4 @@ bool DataContainerWrapper::SaveAsBinary()
 #pragma endregion
 
 #pragma warning(pop)
+
