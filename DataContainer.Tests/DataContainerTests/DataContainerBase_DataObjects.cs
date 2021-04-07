@@ -167,5 +167,30 @@ namespace DataContainer.Tests
             Assert.True(orig.SetValue(minFail));
             Assert.True(orig.SetValue(maxFail));
         }
+
+        [Fact]
+        public void DataContainerBuilder_CanAddEmptyStringProperty()
+        {
+            IDataContainer dc = DataContainerBuilder.Create()
+                .Data("StringData", "")
+                .Build();
+
+            Assert.Equal(1, dc.Count);
+
+            Assert.Equal(string.Empty, dc["StringData"]);
+
+        }
+
+        [Fact]
+        public void ProepertyContainerBuilder_CanAddEmptyStringProperty()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("StringData", "")
+                .Build();
+
+            Assert.Equal(1, dc.Count);
+            Assert.Equal(string.Empty, dc["StringData"]);
+
+        }
     }
 }

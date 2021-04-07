@@ -61,7 +61,7 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public DataContainerBuilder Data(string name, object value)
         {
-            if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
+            if (config.ContainsData(name) || value is null )
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
 
@@ -144,7 +144,7 @@ namespace KEI.Infrastructure
         {
             var value = pi.GetValue(obj);
 
-            if(value is null || string.IsNullOrEmpty(value.ToString()))
+            if(value is null)
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {pi.Name}");
 
