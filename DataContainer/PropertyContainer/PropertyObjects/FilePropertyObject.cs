@@ -34,7 +34,7 @@ namespace KEI.Infrastructure
     /// in <see cref="DataContainer"/>
     /// </summary>
     [Serializable]
-    internal class FilePropertyObject : StringPropertyObject , IFileProperty
+    internal class FilePropertyObject : StringPropertyObject , IFileProperty, ICustomTypeProvider
     {
         const string FILTER_DESCRIPTION_ATTRIBUTE = "desc";
         const string FILTER_EXTENSTION_ATTRIBUTE = "ext";
@@ -135,6 +135,16 @@ namespace KEI.Infrastructure
         protected override void InitializeObject()
         {
             Filters = new FilterCollection();
+        }
+
+        /// <summary>
+        /// Implementation for <see cref="ICustomTypeProvider.GetCustomType"/>
+        /// Can be used to use custom editor with property grid implementations
+        /// </summary>
+        /// <returns></returns>
+        public Type GetCustomType()
+        {
+            return typeof(FilePath);
         }
     }
 }

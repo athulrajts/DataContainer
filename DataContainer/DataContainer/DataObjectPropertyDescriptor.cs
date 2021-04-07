@@ -26,7 +26,12 @@ namespace KEI.Infrastructure
         /// </summary>
         public override Type PropertyType
         {
-            get { return DataObject.GetDataType(); }
+            get
+            {
+                return DataObject is ICustomTypeProvider ctp
+                    ? ctp.GetCustomType()
+                    : DataObject.GetDataType();
+            }
         }
 
         /// <summary>
@@ -65,7 +70,7 @@ namespace KEI.Infrastructure
         /// </summary>
         public override Type ComponentType
         {
-            get { return null; }
+            get { return PropertyType; }
         }
 
         /// <summary>

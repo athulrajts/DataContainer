@@ -11,7 +11,7 @@ namespace KEI.Infrastructure
     /// in <see cref="DataContainer"/>
     /// </summary>
     [Serializable]
-    internal class FolderPropertyObject : StringPropertyObject
+    internal class FolderPropertyObject : StringPropertyObject, ICustomTypeProvider
     {
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>
@@ -31,5 +31,16 @@ namespace KEI.Infrastructure
         /// <param name="info"></param>
         /// <param name="context"></param>
         public FolderPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        /// <summary>
+        /// Implementation for <see cref="ICustomTypeProvider.GetCustomType"/>
+        /// Can be used to use custom editor with property grid implementations
+        /// </summary>
+        /// <returns></returns>
+        public Type GetCustomType()
+        {
+            return typeof(FolderPath);
+        }
     }
+
 }

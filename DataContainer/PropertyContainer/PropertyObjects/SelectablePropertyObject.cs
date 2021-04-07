@@ -14,7 +14,7 @@ namespace KEI.Infrastructure
     /// so a combobox can be used instead of a textbox
     /// </summary>
     [Serializable]
-    internal class SelectablePropertyObject : PropertyObject
+    internal class SelectablePropertyObject : PropertyObject, ICustomTypeProvider
     {
         const string OPTION_ELEMENT = "Option";
 
@@ -227,5 +227,14 @@ namespace KEI.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Implementation for <see cref="ICustomTypeProvider.GetCustomType"/>
+        /// Can be used to use custom editor with property grid implementations
+        /// </summary>
+        /// <returns></returns>
+        public Type GetCustomType()
+        {
+            return typeof(Selector);
+        }
     }
 }
