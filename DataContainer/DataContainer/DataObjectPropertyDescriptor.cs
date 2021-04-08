@@ -51,8 +51,8 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public override object GetValue(object component)
         {
-            return DataObject is ICustomValueProvider icvp
-                ? icvp.GetCustomValue()
+            return DataObject is IEditorValueProvider icvp
+                ? icvp.GetEditorValue()
                 : DataObject.GetValue();
         }
 

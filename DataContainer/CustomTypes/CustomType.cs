@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
 
 namespace KEI.Infrastructure
 {
@@ -14,8 +10,8 @@ namespace KEI.Infrastructure
         Type GetCustomType();
     }
 
-    public interface ICustomValueProvider
+    public interface IEditorValueProvider
     {
-        object GetCustomValue();
+        object GetEditorValue();
     }
 }
