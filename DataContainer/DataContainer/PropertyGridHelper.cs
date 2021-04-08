@@ -88,8 +88,5 @@ namespace KEI.Infrastructure
             return converterMapping[propertyObjectType];
         }
 
-        public static Type PropertyGridEditor { get; set; }
-        public static Type CollectionEditor { get; set; }
-
     }
 }

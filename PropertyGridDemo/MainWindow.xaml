@@ -7,6 +7,7 @@
         xmlns:infra="http://schemas.infragistics.com/xaml"
         xmlns:kei="clr-namespace:KEI.Infrastructure;assembly=DataContainer"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
@@ -71,7 +72,18 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <xctk:PropertyGrid SelectedObject="{Binding SelectedItem}"/>
+                    <xctk:PropertyGrid SelectedObject="{Binding SelectedItem}">
+                        <xctk:PropertyGrid.EditorDefinitions>
+                            <xctk:EditorTemplateDefinition TargetProperties="{x:Type kei:Color}">
+                                <xctk:EditorTemplateDefinition.EditingTemplate>
+                                    <DataTemplate>
+                                        <xctk:PropertyGridEditorColorPicker SelectedColor="{Binding Value, Converter={StaticResource ColorConverter}}"
+                                                                            DisplayColorAndName="True"/>
+                                    </DataTemplate>
+                                </xctk:EditorTemplateDefinition.EditingTemplate>
+                            </xctk:EditorTemplateDefinition>
+                        </xctk:PropertyGrid.EditorDefinitions>
+                    </xctk:PropertyGrid>
 
                     <Canvas Grid.Column="1">
                         <Rectangle Fill="{Binding SelectedItem.Fill, Converter={StaticResource BrushConverter}}"
@@ -84,6 +96,30 @@
                     </Canvas>
 
                 </Grid>
+            </TabItem>
+
+            <TabItem Header="Winforms">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <WindowsFormsHost>
+                        <forms:PropertyGrid x:Name="formsGrid"/>
+                    </WindowsFormsHost>
+
+                    <Canvas Grid.Column="1">
+                        <Rectangle Fill="{Binding SelectedItem.Fill, Converter={StaticResource BrushConverter}}"
+                                   Height="{Binding SelectedItem.Height}"
+                                   Width="{Binding SelectedItem.Width}"
+                                   Canvas.Top="{Binding SelectedItem.Y}"
+                                   Canvas.Left="{Binding SelectedItem.X}"
+                                   Stroke="{Binding SelectedItem.Stroke, Converter={StaticResource BrushConverter}}"
+                                   StrokeThickness="{Binding SelectedItem.StrokeThickness}"/>
+                    </Canvas>
+                    
+                </Grid>
+
             </TabItem>
 
         </TabControl>

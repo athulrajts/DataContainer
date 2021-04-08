@@ -813,7 +813,10 @@ namespace KEI.Infrastructure
                 /// custom editors should be registered using <see cref="PropertyGridHelper.RegisterEditor{TEditor}(string)"/>
                 if (PropertyGridHelper.GetEditorType(data.Type) is Type t)
                 {
-                    attrs.Add(new EditorAttribute(t, t));
+                    string fullname = t.FullName;
+                    string assembly = t.Assembly.FullName;
+
+                    attrs.Add(new EditorAttribute($"{fullname}, {assembly}", "System.Drawing.Design.UITypeEditor, System.Windows.Forms"));
                 }
 
                 /// add type converter attribute

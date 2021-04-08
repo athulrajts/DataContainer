@@ -1,11 +1,11 @@
 ﻿using KEI.Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Application = System.Windows.Application;
 
 namespace PropertyGridDemo
 {
@@ -16,9 +16,12 @@ namespace PropertyGridDemo
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            PropertyGridHelper.RegisterEditor<ColorEditor>(DataObjectType.Color);
+            PropertyGridHelper.RegisterEditor<MyColorEditor>(DataObjectType.Color);
+
             PropertyGridHelper.RegisterEditor<SelectorEditor>(DataObjectType.Selectable);
             base.OnStartup(e);
         }
+
+
     }
 }

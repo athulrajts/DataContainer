@@ -3,7 +3,9 @@ using KEI.Infrastructure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,12 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace PropertyGridDemo
 {
+
+    public class Test
+    {
+        [Editor(typeof(MyColorEditor), typeof(UITypeEditor))]
+        public KEI.Infrastructure.Color Color { get; set; } = new KEI.Infrastructure.Color(234,126,67);
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -57,10 +65,17 @@ namespace PropertyGridDemo
                 .Number("Y", 50.0, p => p
                     .SetCategory("Definition")
                     .SetDescription("Y-Coordinate of top left point"))
-                .Property("Options", DataObjectFactory.GetPropertyObject(DataObjectType.Selectable, "Options", 2, Enumerable.Range(0,5).ToList()))
                 .Build();
 
-            var test = SelectedItem["Options"];
+
+            SelectedItem.PropertyChanged += SelectedItem_PropertyChanged;
+
+            formsGrid.SelectedObject = SelectedItem;
+        }
+
+        private void SelectedItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            formsGrid.Refresh();
         }
 
         public IDataContainer SelectedItem { get; }
