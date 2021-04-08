@@ -13,4 +13,9 @@ namespace KEI.Infrastructure
     {
         Type GetCustomType();
     }
+
+    public interface ICustomValueProvider
+    {
+        object GetCustomValue();
+    }
 }

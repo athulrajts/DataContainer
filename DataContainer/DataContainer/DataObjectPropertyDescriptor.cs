@@ -51,7 +51,9 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public override object GetValue(object component)
         {
-            return DataObject.GetValue();
+            return DataObject is ICustomValueProvider icvp
+                ? icvp.GetCustomValue()
+                : DataObject.GetValue();
         }
 
         /// <summary>

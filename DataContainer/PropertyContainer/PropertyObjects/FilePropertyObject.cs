@@ -34,11 +34,12 @@ namespace KEI.Infrastructure
     /// in <see cref="DataContainer"/>
     /// </summary>
     [Serializable]
-    internal class FilePropertyObject : StringPropertyObject , IFileProperty, ICustomTypeProvider
+    internal class FilePropertyObject : StringPropertyObject, IFileProperty, ICustomTypeProvider, ICustomValueProvider
     {
         const string FILTER_DESCRIPTION_ATTRIBUTE = "desc";
         const string FILTER_EXTENSTION_ATTRIBUTE = "ext";
         const string FILTER_ELEMENT = "Filter";
+        private IDataContainer customData;
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>
@@ -58,9 +59,14 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="filters"></param>
-        public FilePropertyObject(string name, string value): base(name, value)
+        public FilePropertyObject(string name, string value) : base(name, value)
         {
             Filters = new FilterCollection();
+            customData = new DataContainer
+            {
+                { "ActualValue", Value },
+                { "Filters", Filters }
+            };
         }
 
         /// <summary>
@@ -114,7 +120,7 @@ namespace KEI.Infrastructure
                 return true;
             }
 
-            if(elementName == FILTER_ELEMENT)
+            if (elementName == FILTER_ELEMENT)
             {
                 string desc = reader.GetAttribute(FILTER_DESCRIPTION_ATTRIBUTE);
                 string ext = reader.GetAttribute(FILTER_EXTENSTION_ATTRIBUTE);
@@ -129,12 +135,21 @@ namespace KEI.Infrastructure
             return false;
         }
 
+        protected override void OnXmlReadingCompleted()
+        {
+            customData.PutValue("ActualValue", Value);
+            customData.PutValue("Filters", Filters);
+
+            customData.SetBinding(() => Value, BindingMode.OneWay);
+        }
+
         /// <summary>
         /// Implementation for <see cref="DataObject.InitializeObject"/>
         /// </summary>
         protected override void InitializeObject()
         {
             Filters = new FilterCollection();
+            customData = new DataContainer();
         }
 
         /// <summary>
@@ -145,6 +160,14 @@ namespace KEI.Infrastructure
         public Type GetCustomType()
         {
             return typeof(FilePath);
+        }
+
+        public object GetCustomValue()
+        {
+            customData.PutValue("ActualValue", Value);
+            customData.PutValue("Filters", Filters);
+
+            return customData;
         }
     }
 }

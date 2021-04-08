@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataContainer.CLR", "DataCo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppSample", "CppSample\CppSample.vcxproj", "{D7F4FBC5-3BD7-4530-9F88-A6D662B8E335}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyGridDemo", "PropertyGridDemo\PropertyGridDemo.csproj", "{FF8D280F-07A6-4C91-BE45-CD76B61CA802}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,18 @@ Global
 		{D7F4FBC5-3BD7-4530-9F88-A6D662B8E335}.Release|x64.Build.0 = Release|x64
 		{D7F4FBC5-3BD7-4530-9F88-A6D662B8E335}.Release|x86.ActiveCfg = Release|Win32
 		{D7F4FBC5-3BD7-4530-9F88-A6D662B8E335}.Release|x86.Build.0 = Release|Win32
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|x64.ActiveCfg = Debug|x64
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|x64.Build.0 = Debug|x64
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|x64.Build.0 = Release|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF8D280F-07A6-4C91-BE45-CD76B61CA802}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

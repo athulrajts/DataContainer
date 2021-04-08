@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.97" />
+    <PackageReference Include="Infragistics.WPF.PropertyGrid.Trial" Version="20.2.27" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataContainer\DataContainer.csproj" />
+  </ItemGroup>
+
+</Project>
