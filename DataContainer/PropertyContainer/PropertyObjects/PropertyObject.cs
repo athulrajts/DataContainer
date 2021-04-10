@@ -22,6 +22,19 @@ namespace KEI.Infrastructure
         #region Properties
 
         /// <summary>
+        /// Set display name as Name initiallly
+        /// </summary>
+        public override string Name
+        {
+            get { return base.Name; }
+            protected set
+            {
+                base.Name = value;
+                DisplayName = value;
+            }
+        }
+
+        /// <summary>
         /// A Description of what the Data would be used for.
         /// </summary>
         public string Description { get; set; }
@@ -69,7 +82,7 @@ namespace KEI.Infrastructure
 
         public PropertyObject() { }
 
-        public PropertyObject(SerializationInfo info, StreamingContext context): base(info, context) 
+        public PropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Category = info.GetString(nameof(Category));
             Description = info.GetString(nameof(Description));
@@ -355,7 +368,7 @@ namespace KEI.Infrastructure
             if (value is T t)
             {
                 bool isValid = Validate(t);
-                
+
                 if (isValid)
                 {
                     Value = t;

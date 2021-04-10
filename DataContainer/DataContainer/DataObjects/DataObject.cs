@@ -46,7 +46,12 @@ namespace KEI.Infrastructure
         /// <summary>
         /// Unique name/key
         /// </summary>
-        public string Name { get; set; }
+        private string name;
+        public virtual string Name
+        {
+            get { return name; }
+            protected set { name = value; }
+        }
 
         /// <summary>
         /// Value as string if possible

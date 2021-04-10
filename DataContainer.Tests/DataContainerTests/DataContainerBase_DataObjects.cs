@@ -182,7 +182,7 @@ namespace DataContainer.Tests
         }
 
         [Fact]
-        public void ProepertyContainerBuilder_CanAddEmptyStringProperty()
+        public void PropertyContainerBuilder_CanAddEmptyStringProperty()
         {
             IDataContainer dc = PropertyContainerBuilder.Create()
                 .Property("StringData", "")
@@ -191,6 +191,25 @@ namespace DataContainer.Tests
             Assert.Equal(1, dc.Count);
             Assert.Equal(string.Empty, dc["StringData"]);
 
+        }
+
+        [Fact]
+        public void PropertyObject_DisplayNameIsNameIfNotSet()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("Data", 55)
+                .Build();
+
+            PropertyObject obj = dc.Find("Data") as PropertyObject;
+
+            Assert.NotNull(obj.DisplayName);
+
+            Assert.Equal("Data", obj.DisplayName);
+
+            obj.SetDisplayName("The Data");
+
+            Assert.NotEqual(obj.Name, obj.DisplayName);
+            Assert.Equal("The Data", obj.DisplayName);
         }
     }
 }

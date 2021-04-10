@@ -2,8 +2,14 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Xceed.Wpf.Toolkit;
+using Xceed.Wpf.Toolkit.PropertyGrid;
+using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
+using Binding = System.Windows.Data.Binding;
 
 namespace PropertyGridDemo
 {
@@ -53,6 +59,51 @@ namespace PropertyGridDemo
             }
 
             e.Graphics.DrawRectangle(Pens.Black, e.Bounds);
+        }
+    }
+
+    public class ColorEditor : TypeEditor<ColorPicker>
+    {
+        protected override void SetValueDependencyProperty()
+        {
+            ValueProperty = ColorPicker.SelectedColorProperty;
+        }
+
+        protected override void SetControlProperties(PropertyItem propertyItem)
+        {
+            Editor.DisplayColorAndName = true;
+        }
+
+        protected override IValueConverter CreateValueConverter()
+        {
+            return new ColorConverter();
+        }
+    }
+
+    public class SelectorEditor : ITypeEditor
+    {
+        public FrameworkElement ResolveEditor(PropertyItem propertyItem)
+        {
+            PropertyGridEditorComboBox box = new PropertyGridEditorComboBox();
+
+            var itemSourceBinding = new Binding("Option")
+            {
+                Source = propertyItem.Value,
+                Mode = System.Windows.Data.BindingMode.OneTime
+            };
+
+            var selectedItembinding = new Binding("SelectedItem")
+            {
+                Source = propertyItem.Value,
+                ValidatesOnDataErrors = true,
+                ValidatesOnExceptions = true,
+                Mode = propertyItem.IsReadOnly ? System.Windows.Data.BindingMode.OneWay : System.Windows.Data.BindingMode.TwoWay
+            };
+
+            BindingOperations.SetBinding(box, System.Windows.Controls.Primitives.Selector.SelectedItemProperty, selectedItembinding);
+            BindingOperations.SetBinding(box, System.Windows.Controls.Primitives.Selector.ItemsSourceProperty, itemSourceBinding);
+
+            return box;
         }
     }
 }
