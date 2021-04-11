@@ -311,24 +311,44 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static void Merge(this IDataContainer lhs, IDataContainer rhs)
+        public static bool Merge(this IDataContainer lhs, IDataContainer rhs)
         {
+            bool result = false;
+            bool innerResult = false;
             foreach (var data in rhs)
             {
                 if(lhs.ContainsData(data.Name) == false)
                 {
                     lhs.Add(data);
+                    result = true;
                 }
                 else
                 {
                     DataObject lhsData = lhs.Find(data.Name);
+
+                    // No need to update value, but update the details
+                    if(data is PropertyObject propRhs && lhsData is PropertyObject propLhs )
+                    {
+                        result = propLhs.DisplayName != propRhs.DisplayName ||
+                            propLhs.Category != propRhs.Category ||
+                            propLhs.Description != propRhs.Description;
+
+                        propLhs.DisplayName = propRhs.DisplayName;
+                        propLhs.Category = propRhs.Category;
+                        propLhs.Description = propRhs.Description;
+                    }
+
                     if(lhsData.GetValue() is IDataContainer dc)
                     {
                         IDataContainer rhsDC = data.GetValue() as IDataContainer;
-                        dc.Merge(rhsDC);
+                        bool temp = dc.Merge(rhsDC);
+
+                        innerResult = temp || innerResult;
                     }
                 }
             }
+
+            return result || innerResult;
         }
 
 
@@ -394,8 +414,12 @@ namespace KEI.Infrastructure
                 if (value is IDataContainer changedChild)
                 {
                     DataObject dcChild = dc.Find(data.Name);
-                    IDataContainer dcChildValue = dcChild.GetValue() as IDataContainer;
-                    dcChildValue.Refresh(changedChild);
+                    
+                    if (dcChild != null)
+                    {
+                        IDataContainer dcChildValue = dcChild.GetValue() as IDataContainer;
+                        dcChildValue.Refresh(changedChild); 
+                    }
                 }
                 else
                 {

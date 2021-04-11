@@ -585,5 +585,59 @@ namespace DataContainer.Tests
             Assert.Single(listener.PropertiesChanged);
 
         }
+
+        [Fact]
+        public void IDataContainer_Merge_ShouldUpdateCategoryDescriptionAndDisplayName()
+        {
+            IDataContainer A = PropertyContainerBuilder.Create("A")
+                .Property("A", 1)
+                .Property("B", 2)
+                .Property("C", 26)
+                .Build();
+
+            IDataContainer B = PropertyContainerBuilder.Create("B")
+                .Property("A", 2 , b => b
+                    .SetDisplayName("PropertyA")
+                    .SetDescription("PropertyA")
+                    .SetCategory("Category"))
+                .Property("B", 3, b => b
+                    .SetDisplayName("PropertyB")
+                    .SetDescription("PropertyB")
+                    .SetCategory("Category"))
+                .Property("C", 4, b => b
+                    .SetDisplayName("PropertyC")
+                    .SetDescription("PropertyC")
+                    .SetCategory("Category"))
+                .Build();
+
+            bool result = A.Merge(B);
+
+            foreach (var item in A.OfType<PropertyObject>())
+            {
+                Assert.Equal($"Property{item.Name}", item.DisplayName);
+                Assert.Equal($"Property{item.Name}", item.Description);
+                Assert.Equal("Category", item.Category);
+            }
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void IDataContainer_Merge_ReturnsFalseIfNoChange()
+        {
+            IDataContainer A = PropertyContainerBuilder.Create("A")
+                .Property("A", 1)
+                .Property("B", 2)
+                .Property("C", 26)
+                .Build();
+
+            IDataContainer B = PropertyContainerBuilder.Create("B")
+                .Property("A", 1)
+                .Property("B", 2)
+                .Property("C", 26)
+                .Build();
+
+            Assert.False(A.Merge(B));
+        }
     }
 }
