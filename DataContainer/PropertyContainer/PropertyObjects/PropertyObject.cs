@@ -122,7 +122,7 @@ namespace KEI.Infrastructure
             base.WriteXmlContent(writer);
 
             // Write DisplayName if have we have one
-            if (string.IsNullOrEmpty(DisplayName) == false)
+            if (string.IsNullOrEmpty(DisplayName) == false && DisplayName != Name)
             {
                 writer.WriteElementString(nameof(DisplayName), DisplayName);
             }

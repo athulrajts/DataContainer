@@ -211,5 +211,17 @@ namespace DataContainer.Tests
             Assert.NotEqual(obj.Name, obj.DisplayName);
             Assert.Equal("The Data", obj.DisplayName);
         }
+
+        [Fact]
+        public void PropertyObject_ShouldNotWriteDisplayNameIfSameAsNameToXml()
+        {
+            IDataContainer dc = PropertyContainerBuilder.Create()
+                .Property("Data", 55)
+                .Build();
+
+            string xml = XmlHelper.SerializeToString(dc);
+
+            Assert.DoesNotContain("DisplayName", xml);
+        }
     }
 }
