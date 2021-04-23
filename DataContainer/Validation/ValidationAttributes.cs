@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace KEI.Infrastructure.Validation.Attributes
+namespace System.Configuration.Validation.Attributes
 {
     [AttributeUsage(validOn: AttributeTargets.Property, Inherited = true)]
     public class ValidationAttribute : Attribute
@@ -30,7 +29,7 @@ namespace KEI.Infrastructure.Validation.Attributes
     {
         public Positive()
         {
-            validator = new NumberSignValidator { IsPositive = true};
+            validator = new NumberSignValidator { IsPositive = true };
         }
     }
 

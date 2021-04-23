@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     public enum PathValidationMode
     {

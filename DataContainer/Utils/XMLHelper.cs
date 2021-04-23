@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public static class XmlHelper
     {
@@ -70,7 +69,7 @@ namespace KEI.Infrastructure
                     {
                         serializer.Serialize(writer, data, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
                     }
-                   
+
                     return stream.ToString();
                 }
             }

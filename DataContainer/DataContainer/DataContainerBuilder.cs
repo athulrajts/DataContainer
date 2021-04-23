@@ -1,13 +1,12 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
 
     public class DataContainerBuilder
     {
         protected readonly IDataContainer config;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -45,7 +44,7 @@ namespace KEI.Infrastructure
             }
 
             var builder = Create(name);
-            
+
             containerBuilder?.Invoke(builder);
 
             config.Add(new ContainerDataObject(name, builder.Build()));
@@ -61,7 +60,7 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public DataContainerBuilder Data(string name, object value)
         {
-            if (config.ContainsData(name) || value is null )
+            if (config.ContainsData(name) || value is null)
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
 
@@ -107,7 +106,7 @@ namespace KEI.Infrastructure
             if (config.ContainsData(name) || value is null)
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {name}");
-                
+
                 return this;
             }
 
@@ -144,7 +143,7 @@ namespace KEI.Infrastructure
         {
             var value = pi.GetValue(obj);
 
-            if(value is null)
+            if (value is null)
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add invalid value : {pi.Name}");
 
@@ -152,7 +151,7 @@ namespace KEI.Infrastructure
             }
 
             // ??
-            if(value is IDataContainer dc && dc.Count == 0)
+            if (value is IDataContainer dc && dc.Count == 0)
             {
                 return this;
             }
@@ -174,7 +173,7 @@ namespace KEI.Infrastructure
             {
                 return null;
             }
-            else if(value is IDataContainerSource ids)
+            else if (value is IDataContainerSource ids)
             {
                 return ids.ToDataContainer();
             }
@@ -207,21 +206,21 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IDataContainer FromXmlFile(string path) => Infrastructure.DataContainer.FromXmlFile(path);
+        public static IDataContainer FromXmlFile(string path) => Configuration.DataContainer.FromXmlFile(path);
 
         /// <summary>
         /// Read DataContainer from binary file
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IDataContainer FromBinaryFile(string path) => Infrastructure.DataContainer.FromBinaryFile(path);
+        public static IDataContainer FromBinaryFile(string path) => Configuration.DataContainer.FromBinaryFile(path);
 
         /// <summary>
         /// returns <see cref="IDataContainer"/> instance built
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static DataContainerBuilder Create(string name ="") => new DataContainerBuilder(name);
+        public static DataContainerBuilder Create(string name = "") => new DataContainerBuilder(name);
     }
 
     public enum SerializationFormat

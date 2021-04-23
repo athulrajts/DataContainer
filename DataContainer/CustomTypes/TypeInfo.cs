@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Configuration.Types;
 using System.Linq;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 
-namespace KEI.Infrastructure.Types
+namespace System.Configuration
 {
     [Serializable]
     public class TypeInfo : IEquatable<TypeInfo>, IEquatable<Type>
@@ -33,7 +33,7 @@ namespace KEI.Infrastructure.Types
             Namespace = type.Namespace;
             Assembly = type.Assembly.GetName().Name;
 
-            if(type.IsGenericType)
+            if (type.IsGenericType)
             {
                 IsGenericType = true;
                 GenericTypeArgs = new List<TypeInfo>();
@@ -50,7 +50,7 @@ namespace KEI.Infrastructure.Types
 
         public Type GetUnderlyingType()
         {
-            var assembly =  AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.GetName().Name == Assembly)
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.GetName().Name == Assembly)
                 ?? ImplementationsProvider.Instance.GetAssemblies().FirstOrDefault(x => x.GetName().Name == Assembly);
 
             if (assembly == null)

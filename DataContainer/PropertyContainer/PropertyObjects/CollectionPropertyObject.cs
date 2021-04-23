@@ -1,11 +1,9 @@
-﻿using KEI.Infrastructure.Types;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject Implementation for storing <see cref="IList"/> of not primitive types
@@ -14,7 +12,7 @@ namespace KEI.Infrastructure
     internal class CollectionPropertyObject : PropertyObject
     {
         private IDataContainer readingHelper;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -32,7 +30,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        public CollectionPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        public CollectionPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             CollectionType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
             Value = (IList)info.GetValue(nameof(Value), CollectionType);
@@ -145,7 +143,7 @@ namespace KEI.Infrastructure
         protected override bool ReadXmlElement(string elementName, XmlReader reader)
         {
             // call base
-            if(base.ReadXmlElement(elementName, reader))
+            if (base.ReadXmlElement(elementName, reader))
             {
                 return true;
             }
@@ -171,10 +169,10 @@ namespace KEI.Infrastructure
             }
 
             /// Read type info
-            else if(elementName == nameof(TypeInfo))
+            else if (elementName == nameof(TypeInfo))
             {
                 CollectionType = reader.ReadObjectXml<TypeInfo>();
-                
+
                 return true;
             }
 

@@ -1,11 +1,11 @@
 ﻿using System.Xml;
 using Xunit;
-using KEI.Infrastructure;
+using System.Configuration;
 using System.ComponentModel;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
-using KEI.Infrastructure.Helpers;
+using System.Configuration.Helpers;
 using DataContainer.Utils;
 
 namespace DataContainer.Tests

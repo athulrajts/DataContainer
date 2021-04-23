@@ -1,8 +1,7 @@
-﻿using KEI.Infrastructure.Validation;
-using System;
+﻿using System.Configuration.Validation;
 using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [Serializable]
     public abstract class PropertyContainerBase : DataContainerBase, IPropertyContainer

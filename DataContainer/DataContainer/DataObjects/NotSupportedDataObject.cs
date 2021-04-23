@@ -1,7 +1,6 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Dummy object to skip read <see cref="DataObject"/>s who hasn't
@@ -29,7 +28,7 @@ namespace KEI.Infrastructure
         public override void ReadXml(XmlReader reader)
         {
             // read till end, so we can move on to the next node
-            while(reader.EOF == false)
+            while (reader.EOF == false)
             {
                 reader.Read();
             }

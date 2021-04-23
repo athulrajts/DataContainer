@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml;
-using System.Text.Json;
-using System.ComponentModel;
-using KEI.Infrastructure.Types;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [Serializable]
     internal abstract class ObjectPropertyObject : PropertyObject

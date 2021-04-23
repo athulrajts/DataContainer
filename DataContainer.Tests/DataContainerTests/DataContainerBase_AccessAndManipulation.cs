@@ -5,8 +5,8 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Xunit;
 using DataContainer.Utils;
-using KEI.Infrastructure;
-using KEI.Infrastructure.Validation;
+using System.Configuration;
+using System.Configuration.Validation;
 using System.Linq;
 
 namespace DataContainer.Tests
@@ -79,7 +79,7 @@ namespace DataContainer.Tests
 
             var serializedData = XmlHelper.SerializeToString(data);
 
-            var recreatedData = XmlHelper.DeserializeFromString<KEI.Infrastructure.DataContainer>(serializedData);
+            var recreatedData = XmlHelper.DeserializeFromString<System.Configuration.DataContainer>(serializedData);
 
             Assert.NotNull(recreatedData);
 

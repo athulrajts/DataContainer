@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace KEI.Infrastructure.Helpers
+namespace System.Configuration.Helpers
 {
     public static class EnumExtensions
     {

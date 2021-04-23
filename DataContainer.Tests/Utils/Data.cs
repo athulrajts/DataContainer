@@ -1,4 +1,4 @@
-﻿using KEI.Infrastructure;
+﻿using System.Configuration;
 using System;
 using System.Collections.ObjectModel;
 

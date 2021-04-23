@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     /// <summary>
     /// Class to help update a <see cref="IDataContainer"/> whenever the File it was loaded from changes.
@@ -49,7 +47,7 @@ namespace KEI.Infrastructure
             }
             set
             {
-                if(_watcher is TimerBasedFileWatcher tfw)
+                if (_watcher is TimerBasedFileWatcher tfw)
                 {
                     tfw.Interval = value;
                 }
@@ -69,7 +67,7 @@ namespace KEI.Infrastructure
         {
             _container = dc;
 
-            if(string.IsNullOrEmpty(_container.FilePath))
+            if (string.IsNullOrEmpty(_container.FilePath))
             {
                 throw new ArgumentException("FilePath cannot be empty");
             }
@@ -97,12 +95,12 @@ namespace KEI.Infrastructure
             // update properties
             if (changed != null)
             {
-                if(CanAddItems)
+                if (CanAddItems)
                 {
                     _container.Merge(changed);
                 }
 
-                if(CanRemoveItems)
+                if (CanRemoveItems)
                 {
                     _container.InplaceIntersect(changed);
                 }

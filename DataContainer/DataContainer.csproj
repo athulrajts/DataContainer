@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <RootNamespace>KEI.Infrastructure</RootNamespace>
+    <RootNamespace>System.Configuration</RootNamespace>
     <AssemblyName>DataContainer</AssemblyName>
     <PackageId>DataContainer.NET</PackageId>
     <Authors>athulrajts</Authors>
@@ -16,10 +16,11 @@
     <Copyright>Copyright (c) 2021 athulrajts</Copyright>
     <PackageTags>Settings,Configuration, XML, Binary</PackageTags>
     <NeutralLanguage>en-IN</NeutralLanguage>
-    <Version>1.1.4</Version>
-    <AssemblyVersion>1.1.4</AssemblyVersion>
-    <FileVersion>1.1.4</FileVersion>
+    <Version>1.1.5</Version>
+    <AssemblyVersion>1.1.5</AssemblyVersion>
+    <FileVersion>1.1.5</FileVersion>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <PackageIcon>1138513801579060772-128.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="C:\Users\Athul\Downloads\1138513801579060772-128.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

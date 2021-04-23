@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PropertyGridDemo"
         xmlns:infra="http://schemas.infragistics.com/xaml"
-        xmlns:kei="clr-namespace:KEI.Infrastructure;assembly=DataContainer"
+        xmlns:kei="clr-namespace:System.Configuration;assembly=DataContainer"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"

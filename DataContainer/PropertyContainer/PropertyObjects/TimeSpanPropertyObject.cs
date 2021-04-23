@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject implementation for storing <see cref="TimeSpan"/>

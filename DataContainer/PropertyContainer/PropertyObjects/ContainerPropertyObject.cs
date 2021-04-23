@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using KEI.Infrastructure.Types;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject implementation for <see cref="IDataContainer"/>
@@ -54,7 +52,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        public ContainerPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        public ContainerPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             ObjectType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
             Value = info.GetValue(nameof(Value), ObjectType);

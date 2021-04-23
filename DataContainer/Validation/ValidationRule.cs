@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Xml.Serialization;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     public interface IValidationRule
     {
@@ -62,7 +61,7 @@ namespace KEI.Infrastructure.Validation
         {
             get { return currentResult; }
             set { SetProperty(ref currentResult, value); }
-        }   
+        }
 
         public override bool Equals(object obj)
         {
@@ -100,11 +99,11 @@ namespace KEI.Infrastructure.Validation
         [Browsable(false)]
         public virtual string StringRepresentation => string.Empty;
 
-        protected bool SetValidationProperty<T>(ref T store, T value, [CallerMemberName] string property ="")
+        protected bool SetValidationProperty<T>(ref T store, T value, [CallerMemberName] string property = "")
         {
             var propertySet = SetProperty(ref store, value, property);
 
-            if(propertySet)
+            if (propertySet)
             {
                 RaisePropertyChanged(nameof(StringRepresentation));
             }

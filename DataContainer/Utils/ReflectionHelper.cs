@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration.Validation;
+using System.Configuration.Validation.Attributes;
 using System.Linq;
 using System.Reflection;
-using System.Collections;
-using System.ComponentModel;
-using System.Collections.Generic;
-using KEI.Infrastructure.Validation;
-using KEI.Infrastructure.Validation.Attributes;
 
-namespace KEI.Infrastructure.Helpers
+namespace System.Configuration.Helpers
 {
     public static class ReflectionExtentions
     {

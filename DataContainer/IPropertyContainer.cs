@@ -1,6 +1,6 @@
-﻿using KEI.Infrastructure.Validation;
+﻿using System.Configuration.Validation;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public interface IPropertyContainer : IDataContainer
     {

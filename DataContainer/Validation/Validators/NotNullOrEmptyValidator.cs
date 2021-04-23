@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     [Serializable]
     public class NotNullOrEmptyValidator : ValidationRule
@@ -19,7 +18,7 @@ namespace KEI.Infrastructure.Validation
         public override ValidationResult Validate(object value)
         {
 
-            if(value is null || string.IsNullOrEmpty(value.ToString()))
+            if (value is null || string.IsNullOrEmpty(value.ToString()))
             {
                 return ValidationFailed("value cannot be empty");
             }

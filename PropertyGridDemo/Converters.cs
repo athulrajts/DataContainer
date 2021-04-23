@@ -1,4 +1,4 @@
-﻿using KEI.Infrastructure;
+﻿using System.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,7 +13,7 @@ namespace PropertyGridDemo
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is KEI.Infrastructure.Color c)
+            if (value is System.Configuration.Color c)
             {
                 return System.Windows.Media.Color.FromRgb(c.R, c.G, c.B);
             }
@@ -25,7 +25,7 @@ namespace PropertyGridDemo
         {
             if (value is System.Windows.Media.Color c)
             {
-                return new KEI.Infrastructure.Color(c.R, c.G, c.B);
+                return new System.Configuration.Color(c.R, c.G, c.B);
             }
             return DependencyProperty.UnsetValue;
         }
@@ -53,7 +53,7 @@ namespace PropertyGridDemo
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is KEI.Infrastructure.Color c)
+            if (value is System.Configuration.Color c)
             {
                 return new SolidColorBrush(System.Windows.Media.Color.FromRgb(c.R, c.G, c.B));
             }

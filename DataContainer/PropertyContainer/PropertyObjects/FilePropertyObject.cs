@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [Serializable]
     public class Filter

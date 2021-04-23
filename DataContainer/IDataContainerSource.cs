@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     /// <summary>
     /// Ignores the property during creating from <see cref="DataContainerBuilder.CreateObject(string, object)"/>
     /// or <see cref="PropertyContainerBuilder.CreateObject(string, object)"/>
     /// </summary>
-    [AttributeUsage(validOn:AttributeTargets.Property)]
+    [AttributeUsage(validOn: AttributeTargets.Property)]
     public class DataContainerIgnoreAttribute : Attribute { }
 
     /// <summary>

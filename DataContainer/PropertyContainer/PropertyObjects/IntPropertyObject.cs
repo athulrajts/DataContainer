@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject implementation for <see cref="short"/>
@@ -72,7 +71,7 @@ namespace KEI.Infrastructure
         /// <param name="name"></param>
         /// <param name="value"></param>
         public LongPropertyObject(string name, long value) : base(name, value) { }
-        
+
         /// <summary>
         /// Constructor for binary deserialization
         /// </summary>

@@ -1,9 +1,8 @@
-﻿using KEI.Infrastructure.Helpers;
-using System;
+﻿using System.Configuration.Helpers;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// DataObject implementation for storing passwords, serialized value will be encrypted

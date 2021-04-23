@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     [Serializable]
     public class MustBeOneOfValidator : ValidationRule

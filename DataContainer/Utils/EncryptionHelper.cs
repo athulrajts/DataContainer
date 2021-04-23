@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Security.Cryptography;
 
-namespace KEI.Infrastructure.Helpers
+namespace System.Configuration.Helpers
 {
     public static class EncryptionHelper
     {
@@ -60,7 +59,7 @@ namespace KEI.Infrastructure.Helpers
             byte[] passToDecrypt = Convert.FromBase64String(p_Value);
 
             byte[] byteRes = null;
-            
+
             try
             {
                 byteRes = TDES.CreateDecryptor().TransformFinalBlock(passToDecrypt, 0, passToDecrypt.Length);

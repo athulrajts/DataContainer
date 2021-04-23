@@ -1,15 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using KEI.Infrastructure.Utils;
+using System.Configuration.Utils;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Reflection;
+using System.Xml.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Concrete implementation for <see cref="IDataContainer"/>
@@ -78,7 +77,7 @@ namespace KEI.Infrastructure
         /// <param name="key"></param>
         public void Remove(string key)
         {
-            if(internalDictionary.ContainsKey(key) == false)
+            if (internalDictionary.ContainsKey(key) == false)
             {
                 return;
             }
@@ -108,7 +107,7 @@ namespace KEI.Infrastructure
         /// <param name="obj"></param>
         public override void Add(DataObject obj)
         {
-            if(IdentifierExtensions.IsValidIdentifier(obj.Name) == false)
+            if (IdentifierExtensions.IsValidIdentifier(obj.Name) == false)
             {
                 throw new ArgumentException($"{obj.Name} is not a valid c# identifier");
             }
@@ -129,9 +128,9 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public override DataObject Find(string key) => 
-            internalDictionary.ContainsKey(key) 
-            ? internalDictionary[key] 
+        public override DataObject Find(string key) =>
+            internalDictionary.ContainsKey(key)
+            ? internalDictionary[key]
             : null;
 
         /// <summary>
@@ -165,7 +164,7 @@ namespace KEI.Infrastructure
                     return (IDataContainer)formatter.Deserialize(stream);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 DataContainerEvents.NotifyError($"Error reading file :{path}, {ex}");
 

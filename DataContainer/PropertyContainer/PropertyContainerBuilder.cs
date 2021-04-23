@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Configuration.Helpers;
 using System.Reflection;
-using KEI.Infrastructure.Helpers;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
 
     /// <summary>
@@ -59,14 +58,14 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IPropertyContainer FromXmlFile(string path) => Infrastructure.PropertyContainer.FromXmlFile(path);
+        public static IPropertyContainer FromXmlFile(string path) => Configuration.PropertyContainer.FromXmlFile(path);
 
         /// <summary>
         /// Create <see cref="IPropertyContainer"/> from binary file
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IPropertyContainer FromBinaryFile(string path) => Infrastructure.PropertyContainer.FromBinaryFile(path);
+        public static IPropertyContainer FromBinaryFile(string path) => Configuration.PropertyContainer.FromBinaryFile(path);
 
         #endregion
 
@@ -90,7 +89,7 @@ namespace KEI.Infrastructure
             }
 
             var builder = Create(name);
-            
+
             containerBuilder?.Invoke(builder);
 
             config.Add(new ContainerPropertyObject(name, builder.Build()));
@@ -122,11 +121,11 @@ namespace KEI.Infrastructure
             {
                 obj = DataObjectFactory.GetPropertyObjectFor(name, value);
             }
-            else if(format == SerializationFormat.Json)
+            else if (format == SerializationFormat.Json)
             {
                 obj = new JsonPropertyObject(name, value);
             }
-            else if(format == SerializationFormat.Xml)
+            else if (format == SerializationFormat.Xml)
             {
                 obj = new XmlPropertyObject(name, value);
             }
@@ -181,12 +180,12 @@ namespace KEI.Infrastructure
             if (config.ContainsData(name) || value is null || string.IsNullOrWhiteSpace(value.ToString()))
             {
                 DataContainerEvents.NotifyInformation($"Attempted to add duplication value : {name}");
-                
+
                 return this;
             }
 
             var obj = new PasswordPropertyObject(name, value);
-            
+
             propertyBuilder?.Invoke(new PropertyObjectBuilder(obj));
 
             config.Add(obj);
@@ -367,7 +366,7 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public PropertyContainerBuilder Color(string name, string hex, Action<PropertyObjectBuilder> propertyBuilder = null)
         {
-            if (Infrastructure.Color.Parse(hex) is Color c)
+            if (Configuration.Color.Parse(hex) is Color c)
             {
                 Color(name, c, propertyBuilder);
             }
@@ -412,11 +411,11 @@ namespace KEI.Infrastructure
             }
 
             PropertyObject obj = null;
-            if(a.Rank == 1)
+            if (a.Rank == 1)
             {
                 obj = new Array1DPropertyObject(name, a);
             }
-            else if(a.Rank == 2)
+            else if (a.Rank == 2)
             {
                 obj = new Array2DPropertyObject(name, a);
             }

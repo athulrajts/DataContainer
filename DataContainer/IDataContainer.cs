@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using KEI.Infrastructure.Types;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public interface IDataContainer : INotifyPropertyChanged, INotifyCollectionChanged, ICloneable, IEnumerable<DataObject>
     {

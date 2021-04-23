@@ -1,11 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public static class DataContainerExtensions
     {
@@ -23,13 +22,13 @@ namespace KEI.Infrastructure
         public static T GetValue<T>(this IDataContainer container, Key<T> key)
         {
             T value = key.DefaultValue;
-            
+
             container.GetValue(key.Name, ref value);
-            
+
             return value;
         }
 
-        public static bool SetValue<T>(this IDataContainer container, Key<T> key, T value) 
+        public static bool SetValue<T>(this IDataContainer container, Key<T> key, T value)
             => container.SetValue(key.Name, value);
 
         public static void PutValue(this IDataContainer container, string key, object value)
@@ -51,7 +50,7 @@ namespace KEI.Infrastructure
             }
         }
 
-        public static void PutValue<T>(this IDataContainer container, Key<T> key, T value) 
+        public static void PutValue<T>(this IDataContainer container, Key<T> key, T value)
             => container.PutValue(key.Name, value);
 
         public static DataObject FindRecursive(this IDataContainer container, string key)
@@ -80,7 +79,7 @@ namespace KEI.Infrastructure
 
         public static void Remove(this IDataContainer dc, string key)
         {
-            if(dc.Find(key) is DataObject obj)
+            if (dc.Find(key) is DataObject obj)
             {
                 dc.Remove(obj);
             }
@@ -93,7 +92,7 @@ namespace KEI.Infrastructure
         {
             var split = key.Split('.');
 
-            if(split.Length == 1 && container.Find(split.First()) is DataObject obj)
+            if (split.Length == 1 && container.Find(split.First()) is DataObject obj)
             {
                 container.Remove(obj);
             }
@@ -104,7 +103,7 @@ namespace KEI.Infrastructure
 
                 if (temp is IDataContainer dc)
                 {
-                   dc.RecursiveRemove(string.Join(".", split.Skip(1)));
+                    dc.RecursiveRemove(string.Join(".", split.Skip(1)));
                 }
                 else
                 {
@@ -131,7 +130,7 @@ namespace KEI.Infrastructure
         public static IDataContainer Union(this IDataContainer lhs, IDataContainer rhs)
         {
             IDataContainer union = lhs is IPropertyContainer
-                ? (IDataContainer)new PropertyContainer() 
+                ? (IDataContainer)new PropertyContainer()
                 : new DataContainer();
 
             union.Name = lhs.Name;
@@ -143,7 +142,7 @@ namespace KEI.Infrastructure
 
             foreach (DataObject obj in rhs)
             {
-                if(union.ContainsData(obj.Name) == false)
+                if (union.ContainsData(obj.Name) == false)
                 {
                     union.Add(obj);
                 }
@@ -158,7 +157,7 @@ namespace KEI.Infrastructure
 
                         if (unionDC.IsIdentical(dc) == false)
                         {
-                            unionObj.SetValue(unionDC.Union(dc)); 
+                            unionObj.SetValue(unionDC.Union(dc));
                         }
                     }
                 }
@@ -190,7 +189,7 @@ namespace KEI.Infrastructure
             foreach (var key in intersectKeys)
             {
                 DataObject first = lhs.Find(key);
-                
+
                 // in case of nested IDataContainer
                 if (first.GetValue() is IDataContainer dc)
                 {
@@ -198,7 +197,7 @@ namespace KEI.Infrastructure
 
                     if (dc.IsIdentical(second) == false)
                     {
-                        first.SetValue(dc.Intersect(second)); 
+                        first.SetValue(dc.Intersect(second));
                     }
                 }
 
@@ -317,7 +316,7 @@ namespace KEI.Infrastructure
             bool innerResult = false;
             foreach (var data in rhs)
             {
-                if(lhs.ContainsData(data.Name) == false)
+                if (lhs.ContainsData(data.Name) == false)
                 {
                     lhs.Add(data);
                     result = true;
@@ -327,7 +326,7 @@ namespace KEI.Infrastructure
                     DataObject lhsData = lhs.Find(data.Name);
 
                     // No need to update value, but update the details
-                    if(data is PropertyObject propRhs && lhsData is PropertyObject propLhs )
+                    if (data is PropertyObject propRhs && lhsData is PropertyObject propLhs)
                     {
                         result = propLhs.DisplayName != propRhs.DisplayName ||
                             propLhs.Category != propRhs.Category ||
@@ -338,7 +337,7 @@ namespace KEI.Infrastructure
                         propLhs.Description = propRhs.Description;
                     }
 
-                    if(lhsData.GetValue() is IDataContainer dc)
+                    if (lhsData.GetValue() is IDataContainer dc)
                     {
                         IDataContainer rhsDC = data.GetValue() as IDataContainer;
                         bool temp = dc.Merge(rhsDC);
@@ -362,7 +361,7 @@ namespace KEI.Infrastructure
         {
             foreach (var data in rhs)
             {
-                if(lhs.Find(data.Name) is DataObject obj)
+                if (lhs.Find(data.Name) is DataObject obj)
                 {
                     lhs.Remove(obj);
                 }
@@ -414,11 +413,11 @@ namespace KEI.Infrastructure
                 if (value is IDataContainer changedChild)
                 {
                     DataObject dcChild = dc.Find(data.Name);
-                    
+
                     if (dcChild != null)
                     {
                         IDataContainer dcChildValue = dcChild.GetValue() as IDataContainer;
-                        dcChildValue.Refresh(changedChild); 
+                        dcChildValue.Refresh(changedChild);
                     }
                 }
                 else
@@ -462,7 +461,7 @@ namespace KEI.Infrastructure
             {
                 if (s[key].Value is object obj)
                 {
-                    dc.SetValue(key, obj); 
+                    dc.SetValue(key, obj);
                 }
             }
         }

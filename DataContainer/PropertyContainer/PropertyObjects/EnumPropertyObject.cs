@@ -1,10 +1,8 @@
-﻿using System;
+﻿using System.Configuration.Validation;
 using System.Runtime.Serialization;
 using System.Xml;
-using KEI.Infrastructure.Types;
-using KEI.Infrastructure.Validation;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject implementation for <see cref="enum"/>
@@ -95,12 +93,12 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         protected override bool ReadXmlElement(string elementName, XmlReader reader)
         {
-            if(base.ReadXmlElement(elementName, reader) == true)
+            if (base.ReadXmlElement(elementName, reader) == true)
             {
                 return true;
             }
 
-            if(elementName == nameof(TypeInfo))
+            if (elementName == nameof(TypeInfo))
             {
                 EnumType = reader.ReadObjectXml<TypeInfo>();
 

@@ -78,12 +78,12 @@ class ValueConverter<Color>
 public:
 	static System::Object^ GetManaged(Color& unmanaged)
 	{
-		return gcnew KEI::Infrastructure::Color(unmanaged.r, unmanaged.g, unmanaged.b);
+		return gcnew System::Configuration::Color(unmanaged.r, unmanaged.g, unmanaged.b);
 	}
 
 	static Color GetUnmanaged(System::Object^ managed)
 	{
-		KEI::Infrastructure::Color^ c = safe_cast<KEI::Infrastructure::Color^>(managed);
+		System::Configuration::Color^ c = safe_cast<System::Configuration::Color^>(managed);
 		Color result{};
 
 		if (c)
@@ -103,12 +103,12 @@ class ValueConverter<Point>
 public:
 	static System::Object^ GetManaged(Point& unmanaged)
 	{
-		return gcnew KEI::Infrastructure::Point(unmanaged.x, unmanaged.y);
+		return gcnew System::Configuration::Point(unmanaged.x, unmanaged.y);
 	}
 
 	static Point GetUnmanaged(System::Object^ managed)
 	{
-		KEI::Infrastructure::Point^ p = safe_cast<KEI::Infrastructure::Point^>(managed);
+		System::Configuration::Point^ p = safe_cast<System::Configuration::Point^>(managed);
 		Point result{};
 
 		if (p)

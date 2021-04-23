@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Configuration.Helpers;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using KEI.Infrastructure.Helpers;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     public enum Ineqaulity
     {

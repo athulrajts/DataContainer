@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.ComponentModel;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Object Representing a binding between a CLR Property
@@ -103,7 +102,7 @@ namespace KEI.Infrastructure
                 // Update the target property if the owner hasn't already been GC'ed
                 if (BindingTarget.IsAlive)
                 {
-                    TargetProperty.SetValue(BindingTarget.Target, Property.GetValue()); 
+                    TargetProperty.SetValue(BindingTarget.Target, Property.GetValue());
                 }
             }
         }

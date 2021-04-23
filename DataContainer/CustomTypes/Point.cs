@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.ComponentModel;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [TypeConverter(typeof(PointConverter))]
     [Serializable]

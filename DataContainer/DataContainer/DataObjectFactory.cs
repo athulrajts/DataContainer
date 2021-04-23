@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public static class DataObjectType
     {
@@ -314,34 +313,34 @@ namespace KEI.Infrastructure
 
         private static DataObject GetSpecialDataObject(string name, object value)
         {
-            if(value is DataObject data)
+            if (value is DataObject data)
             {
                 return data;
             }
-            else if(value is Enum e)
+            else if (value is Enum e)
             {
                 return new EnumDataObject(name, e);
             }
-            else if(value is IDataContainer d)
+            else if (value is IDataContainer d)
             {
                 return new ContainerDataObject(name, d);
             }
-            else if(value is IDataContainerSource ids)
+            else if (value is IDataContainerSource ids)
             {
                 return new ContainerDataObject(name, ids.ToDataContainer());
             }
-            else if(value is Array a)
+            else if (value is Array a)
             {
                 if (a.GetType().GetElementType().IsPrimitive == false)
                 {
                     throw new NotSupportedException("Array of non primitive types not supported");
                 }
 
-                if(a.Rank == 1)
+                if (a.Rank == 1)
                 {
                     return new Array1DDataObject(name, a);
                 }
-                else if(a.Rank == 2)
+                else if (a.Rank == 2)
                 {
                     return new Array2DDataObject(name, a);
                 }
@@ -350,7 +349,7 @@ namespace KEI.Infrastructure
                     throw new NotSupportedException("Array of more than 2 dimensions not supported");
                 }
             }
-            else if(value is IList l)
+            else if (value is IList l)
             {
                 return new CollectionDataObject(name, l);
             }
@@ -419,7 +418,7 @@ namespace KEI.Infrastructure
             {
                 return new ContainerPropertyObject(name, d);
             }
-            else if(value is IPropertyContainerSource ips)
+            else if (value is IPropertyContainerSource ips)
             {
                 return new ContainerPropertyObject(name, ips.ToPropertyContainer());
             }

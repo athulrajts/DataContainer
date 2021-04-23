@@ -1,10 +1,9 @@
-﻿using System;
-using System.Xml.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     [XmlRoot(IsNullable = false, ElementName = "Validations")]
     [Serializable]

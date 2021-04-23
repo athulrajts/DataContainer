@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Timers;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Class to Automatically save the <see cref="IDataContainer"/> instance whenever it's properties changes.
@@ -36,19 +36,19 @@ namespace KEI.Infrastructure
         /// Enable AutoSave
         /// </summary>
         private bool enabled;
-        public bool Enabled 
+        public bool Enabled
         {
             get { return enabled; }
             set
             {
-                if(enabled == value)
+                if (enabled == value)
                 {
                     return;
                 }
 
                 enabled = value;
 
-                if(enabled)
+                if (enabled)
                 {
                     _container.PropertyChanged += PropertyChanged;
                 }
@@ -90,7 +90,7 @@ namespace KEI.Infrastructure
 
         public void AddFilter(string filter)
         {
-            if(_filters.Contains(filter))
+            if (_filters.Contains(filter))
             {
                 return;
             }
@@ -123,15 +123,15 @@ namespace KEI.Infrastructure
         private void PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             /// Don't need to save it's a property we don't want.
-            if(UseFilters)
+            if (UseFilters)
             {
-                if(_filters.Contains(e.PropertyName) == false)
+                if (_filters.Contains(e.PropertyName) == false)
                 {
                     return;
                 }
             }
 
-            if(HasPendingUpdates)
+            if (HasPendingUpdates)
             {
                 // Reset timer if another property changed event comes before saving
                 _timer.Stop();

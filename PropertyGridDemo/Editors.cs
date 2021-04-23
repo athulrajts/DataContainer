@@ -22,7 +22,7 @@ namespace PropertyGridDemo
 
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            if (value.GetType() != typeof(KEI.Infrastructure.Color))
+            if (value.GetType() != typeof(System.Configuration.Color))
             {
                 return value;
             }
@@ -31,7 +31,7 @@ namespace PropertyGridDemo
 
             if (svc != null)
             {
-                KEI.Infrastructure.Color c = (KEI.Infrastructure.Color)value;
+                System.Configuration.Color c = (System.Configuration.Color)value;
                 var editor = new System.Drawing.Design.ColorEditor();
                 System.Drawing.Color edited = (System.Drawing.Color)editor.EditValue(context, provider, System.Drawing.Color.FromArgb(c.R, c.G, c.B));
 
@@ -52,7 +52,7 @@ namespace PropertyGridDemo
 
         public override void PaintValue(PaintValueEventArgs e)
         {
-            KEI.Infrastructure.Color c = (KEI.Infrastructure.Color)e.Value;
+            System.Configuration.Color c = (System.Configuration.Color)e.Value;
             using (SolidBrush brush = new SolidBrush(System.Drawing.Color.FromArgb(c.R, c.G, c.B)))
             {
                 e.Graphics.FillRectangle(brush, e.Bounds);

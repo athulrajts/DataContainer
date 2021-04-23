@@ -1,9 +1,8 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
 
     /// <summary>

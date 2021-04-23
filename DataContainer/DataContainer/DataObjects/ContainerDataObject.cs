@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using KEI.Infrastructure.Types;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// DataObject implementation for CLR object or <see cref="IDataContainer"/>
@@ -59,7 +57,7 @@ namespace KEI.Infrastructure
             ObjectType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
             Value = info.GetValue(nameof(Value), ObjectType);
 
-            if(Value is IDataContainer dc)
+            if (Value is IDataContainer dc)
             {
                 _container = dc;
             }
@@ -134,7 +132,7 @@ namespace KEI.Infrastructure
                 return false;
             }
             else
-            { 
+            {
                 Value = value;
                 return true;
             }
@@ -248,7 +246,7 @@ namespace KEI.Infrastructure
                 // free memory, we don't need it anymore
                 _container = null;
             }
-            else 
+            else
             {
                 Value = _container;
             }

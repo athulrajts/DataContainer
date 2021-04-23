@@ -38,8 +38,8 @@ public:
 private:
 	DataContainerBuilderWrapper(std::string name = "")
 	{
-		instance = KEI::Infrastructure::DataContainerBuilder::Create(gcnew System::String(name.c_str()));
+		instance = System::Configuration::DataContainerBuilder::Create(gcnew System::String(name.c_str()));
 	}
 
-	msclr::gcroot<KEI::Infrastructure::DataContainerBuilder^> instance;
+	msclr::gcroot<System::Configuration::DataContainerBuilder^> instance;
 };

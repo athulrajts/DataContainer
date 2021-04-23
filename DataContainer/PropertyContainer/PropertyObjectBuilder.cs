@@ -1,6 +1,6 @@
-﻿using KEI.Infrastructure.Validation;
+﻿using System.Configuration.Validation;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public class PropertyObjectBuilder
     {
@@ -21,7 +21,7 @@ namespace KEI.Infrastructure
             prop.Category = category;
             return this;
         }
-        
+
         public virtual PropertyObjectBuilder SetDescription(string description)
         {
             prop.Description = description;

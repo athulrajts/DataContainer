@@ -1,9 +1,8 @@
-﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
-namespace KEI.Infrastructure.Types
+namespace System.Configuration.Types
 {
     public class ImplementationsProvider
     {

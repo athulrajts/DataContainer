@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KEI.Infrastructure.Validation
+﻿namespace System.Configuration.Validation
 {
     public class ValidationBuilder
     {
@@ -10,7 +8,7 @@ namespace KEI.Infrastructure.Validation
         {
             if (validationGroup != null)
             {
-                Validator = validationGroup; 
+                Validator = validationGroup;
             }
         }
 

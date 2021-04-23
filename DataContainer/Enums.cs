@@ -1,4 +1,4 @@
-﻿namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     /// <summary>
     /// Reprents how a PropertyEditor can manipulate the property

@@ -1,4 +1,4 @@
-﻿namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     /// <summary>
     /// Typed key, so you don't know to wonder what type the result will be
@@ -14,6 +14,11 @@
         {
             Name = name;
             DefaultValue = defaultValue;
+        }
+
+        public Key()
+        {
+
         }
 
     }

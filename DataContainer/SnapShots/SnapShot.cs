@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Represents state of <see cref="IDataContainer"/>
@@ -44,7 +44,7 @@ namespace KEI.Infrastructure
             {
                 Name = key,
                 Type = type,
-                Value = value 
+                Value = value
             });
         }
 
@@ -63,7 +63,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="dc"></param>
         /// <param name="parent"></param>
-        private void PopulateValues(IDataContainer dc, string parent="")
+        private void PopulateValues(IDataContainer dc, string parent = "")
         {
             foreach (DataObject item in dc)
             {

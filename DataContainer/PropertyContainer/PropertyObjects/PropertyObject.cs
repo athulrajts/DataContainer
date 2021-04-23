@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using KEI.Infrastructure.Validation;
-using System.Xml;
-using System.Collections.Generic;
+using System.Configuration.Validation;
 using System.Runtime.Serialization;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Abstraction for holding different type of data in <see cref="IPropertyContainer"/>

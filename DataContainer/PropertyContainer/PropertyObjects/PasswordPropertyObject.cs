@@ -1,9 +1,8 @@
-﻿using System;
+﻿using System.Configuration.Helpers;
 using System.Runtime.Serialization;
 using System.Xml;
-using KEI.Infrastructure.Helpers;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [Serializable]
     internal class PasswordPropertyObject : StringPropertyObject

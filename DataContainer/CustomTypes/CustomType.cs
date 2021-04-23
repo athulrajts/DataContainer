@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     public class FolderPath { }
     public class FilePath { }

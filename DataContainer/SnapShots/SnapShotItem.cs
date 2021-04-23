@@ -1,4 +1,4 @@
-﻿namespace KEI.Infrastructure
+﻿namespace System.Configuration
 {
     public class SnapShotItem : BindableObject
     {

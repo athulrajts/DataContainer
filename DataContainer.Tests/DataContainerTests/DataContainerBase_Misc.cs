@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
-using KEI.Infrastructure;
-using KEI.Infrastructure.Utils;
+using System.Configuration;
+using System.Configuration.Utils;
 
 namespace DataContainer.Tests
 {
@@ -185,7 +185,7 @@ namespace DataContainer.Tests
 
             string xml = XmlHelper.SerializeToString(dc);
 
-            IDataContainer dcNew = XmlHelper.DeserializeFromString<KEI.Infrastructure.DataContainer>(xml);
+            IDataContainer dcNew = XmlHelper.DeserializeFromString<System.Configuration.DataContainer>(xml);
 
             Assert.True(dcNew.ContainsData("person"));
 

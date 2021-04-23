@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml;
-using KEI.Infrastructure.Types;
-using System.Collections;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Specialized PropertyObject implementation whos value
@@ -75,7 +73,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        public SelectablePropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        public SelectablePropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Value = (Selector)info.GetValue(nameof(Value), typeof(Selector));
             ListType = (TypeInfo)info.GetValue("Type", typeof(TypeInfo));
@@ -193,10 +191,10 @@ namespace KEI.Infrastructure
 
                 return true;
             }
-            else if(elementName == OPTION_ELEMENT)
+            else if (elementName == OPTION_ELEMENT)
             {
                 Value.Option.Add(reader.ReadElementContentAsString());
-                
+
                 return true;
             }
 

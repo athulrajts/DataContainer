@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// DataObject implementation for <see cref="string"/>
@@ -64,7 +63,7 @@ namespace KEI.Infrastructure
             {
                 _value = value;
 
-                RaisePropertyChanged(nameof(Value)); 
+                RaisePropertyChanged(nameof(Value));
             }
         }
     }

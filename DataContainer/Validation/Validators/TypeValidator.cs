@@ -1,10 +1,8 @@
-﻿using KEI.Infrastructure.Types;
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     [Serializable]
     public class TypeValidator : ValidationRule
@@ -30,7 +28,7 @@ namespace KEI.Infrastructure.Validation
 
         public override ValidationResult Validate(object value)
         {
-            if(Type == null)
+            if (Type == null)
                 return new ValidationResult(true);
 
             TypeConverter converter = TypeDescriptor.GetConverter(Type);

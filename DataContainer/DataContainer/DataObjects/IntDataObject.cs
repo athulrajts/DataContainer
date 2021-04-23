@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// DataObject Implementation for <see cref="short"/>

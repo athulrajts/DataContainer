@@ -1,4 +1,4 @@
-﻿using KEI.Infrastructure;
+﻿using System.Configuration;
 
 namespace DataContainer.Utils
 {

@@ -11,7 +11,7 @@ class DataContainerWrapper
 {
 public:
 	DataContainerWrapper();
-	DataContainerWrapper(KEI::Infrastructure::IDataContainer^ instance);
+	DataContainerWrapper(System::Configuration::IDataContainer^ instance);
 
 	std::vector<std::string> GetKeys();
 
@@ -45,7 +45,7 @@ public:
 	{
 		System::String^ managedKey = gcnew System::String(key.c_str());
 
-		KEI::Infrastructure::DataContainerExtensions::PutValue(instance, managedKey, ValueConverter<T>::GetManaged(value));
+		System::Configuration::DataContainerExtensions::PutValue(instance, managedKey, ValueConverter<T>::GetManaged(value));
 	}
 
 	template <typename T>
@@ -56,7 +56,7 @@ public:
 		return instance->SetValue(managedKey, ValueConverter<T>::GetManaged(value));
 	}
 
-	KEI::Infrastructure::IDataContainer^ GetInstance()
+	System::Configuration::IDataContainer^ GetInstance()
 	{
 		return instance;
 	}
@@ -67,7 +67,7 @@ public:
 	}
 
 private:
-	msclr::gcroot<KEI::Infrastructure::IDataContainer^> instance;
+	msclr::gcroot<System::Configuration::IDataContainer^> instance;
 	msclr::gcroot<PropertyChangedListener^> listner;
 	UnmanagedPropertyChangedListener unmanagedListner;
 };
@@ -83,7 +83,7 @@ public:
 
 	static DataContainerWrapper GetUnmanaged(System::Object^ managed)
 	{
-		KEI::Infrastructure::IDataContainer^ dc = safe_cast<KEI::Infrastructure::IDataContainer^>(managed);
+		System::Configuration::IDataContainer^ dc = safe_cast<System::Configuration::IDataContainer^>(managed);
 		DataContainerWrapper result;
 
 		if (dc)

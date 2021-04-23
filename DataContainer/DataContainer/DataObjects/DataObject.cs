@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     internal interface IWriteToBinaryStream
     {
@@ -63,7 +62,7 @@ namespace KEI.Infrastructure
             set
             {
                 SetProperty(ref stringValue, value);
-                OnStringValueChanged(value); 
+                OnStringValueChanged(value);
             }
         }
 
@@ -293,11 +292,11 @@ namespace KEI.Infrastructure
 
         }
 
-        public DataObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        public DataObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Value = (T)info.GetValue(nameof(Value), typeof(T));
         }
-        
+
 
         /// <summary>
         /// Value held by this object

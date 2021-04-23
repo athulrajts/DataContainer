@@ -1,9 +1,7 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using KEI.Infrastructure.Types;
-using System.Collections;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Container for Holding <see cref="Enum"/> Properties or, Properties whos

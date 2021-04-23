@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using KEI.Infrastructure.Utils;
+using System.Configuration.Utils;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
+using System.Xml.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [XmlRoot("DataContainer")]
     [Serializable]
@@ -69,7 +68,7 @@ namespace KEI.Infrastructure
         public override void Clear()
         {
             internalDictionary.Clear();
-            
+
             RaiseCollectionChanged(NotifyCollectionChangedAction.Reset);
         }
 
@@ -109,7 +108,7 @@ namespace KEI.Infrastructure
                     return (IPropertyContainer)formatter.Deserialize(stream);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 DataContainerEvents.NotifyError($"Error reading file :{path}, {ex}");
 

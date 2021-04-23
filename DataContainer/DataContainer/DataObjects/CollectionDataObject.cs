@@ -1,11 +1,9 @@
-﻿using System;
+﻿using System.Collections;
 using System.IO;
-using System.Xml;
-using System.Collections;
-using KEI.Infrastructure.Types;
 using System.Runtime.Serialization;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// <see cref="DataObject"/> implementation to store <see cref="IList"/> of non primitive types
@@ -14,7 +12,7 @@ namespace KEI.Infrastructure
     internal class CollectionDataObject : DataObject
     {
         private IDataContainer readingHelper;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -134,7 +132,7 @@ namespace KEI.Infrastructure
         protected override bool ReadXmlElement(string elementName, XmlReader reader)
         {
             // call base
-            if(base.ReadXmlElement(elementName, reader))
+            if (base.ReadXmlElement(elementName, reader))
             {
                 return true;
             }
@@ -163,10 +161,10 @@ namespace KEI.Infrastructure
             }
 
             /// Read type info
-            else if(elementName == nameof(TypeInfo))
+            else if (elementName == nameof(TypeInfo))
             {
                 CollectionType = reader.ReadObjectXml<TypeInfo>();
-                
+
                 return true;
             }
 

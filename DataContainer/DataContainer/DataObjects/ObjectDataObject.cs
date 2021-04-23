@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml;
-using System.Text.Json;
-using System.ComponentModel;
-using KEI.Infrastructure.Types;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     [Serializable]
     internal abstract class ObjectDataObject : DataObject
@@ -68,7 +66,7 @@ namespace KEI.Infrastructure
         ~ObjectDataObject()
         {
             /// Unhook the property changed listener
-            if(Value is INotifyPropertyChanged inpc)
+            if (Value is INotifyPropertyChanged inpc)
             {
                 inpc.PropertyChanged -= Inpc_PropertyChanged;
             }
@@ -233,7 +231,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        public JsonDataObject(SerializationInfo info, StreamingContext context): base(info, context) { }
+        public JsonDataObject(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Implementation for <see cref="DataObject.Type"/>

@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Timers;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     public delegate void FileChangedEvent();
 
@@ -25,7 +24,7 @@ namespace KEI.Infrastructure
     {
         internal const int TIMER_INTERVAL = 4000;
         private readonly Timer _timer = new Timer(TIMER_INTERVAL);
-        
+
         private FileInfo _info;
         private DateTime _lastModifiedDate;
 
@@ -37,7 +36,7 @@ namespace KEI.Infrastructure
         /// <summary>
         /// Enable/Disable raising change events.
         /// </summary>
-        public bool Watch 
+        public bool Watch
         {
             get { return _timer.Enabled; }
             set { _timer.Enabled = value; }
@@ -61,7 +60,7 @@ namespace KEI.Infrastructure
             get { return path; }
             set
             {
-                if(path == value)
+                if (path == value)
                 {
                     return;
                 }
@@ -99,7 +98,7 @@ namespace KEI.Infrastructure
         {
             _info.Refresh();
 
-            if(_lastModifiedDate < _info.LastWriteTimeUtc)
+            if (_lastModifiedDate < _info.LastWriteTimeUtc)
             {
                 _lastModifiedDate = _info.LastWriteTimeUtc;
 

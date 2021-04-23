@@ -1,5 +1,5 @@
 ﻿using Infragistics.Controls.Editors;
-using KEI.Infrastructure;
+using System.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace PropertyGridDemo
     public class Test
     {
         [Editor(typeof(MyColorEditor), typeof(UITypeEditor))]
-        public KEI.Infrastructure.Color Color { get; set; } = new KEI.Infrastructure.Color(234,126,67);
+        public System.Configuration.Color Color { get; set; } = new System.Configuration.Color(234,126,67);
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml

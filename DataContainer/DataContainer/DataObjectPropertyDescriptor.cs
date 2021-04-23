@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// an implementation for <see cref="PropertyDescriptor"/> based on <see cref="DataObject"/>

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml;
-using System.Text;
-using System.ComponentModel;
-using KEI.Infrastructure.Types;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Base class for storing <see cref="System.Array"/> of primitive types
@@ -251,7 +249,7 @@ namespace KEI.Infrastructure
 
                 int rows = Value.GetLength(0);
                 int columns = Value.GetLength(1);
-                
+
                 // convert array to string
                 // each row is separated by '\n'
                 // each column separated by ','

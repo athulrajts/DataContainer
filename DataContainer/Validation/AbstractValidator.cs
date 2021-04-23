@@ -1,9 +1,8 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Collections.Generic;
+using System.Reflection;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     public abstract class AbstractValidator<T>
     {
@@ -84,7 +83,7 @@ namespace KEI.Infrastructure.Validation
     public class ValidationResults
     {
         public bool IsValid { get; set; }
-        public List<ValidationFailure> Errors { get; set; } = new List<ValidationFailure>(); 
+        public List<ValidationFailure> Errors { get; set; } = new List<ValidationFailure>();
     }
 
     public class ValidationFailure

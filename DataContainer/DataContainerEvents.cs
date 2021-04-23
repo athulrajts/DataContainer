@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     // if users want to get actions that are done internal, such as error handling.
     public class DataContainerEvents

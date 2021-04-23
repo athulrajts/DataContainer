@@ -141,14 +141,14 @@ bool DataContainer::SaveAsBinary()
 
 DataContainerWrapper::DataContainerWrapper()
 {
-	instance = gcnew KEI::Infrastructure::DataContainer();
+	instance = gcnew System::Configuration::DataContainer();
 
 	System::ComponentModel::INotifyPropertyChanged^ inpc = safe_cast<System::ComponentModel::INotifyPropertyChanged^>(GetInstance());
 
 	listner = gcnew PropertyChangedListener(inpc, &unmanagedListner);
 }
 
-DataContainerWrapper::DataContainerWrapper(KEI::Infrastructure::IDataContainer^ managed)
+DataContainerWrapper::DataContainerWrapper(System::Configuration::IDataContainer^ managed)
 {
 	System::ComponentModel::INotifyPropertyChanged^ inpc = safe_cast<System::ComponentModel::INotifyPropertyChanged^>(managed);
 
@@ -171,13 +171,13 @@ std::vector<std::string> DataContainerWrapper::GetKeys()
 
 DataContainerWrapper* DataContainerWrapper::LoadFromXml(std::string path)
 {
-	KEI::Infrastructure::IDataContainer^ dc = KEI::Infrastructure::DataContainer::FromXmlFile(gcnew String(path.c_str()));
+	System::Configuration::IDataContainer^ dc = System::Configuration::DataContainer::FromXmlFile(gcnew String(path.c_str()));
 	return new DataContainerWrapper(dc);
 }
 
 DataContainerWrapper* DataContainerWrapper::LoadFromBinary(std::string path)
 {
-	KEI::Infrastructure::IDataContainer^ dc = KEI::Infrastructure::DataContainer::FromBinaryFile(gcnew String(path.c_str()));
+	System::Configuration::IDataContainer^ dc = System::Configuration::DataContainer::FromBinaryFile(gcnew String(path.c_str()));
 
 	if (dc == nullptr)
 	{

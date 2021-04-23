@@ -1,27 +1,24 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Dynamic;
-using System.Reflection;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Base class for <see cref="DataContainer"/> and <see cref="PropertyContainer"/>
     /// </summary>
     [XmlRoot("DataContainer")]
     [Serializable]
-    public abstract class DataContainerBase : DynamicObject, IDataContainer, ICustomTypeDescriptor, IXmlSerializable, ISerializable
+    public abstract partial class DataContainerBase : DynamicObject, IDataContainer
     {
         #region Constructors
 
@@ -41,7 +38,7 @@ namespace KEI.Infrastructure
         public DataContainerBase(SerializationInfo info, StreamingContext context) : this()
         {
             Name = info.GetString(nameof(Name));
-            UnderlyingType = (Types.TypeInfo)info.GetValue(nameof(UnderlyingType), typeof(Types.TypeInfo));
+            UnderlyingType = (TypeInfo)info.GetValue(nameof(UnderlyingType), typeof(TypeInfo));
             int count = info.GetInt32(nameof(Count));
 
             for (int i = 0; i < count; i++)
@@ -69,7 +66,7 @@ namespace KEI.Infrastructure
         /// Represents Type that this instance can be cast into
         /// can be converted into
         /// </summary>
-        public Types.TypeInfo UnderlyingType { get; set; }
+        public TypeInfo UnderlyingType { get; set; }
 
         /// <summary>
         /// Number of data objects in this container
@@ -550,116 +547,6 @@ namespace KEI.Infrastructure
 
         #endregion
 
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// Get an in unintialized <see cref="DataObject"/> based on <paramref name="type"/>
-        /// values will be populated from xml when <see cref="DataObject.ReadXml(XmlReader)"/> is called
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        protected virtual DataObject GetUnitializedDataObject(string type)
-        {
-            return DataObjectFactory.GetDataObject(type);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="IXmlSerializable.GetSchema"/>
-        /// according to internet you should return null.
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() => null;
-
-        /// <summary>
-        /// Implementation for <see cref="IXmlSerializable.ReadXml(XmlReader)"/>
-        /// </summary>
-        /// <param name="reader"></param>
-        public virtual void ReadXml(XmlReader reader)
-        {
-            // Read attribute name
-            if (reader.GetAttribute(DataObject.KEY_ATTRIBUTE) is string s)
-            {
-                Name = s;
-            }
-
-            // read to content
-            reader.Read();
-
-            while (reader.EOF == false)
-            {
-                // nothing of value skip.
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                }
-
-                // read UnderlyingType
-                // for IDataContainers created from taking CLR objects as reference
-                else if (reader.Name == nameof(Types.TypeInfo))
-                {
-                    UnderlyingType = reader.ReadObjectXml<Types.TypeInfo>();
-                }
-
-                // We're reading a DataObject implementation
-                else
-                {
-                    string dataObjectType = reader.GetAttribute(DataObject.TYPE_ID_ATTRIBUTE);
-
-                    /// Get uninitialized Object based on type attribute
-                    if (GetUnitializedDataObject(dataObjectType) is DataObject obj)
-                    {
-                        /// need to create a new XmlReader so that <see cref="DataObject"/> implementation
-                        /// can read till end.
-                        using (var newReader = XmlReader.Create(new StringReader(reader.ReadOuterXml())))
-                        {
-                            // move to content
-                            newReader.Read();
-
-                            obj.ReadXml(newReader);
-
-                            /// If we get a <see cref="NotSupportedDataObject"/>, don't add it, because it's just a dummy object
-                            /// which reads all the xml and does nothing with it.
-                            /// 3rd party implementation of <see cref="DataObject"/> should be registered by using
-                            /// <see cref="DataObjectFactory.RegisterDataObject{T}"/> or <see cref="DataObjectFactory.RegisterPropertyObject{T}"/> methods
-                            /// so that <see cref="DataContainerBase"/> can create those objects to read
-                            if (obj.Type != DataObjectType.NotSupported)
-                            {
-                                Add(obj);
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="IXmlSerializable.WriteXml(XmlWriter)"/>
-        /// </summary>
-        /// <param name="writer"></param>
-        public virtual void WriteXml(XmlWriter writer)
-        {
-            // write name as attribute if we have a name
-            if (string.IsNullOrEmpty(Name) == false)
-            {
-                writer.WriteAttributeString(DataObject.KEY_ATTRIBUTE, Name);
-            }
-
-            // write underlying type if this was created from a CLR object
-            if (UnderlyingType != null)
-            {
-                writer.WriteObjectXml(UnderlyingType);
-            }
-
-            // write all the dataobjects
-            foreach (var obj in this)
-            {
-                obj.WriteXml(writer);
-            }
-        }
-
-        #endregion
-
         #region INotifyCollectionChanged Members
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -680,199 +567,6 @@ namespace KEI.Infrastructure
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged([CallerMemberName] string property = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-
-        #endregion
-
-        #region ICustomTypeDescriptor Members
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetComponentName"/>
-        /// </summary>
-        /// <returns></returns>
-        public string GetComponentName()
-        {
-            return TypeDescriptor.GetComponentName(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetDefaultEvent"/>
-        /// </summary>
-        /// <returns></returns>
-        public EventDescriptor GetDefaultEvent()
-        {
-            return TypeDescriptor.GetDefaultEvent(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetClassName"/>
-        /// </summary>
-        /// <returns></returns>
-        public string GetClassName()
-        {
-            return TypeDescriptor.GetClassName(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetEvents(Attribute[])"/>
-        /// </summary>
-        /// <param name="attributes"></param>
-        /// <returns></returns>
-        public EventDescriptorCollection GetEvents(Attribute[] attributes)
-        {
-            return TypeDescriptor.GetEvents(this, attributes, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetEvents"/>
-        /// </summary>
-        /// <returns></returns>
-        EventDescriptorCollection ICustomTypeDescriptor.GetEvents()
-        {
-            return TypeDescriptor.GetEvents(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetConverter"/>
-        /// </summary>
-        /// <returns></returns>
-        public TypeConverter GetConverter()
-        {
-            return TypeDescriptor.GetConverter(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor)"/>
-        /// </summary>
-        /// <param name="pd"></param>
-        /// <returns></returns>
-        public object GetPropertyOwner(PropertyDescriptor pd)
-        {
-            return this;
-        }
-
-        /// <summary>
-        /// Imlplementation for <see cref="ICustomTypeDescriptor.GetAttributes"/>
-        /// </summary>
-        /// <returns></returns>
-        public AttributeCollection GetAttributes()
-        {
-            return TypeDescriptor.GetAttributes(this, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetEditor(Type)"/>
-        /// </summary>
-        /// <param name="editorBaseType"></param>
-        /// <returns></returns>
-        public object GetEditor(Type editorBaseType)
-        {
-            return TypeDescriptor.GetEditor(this, editorBaseType, true);
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetDefaultProperty"/>
-        /// </summary>
-        /// <returns></returns>
-        public PropertyDescriptor GetDefaultProperty()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetProperties"/>
-        /// </summary>
-        /// <returns></returns>
-        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
-        {
-            return ((ICustomTypeDescriptor)this).GetProperties(Array.Empty<Attribute>());
-        }
-
-        /// <summary>
-        /// Implementation for <see cref="ICustomTypeDescriptor.GetProperties(Attribute[])"/>
-        /// This is a called by PropertyGrid Implementations, both in WinForms and WPF.
-        /// </summary>
-        /// <param name="attributes"></param>
-        /// <returns></returns>
-        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-        {
-            ArrayList properties = new ArrayList();
-
-            // add attributes for property grid
-            foreach (DataObject data in this)
-            {
-                var attrs = new List<Attribute>();
-
-                // add expandable attributes for data objects holding complex objects
-                if ((data.Type == DataObjectType.Xml || data.Type == DataObjectType.Container || data.Type == DataObjectType.Json)
-                    && PropertyGridHelper.ExpandableAttribute != null)
-                {
-                    attrs.Add(PropertyGridHelper.ExpandableAttribute);
-                }
-
-                /// add editor attribute
-                /// custom editors should be registered using <see cref="PropertyGridHelper.RegisterEditor{TEditor}(string)"/>
-                if (PropertyGridHelper.GetEditorType(data.Type) is Type t)
-                {
-                    string fullname = t.FullName;
-                    string assembly = t.Assembly.FullName;
-
-                    attrs.Add(new EditorAttribute($"{fullname}, {assembly}", "System.Drawing.Design.UITypeEditor, System.Windows.Forms"));
-                }
-
-                /// add type converter attribute
-                /// custom type converters should be registered using <see cref="PropertyGridHelper.RegisterConverter{TConverter}(string)"/>
-                if (PropertyGridHelper.GetConverterType(data.GetType()) is Type ct)
-                {
-                    attrs.Add(new TypeConverterAttribute(ct));
-                }
-
-                /// if it's a property object have some additional that the property grid could make use of
-                /// such as <see cref="PropertyObject.Description"/>, <see cref="PropertyObject.Category"/> <see cref="PropertyObject.DisplayName"/>
-                /// also <see cref="PropertyObject.BrowseOption"/> decided whether it's readonly or whether it should be displayed in
-                /// property grid.
-                if (data is PropertyObject po)
-                {
-                    // add description attribute
-                    if (string.IsNullOrEmpty(po.Description) == false)
-                    {
-                        attrs.Add(new DescriptionAttribute(po.Description));
-                    }
-
-                    // add display name attribute
-                    if (string.IsNullOrEmpty(po.DisplayName) == false)
-                    {
-                        attrs.Add(new DisplayNameAttribute(po.DisplayName));
-                    }
-
-                    // add category attribute
-                    if (string.IsNullOrEmpty(po.Category) == false)
-                    {
-                        attrs.Add(new CategoryAttribute(po.Category));
-                    }
-
-                    Attribute browseOption = new BrowsableAttribute(true);
-                    if (po.BrowseOption == BrowseOptions.NonBrowsable)
-                    {
-                        browseOption = new BrowsableAttribute(false);
-                    }
-                    else if (po.BrowseOption == BrowseOptions.NonEditable)
-                    {
-                        browseOption = new ReadOnlyAttribute(true);
-                    }
-
-                    // add browsable/readonly attributes
-                    attrs.Add(browseOption);
-
-                }
-
-                /// Create property descriptor
-                properties.Add(new DataObjectPropertyDescriptor(data, attrs.ToArray()));
-            }
-
-            PropertyDescriptor[] props = (PropertyDescriptor[])properties.ToArray(typeof(PropertyDescriptor));
-
-            return new PropertyDescriptorCollection(props);
-        }
 
         #endregion
 
@@ -1025,23 +719,6 @@ namespace KEI.Infrastructure
                     RaisePropertyChanged($"{dc.Name}.{propName}");
                 }
 
-            }
-        }
-
-        #endregion
-
-        #region ISerializable Members
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(nameof(Name), Name);
-            info.AddValue(nameof(UnderlyingType), UnderlyingType);
-            info.AddValue(nameof(Count), Count);
-
-            int count = 0;
-            foreach (var item in this)
-            {
-                info.AddValue($"Data_{count++}", item);
             }
         }
 

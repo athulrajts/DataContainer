@@ -1,5 +1,5 @@
 ﻿using Xunit;
-using KEI.Infrastructure;
+using System.Configuration;
 using DataContainer.Utils;
 
 namespace DataContainer.Tests

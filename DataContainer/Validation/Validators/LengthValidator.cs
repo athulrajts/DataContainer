@@ -1,9 +1,8 @@
-﻿using System;
+﻿using System.Configuration.Validation.Attributes;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using KEI.Infrastructure.Validation.Attributes;
 
-namespace KEI.Infrastructure.Validation
+namespace System.Configuration.Validation
 {
     [Serializable]
     public class LengthValidator : ValidationRule
@@ -40,7 +39,7 @@ namespace KEI.Infrastructure.Validation
 
         public override ValidationResult Validate(object value)
         {
-            if(value is string str)
+            if (value is string str)
             {
                 if (Max == Min && str.Length != Max)
                 {
@@ -78,13 +77,13 @@ namespace KEI.Infrastructure.Validation
         {
             get
             {
-                if (Min < 0 )
+                if (Min < 0)
                     return $"MaxLength - {Max}";
                 else if (Max == int.MaxValue)
                     return $"MinLength - {Min}";
                 else if (max == min)
                     return $"Length = {Max}";
-                else if(Min != int.MinValue && Max != int.MaxValue)
+                else if (Min != int.MinValue && Max != int.MaxValue)
                     return $"Length[{Min} - {Max}]";
 
                 return string.Empty;

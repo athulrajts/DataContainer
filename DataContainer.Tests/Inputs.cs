@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using KEI.Infrastructure;
+using System.Configuration;
 
 namespace DataContainer.Tests
 {

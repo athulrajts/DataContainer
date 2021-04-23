@@ -1,10 +1,8 @@
-﻿using KEI.Infrastructure.Types;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// DataObject implementation for <see cref="enum"/>
@@ -105,7 +103,7 @@ namespace KEI.Infrastructure
         /// <returns></returns>
         public override object ConvertFromString(string value)
         {
-            if(EnumType is null)
+            if (EnumType is null)
             {
                 return null;
             }
@@ -152,10 +150,10 @@ namespace KEI.Infrastructure
             try
             {
                 obj = Enum.Parse(EnumType, value);
-                
+
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

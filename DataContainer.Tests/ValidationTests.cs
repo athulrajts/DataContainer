@@ -1,4 +1,4 @@
-﻿using KEI.Infrastructure.Validation;
+﻿using System.Configuration.Validation;
 using System.IO;
 using Xunit;
 

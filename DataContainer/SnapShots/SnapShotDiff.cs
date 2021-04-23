@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// Represents the difference between 2 <see cref="SnapShot"/>s
@@ -14,7 +14,7 @@ namespace KEI.Infrastructure
 
         // first snapshot
         public SnapShot Left { get; }
-        
+
         // second snapshot
         public SnapShot Right { get; }
 
@@ -52,7 +52,7 @@ namespace KEI.Infrastructure
             // add right only
             foreach (var key in rightOnlyKeys)
             {
-               AddDiffItem(key, Right[key].Type, null, Right[key].Value);
+                AddDiffItem(key, Right[key].Type, null, Right[key].Value);
             }
 
             // add common
@@ -84,17 +84,17 @@ namespace KEI.Infrastructure
         /// <param name="right"></param>
         internal void AddDiffItem(string name, string type, object left, object right)
         {
-            if(diffs.ContainsKey(name))
+            if (diffs.ContainsKey(name))
             {
                 diffs[name].Left = left;
                 diffs[name].Right = right;
             }
             else
             {
-                diffs.Add(name, new SnapShotDiffItem 
+                diffs.Add(name, new SnapShotDiffItem
                 {
                     Left = left,
-                    Right = right, 
+                    Right = right,
                     DataObjectName = name,
                     DataObjectType = type
                 });

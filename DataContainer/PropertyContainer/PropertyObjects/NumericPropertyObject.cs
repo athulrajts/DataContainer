@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Xml;
 
-namespace KEI.Infrastructure
+namespace System.Configuration
 {
     /// <summary>
     /// PropertyObject implementation for storing numeric types
@@ -27,7 +26,7 @@ namespace KEI.Infrastructure
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        public NumericPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context) 
+        public NumericPropertyObject(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Increment = info.GetValue(nameof(Increment), typeof(T));
             Min = info.GetValue(nameof(Min), typeof(T));
